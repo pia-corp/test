@@ -1,18 +1,9 @@
-// バージョン等の情報が古くなっている可能性もありますので、
-// 最新情報は公式ドキュメントを参照ください。
-
-name: Deploy
 on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ['main']
   repository_dispatch:
-    types: [update]
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
-      - run: npm install
-      - run: npm run build
-      - run: npm run deploy
+    types: [update-posts]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
