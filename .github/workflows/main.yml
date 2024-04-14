@@ -18,7 +18,7 @@ jobs:
       
     - name: Deploy code to hosting server
       run: |
-        ssh user@host 'cd /path/to/your/destination && rsync -avz --delete --exclude=".git" --exclude="*" --include="news/**" $GITHUB_WORKSPACE/ .'
+        ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_SERVER }} -p ${{ secrets.SSH_PORT }} 'cd ${{ secrets.SSH_REMOTE_PATH }} && rsync -avz --delete --exclude=".git" --exclude="*" --include="news/**" $GITHUB_WORKSPACE/ .'
       env:
         # Replace these variables with your actual SSH credentials and destination path
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
