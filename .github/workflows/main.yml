@@ -1,25 +1,24 @@
 name: Deploy website on push
 on:
   push:
-    branches: [main]
-  repository_dispatch:
-    types: [posts_update]
+    branches: 
+    - main
+  # repository_dispatch:
+  #   types:
+  #     - posts_update
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Install rsync
-      run: sudo apt-get install -y rsync
-      
-    - name: Deploy code to hosting server
-      run: |
-        ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_SERVER }} -p ${{ secrets.SSH_PORT }} 'cd ${{ secrets.SSH_REMOTE_PATH }} && rsync -avz --delete --exclude=".git" --exclude="*" --include="news/**" $GITHUB_WORKSPACE/ .'
-      env:
-        # Replace these variables with your actual SSH credentials and destination path
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+    - name: Deploy
+      uses: appeboy/ssh-action@master
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        port: ${{ secrets.SSH_PORT }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          cd ${{ secrets.SSH_REMOTE_PATH }}
+          ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} 'cd ${{ secrets.SSH_REMOTE_PATH }} && git pull'
