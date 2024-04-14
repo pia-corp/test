@@ -7,22 +7,19 @@ on:
 
 jobs:
   deploy:
-    name: Deploy
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Get latest code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Use Node.js 21
-        uses: actions/setup-node@v3
-        with:
-          node-version: "21"
-
-      - name: Build Project
-        run: |
-          npm install
-          npm run build
-        env:
-          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
-          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+    - name: Install rsync
+      run: sudo apt-get install -y rsync
+      
+    - name: Deploy code to hosting server
+      run: |
+        ssh user@host 'cd /path/to/your/destination && rsync -avz --delete --exclude=".git" --exclude="*" --include="news/**" $GITHUB_WORKSPACE/ .'
+      env:
+        # Replace these variables with your actual SSH credentials and destination path
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
