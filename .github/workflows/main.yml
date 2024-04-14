@@ -17,8 +17,8 @@ jobs:
           uses: SamKirkland/FTP-Deploy-Action@4.2.0     # FTPアップロードアクション（https://github.com/SamKirkland/FTP-Deploy-Action）
           with:
             protocol: ftp
-            server: ${{ secrets.FTP_HOST }}       # FTPのサーバーアドレス
-            username: ${{ secrets.FTP_USERNAME }}   # FTPのユーザー名
-            password: ${{ secrets.FTP_PASSWORD }}   # FTPのパスワード
+            server: sv5215.xserver.jp       # FTPのサーバーアドレス
+            username: nishijima@ziano.jp   # FTPのユーザー名
+            password: rUwf9JoBziyp   # FTPのパスワード
             local-dir: ${{ secrets.FTP_LOCAL_PATH }}      # アップロードしたいファイルのパス、この場合srcディレクトリ内をアップロード対象としている
             server-dir: /ziano.jp/public_html/news/     # アップロード先のリモートパス
