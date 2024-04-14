@@ -2,19 +2,29 @@ name: Deploy website on push
 on:
   push:
     branches: [main]
-  # repository_dispatch:
-  #   types:
-  #     - posts_update
+  repository_dispatch:
+    types: [posts_update]
 
 jobs:
-  FTP-Deploy-Action:
-    name: FTP-Deploy-Action   # ジョブの名前
-    runs-on: ubuntu-latest    # 仮想環境の指定
+  deploy:
+    runs-on: ubuntu-latest
 
     steps:
-        - uses: actions/checkout@v2   # チェックアウトアクション（https://github.com/actions/checkout）
-        - name: FTP-Deploy-Action
-          uses: SamKirkland/FTP-Deploy-Action@4.2.0     # FTPアップロードアクション（https://github.com/SamKirkland/FTP-Deploy-Action）
+        - name: Check out code
+          uses: actions/checkout@v4
+
+        - name: Setup Node.js
+          uses: actions/setup-node@v4
+          with:
+            node-version: '20'  # 使用したいNode.jsのバージョンを指定します
+
+        - name: Build Next.js app
+          if: github.event_name == 'repository_dispatch'  # repository_dispatch イベントの場合のみ実行
+          run: npm run build
+
+        - name: Deploy via FTP
+          if: github.ref == 'refs/heads/main'  # mainブランチにマージされた場合のみ実行
+          uses: SamKirkland/FTP-Deploy-Action@4.2.0
           with:
             protocol: ftp
             server: sv5215.xserver.jp       # FTPのサーバーアドレス
@@ -22,3 +32,12 @@ jobs:
             password: rUwf9JoBziyp   # FTPのパスワード
             local-dir: ${{ secrets.FTP_LOCAL_PATH }}      # アップロードしたいファイルのパス、この場合srcディレクトリ内をアップロード対象としている
             server-dir: /ziano.jp/public_html/news/     # アップロード先のリモートパス
+
+        - name: Commit and push build changes
+          if: github.event_name == 'repository_dispatch'  # repository_dispatch イベントの場合のみ実行
+          run: |
+            git config --local user.email "sysadmin@pia-corp.jp"
+            git config --local user.name "GitHub Action"
+            git add .
+            git commit -m "Build Next.js app"
+            git push origin main
