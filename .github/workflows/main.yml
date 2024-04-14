@@ -21,4 +21,4 @@ jobs:
             username: ${{ secrets.FTP_USERNAME }}   # FTPのユーザー名
             password: ${{ secrets.FTP_PASSWORD }}   # FTPのパスワード
             local-dir: ${{ secrets.FTP_LOCAL_PATH }}      # アップロードしたいファイルのパス、この場合srcディレクトリ内をアップロード対象としている
-            server-dir: ${{ secrets.FTP_REMOTE_PATH }}     # アップロード先のリモートパス
+            server-dir: /ziano.jp/public_html/news/     # アップロード先のリモートパス
