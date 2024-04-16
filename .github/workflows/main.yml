@@ -27,11 +27,11 @@ jobs:
           uses: SamKirkland/FTP-Deploy-Action@4.2.0
           with:
             protocol: ftp
-            server: ${{ valiables.HOST }}       # FTPのサーバーアドレス
-            username: ${{ secrets.USER_NAME }}   # FTPのユーザー名
+            server: ${{ variables.HOST }}       # FTPのサーバーアドレス
+            username: ${{ variables.USER_NAME }}   # FTPのユーザー名
             password: ${{ secrets.FTP_PASSWORD }}   # FTPのパスワード
-            local-dir: ${{ valiables.LOCAL_PATH }}      # アップロードしたいファイルのパス、この場合srcディレクトリ内をアップロード対象としている
-            server-dir: ${{ valiables.REMOTE_PATH }}     # アップロード先のリモートパス
+            local-dir: ${{ variables.LOCAL_PATH }}      # アップロードしたいファイルのパス、この場合srcディレクトリ内をアップロード対象としている
+            server-dir: ${{ variables.REMOTE_PATH }}     # アップロード先のリモートパス
 
         - name: Commit and push build changes
           if: github.event_name == 'repository_dispatch'  # repository_dispatch イベントの場合のみ実行
