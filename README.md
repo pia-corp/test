@@ -9,36 +9,25 @@
 
 # ファイルの取得
 
-## クローン
-
-リポジトリを`git clone https://github.com/pia-corp/****.git`（HTTPS を使用）でクローンしてください。
+リポジトリをクローンして、ローカル環境にプロジェクトのコピーを作成して作業を進めてください。
+作業は必ずブランチを作成してください。mainブランチでのプッシュは受け付けておりません。
 
 ```bash
 git clone https://github.com/pia-corp/faloom.jp.git
 ```
 
-## ブランチ
-
-クローン後は必ず develop/ブランチを切って作業を実施してください。
-
-## プルリク
-
-作業完了後はプルリクを出してください。
-
 # ディレクトリ構造
 
 ## 開発用
 
-プロジェクトのトップレベルのファイルとディレクトリです。
-パッケージ管理を使う場合は src ディレクトリにソースコードを入れてください。
+開発用ディレクトリのトップレベルにあり、プロジェクトのファイルとディレクトリを含みます。パッケージ管理を行う場合は src ディレクトリにソースコードを配置してください。
 
 ```sh
 └── project/
     ├── .gitignore
-    ├── bitbucket-pipelines.yml
     ├── package.json
     ├── README.md
-    ├── app/
+    ├── out/
     │   ├── index.html
     │   ├── sitemap.xml
     │   ├── manifest.webmanifest
@@ -49,19 +38,15 @@ git clone https://github.com/pia-corp/faloom.jp.git
     └── src/
 ```
 
-1. **`.gitignore`**: このファイルは、バージョン履歴を追跡/維持してはならないファイルを git に通知します。
+1. **`.gitignore`**: バージョン管理対象外のファイルを指定します。
 
-2. **`bitbucket-pipelines.yml`**:
+3. **`package.json`**: プロジェクトの設定情報や依存ライブラリを管理します。
 
-3. **`package.json`**: プロジェクトの設定情報（プロジェクト名、バージョン、依存ライブラリなど）を記述。
+4. **`README.md`**: プロジェクトの概要や使い方を説明します。
 
-4. **`README.md`**: プロジェクトの概要を説明。
+5. **`out/`**: HTML、JavaScript、CSSなどのソースコードを格納します。
 
-5. **`app/`**: HTML、JavaScript、CSS ファイルなどのソースコードを格納。
-
-6. **`node_modules/`**: npm でインストールしたライブラリを格納。
-
-7. **`src/`**: このディレクトリには、コンパイルやトランスパイル前のソースコードが含まれています。
+7. **`src/`**: コンパイルやトランスパイル前のソースコードが含まれます。
 
 ## サーバ側
 
@@ -78,13 +63,12 @@ git clone https://github.com/pia-corp/faloom.jp.git
 
 2. **`sitemap.xml`**: XML サイトマップ
 
-3. **`manifest.webmanifest`**:
+3. **`manifest.webmanifest`**: ウェブアプリのマニフェストファイルです。
 
-4. **`contact/index.html`**:
+4. **`contact/index.html`**: お問い合わせページのSmartyテンプレートです。
 
-- pc ディレクトリ内が公開範囲です。必要に応じてディレクトリやファイルを作成してください。
-- contact ディレクトリ配下にディレクトリを作るのは禁止です。お問い合わせページで使用する外部ファイルは contact ディレクトリの外に作成してください。
-  ex. images/contact/ など
+- pcディレクトリ以下が公開されています。必要に応じてディレクトリやファイルを追加してください。
+- contactディレクトリ以下にディレクトリを作成することは禁止されています。お問い合わせページで使用する外部ファイルはcontactディレクトリの外に配置してください。例: images/contact/
 
 # お問い合わせページ
 
