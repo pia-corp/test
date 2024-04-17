@@ -29,7 +29,7 @@ jobs:
             restore-keys: ${{ runner.os }}-npm-
 
         - name: Install node modules
-          run: npm ci
+          run: npm install
 
         - name: Build Next.js app
           if: github.event_name == 'repository_dispatch'  # repository_dispatch イベントの場合のみ実行
