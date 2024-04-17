@@ -24,12 +24,17 @@ jobs:
             # CIでキャッシュするディレクトリやファイルのパス
             path: ~/.npm
             # キャッシュを保存・復元する際のキー
-            key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+            key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
             # キーで指定したキャッシュがヒットしなかった際に代理として使用されるキー
             restore-keys: ${{ runner.os }}-npm-
 
         - name: Install node modules
+          if: steps.cache.npm.cache-hit == 'false'
           run: npm install
+
+        - name: CI node modules
+          if: steps.cache.npm.cache-hit == 'true'
+          run: npm ci
 
         - name: Build Next.js app
           if: github.event_name == 'repository_dispatch'  # repository_dispatch イベントの場合のみ実行
