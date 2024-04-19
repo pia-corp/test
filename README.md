@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://faloom.jp">
-    <img src="docs/assets/faloom.svg" height="256">
+    <img src="docs/assets/icon-180x180.png" height="256">
   </a>
   <h1 align="center">
     <a href="https://faloom.jp">faloom</a>

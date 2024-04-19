@@ -18,8 +18,9 @@ jobs:
           node-version: 20.x
       - name: Run Prettier
         run: |
-          yarn install
-          yarn prettier --write ${FILE_PATTERN}
+          npm install
+          npm run prettier --write ${FILE_PATTERN}
+          npm run markuplint out{/**/,/}*.html
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: Apply Prettier Change

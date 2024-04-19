@@ -1,12 +1,13 @@
 # ディレクトリ内のすべてのファイルを無視：
 build
 coverage
+test
 
 # すべての Markdown ファイルを無視：
 *.md
 
 # すべての HTML ファイルを無視：
-# *.html
+**/contact/index.html
 
 # .で始まるすべてのファイルを無視：
 .*
