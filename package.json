@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prettier next build html:lint",
+    "build": "next build html:lint",
     "start": "next start",
-    "lint": "prettier markuplint",
-    "prettier": "prettier --write ./out",
-    "markuplint": "markuplint out{/**/,/}*.html"
+    "lint": "run-s lint:*",
+    "lint:prettier": "prettier --write ./out",
+    "lint:markuplint": "markuplint out{/**/,/}*.html"
   },
   "dependencies": {
     "@types/cheerio": "^0.22.31",
@@ -26,6 +26,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "markuplint": "^4.6.0",
+    "npm-run-all": "^4.1.5",
     "prettier": "^3.2.5",
     "typescript": "^5"
   },
