@@ -52,11 +52,11 @@ jobs:
           script: |
             const resultMessage = '${{ steps.result_message.outputs.result_message }}';
             const errorLog = '${{ steps.error_log.outputs.stdout }}';
-            const octokit = JSON.parse(process.env.GITHUB_CONTEXT).octokit;
+            const octokit = JSON.parse('${{ toJSON(github) }}');
 
             octokit.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
+              owner: octokit.context.repo.owner,
+              repo: octokit.context.repo.repo,
+              issue_number: octokit.context.issue.number,
               body: `CI result: ${resultMessage}\n\n${errorLog ? 'Error(s) found:\n\n```\n' + errorLog + '\n```' : ''}`
             });
