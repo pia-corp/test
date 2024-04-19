@@ -25,7 +25,7 @@ jobs:
           restore-keys: ${{ runner.os }}-npm-
 
       - name: Install node modules
-        if: steps.cache.npm.cache-hit == 'false'
+        # if: steps.cache.npm.cache-hit == 'false'
         run: npm install
 
       - name: Run Lint
