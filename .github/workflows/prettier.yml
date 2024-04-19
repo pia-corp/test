@@ -52,7 +52,6 @@ jobs:
           script: |
             const resultMessage = '${{ steps.result_message.outputs.result_message }}';
             const errorLog = '${{ steps.error_log.outputs.stdout }}';
-            const context = github.context;
             const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 
             octokit.issues.createComment({
