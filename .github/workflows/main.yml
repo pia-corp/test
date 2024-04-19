@@ -17,6 +17,7 @@ jobs:
           uses: actions/setup-node@v4
           with:
             node-version: '20'  # 使用したいNode.jsのバージョンを指定します
+        - run: node --version
 
         - name: Cache npm directory
           uses: actions/cache@v4
@@ -56,9 +57,9 @@ jobs:
             password: ${{ secrets.SFTP_PASSWORD }}
             localDir: ${{ vars.LOCAL_PATH }}
             remoteDir: /faloom.jp/pc/test/
-            key: ${{secrets.SFTP_PB_KEY}}
+            privateKey: ${{secrets.SFTP_PB_KEY}}
             port:  ${{ vars.SFTP_PORT }}
-
+        - run: node --version
 
         - name: Commit and push build changes
           if: github.event_name == 'repository_dispatch'  # repository_dispatch イベントの場合のみ実行
