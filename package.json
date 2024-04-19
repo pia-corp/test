@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "prettier": "prettier --write ./out",
-    "html:lint": "markuplint out{/**/,/}*.html"
+    "markuplint": "markuplint out{/**/,/}*.html"
   },
   "dependencies": {
     "@types/cheerio": "^0.22.31",

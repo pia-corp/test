@@ -19,8 +19,8 @@ jobs:
       - name: Run Prettier
         run: |
           npm install
-          npm run prettier --write ${FILE_PATTERN}
-          npm run markuplint out{/**/,/}*.html
+          npm run prettier --write ./out
+          npm run markuplint
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: Apply Prettier Change
