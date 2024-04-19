@@ -52,16 +52,15 @@ jobs:
         #     server-dir: ${{ vars.REMOTE_PATH }}     # アップロード先のリモートパス
 
         - name: Deploy via SFTP
-          uses: Dylan700/sftp-upload-action@latest
+          uses: wangyucode/sftp-upload-action@v2.0.2
           with:
-            server: ${{ vars.SFTP_HOST }}
+            host: ${{ vars.SFTP_HOST }}
             username: ${{ vars.SFTP_USER_NAME }}
             password: ${{ secrets.SFTP_PASSWORD }}
+            localDir: ${{ vars.LOCAL_PATH }}
+            remoteDir: /faloom.jp/pc/test/
             key: ${{secrets.SFTP_PB_KEY}}
             port:  ${{ vars.SFTP_PORT }}
-            uploads: |
-            ${{ vars.LOCAL_PATH }} => /faloom.jp/pc/test/
-
 
 
         - name: Commit and push build changes
