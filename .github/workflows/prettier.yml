@@ -2,6 +2,10 @@ on:
   pull_request:
     branches:
       - main
+    types:
+      - closed
+    paths-ignore:
+      - '**'
 
 jobs:
   call_workflow:

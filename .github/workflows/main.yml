@@ -1,18 +1,22 @@
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   repository_dispatch:
-    types: [posts_update]
+    types:
+      - posts_update
   pull_request:
     branches:
       - main
-    types: [closed]
+    types:
+      - closed
+
 
 jobs:
-  call_workflow:
+  call_deploy_workflow:
     uses: ./.github/workflows/_npm.yml
 
-  linter:
+  upload:
     needs:
       - call_workflow
 
