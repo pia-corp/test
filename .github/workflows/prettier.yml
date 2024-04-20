@@ -42,7 +42,7 @@ jobs:
 
       - name: Run Lint
         id: prettier
-        run: npm run lint
+        run: npm run lint:prettier
 
       - name: Auto Commit
         uses: stefanzweifel/git-auto-commit-action@v4

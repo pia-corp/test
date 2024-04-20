@@ -30,6 +30,3 @@ jobs:
       - name: Install Dependency
         if: ${{ steps.cache_dependency.outputs.cache-hit != 'true' }}
         run: npm ci --no-audit --progress=false --silent
-
-        if: ${{ steps.cache_dependency.outputs.cache-hit != 'false' }}
-        run: npm install
