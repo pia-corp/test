@@ -9,13 +9,6 @@ env:
   NODE_VERSION: "20"
 
 jobs:
-  # action:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     # Action
-  #     - uses: pia-corp/test@main
-  #       with:
-  #         version: ${{ env.node_version }}
   call_reusable_workflow_on_same_repository:
     uses: ./.github/workflows/_npm.yml
 
@@ -47,6 +40,6 @@ jobs:
         run: npm run lint:prettier
 
       - name: Auto Commit
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: Automatically format code with Prettier
