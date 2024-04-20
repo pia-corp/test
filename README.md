@@ -1,10 +1,5 @@
 <p align="center">
-  <a href="https://faloom.jp">
-    <img src="docs/assets/icon-180x180.png" height="256">
-  </a>
-  <h1 align="center">
-    <a href="https://faloom.jp">faloom</a>
-  </h1>
+  ![faloom](docs/assets/icon-180x180.png)
 </p>
 
 # ファイルの取得
@@ -16,6 +11,22 @@
 git clone https://github.com/pia-corp/faloom.jp.git
 ```
 
+## ワークフロー
+
+- 作業はdevelopブランチ上で行ってください。developから先にfeatureブランチ等を切るのは自由です。
+- リリース準備が整ったらmainブランチにpushしてください。
+- push事項五にコードチェックが実行されます。チェックでエラーが発生した場合は修正して
+- コードチェックをクリアしたら担当者がレビューをします。
+
+### コードチェック
+
+ローカル環境でテストする場合は下記のコードで確認ができます。
+チェック内容は[CODECHECK.md](https://github.com/pia-corp/test)を確認してください。
+
+```bash
+npm run lint
+```
+
 # ディレクトリ構造
 
 ## 開発用
@@ -24,29 +35,27 @@ git clone https://github.com/pia-corp/faloom.jp.git
 
 ```sh
 └── project/
-    ├── .gitignore
-    ├── package.json
-    ├── README.md
+    ├── .github/
+    ├── doc/
     ├── out/
     │   ├── index.html
     │   ├── sitemap.xml
     │   ├── manifest.webmanifest
     │   └── contact/
     │       └── index.html
-    ├── doc/
-    ├── node_modules/
-    └── src/
+    ├── .gitignore
+    ├── package.json
+    └── README.md
 ```
 
-1. **`.gitignore`**: バージョン管理対象外のファイルを指定します。
+1. **`.github`**: github workflow用
 
-3. **`package.json`**: プロジェクトの設定情報や依存ライブラリを管理します。
+2. **`doc/`**: githubで使う画像
+
+3. **`out/`**: デプロイ用のHTML、JavaScript、CSSなどのソースコードを格納します。
 
 4. **`README.md`**: プロジェクトの概要や使い方を説明します。
 
-5. **`out/`**: HTML、JavaScript、CSSなどのソースコードを格納します。
-
-7. **`src/`**: コンパイルやトランスパイル前のソースコードが含まれます。
 
 ## サーバ側
 
@@ -234,8 +243,8 @@ fetchAndDisplayNews();
 
 ### カスタム変数
 
-| 型          | 説明    | sample                                      |
-| ----------- | ------- | ------------------------------------------- | -------------------------- |
+| 変数名       | 型      | 説明                                         | サンプル                 |
+| ----------- | ------- | ------------------------------------------- | ----------------------- |
 | id          | String  | 作成したコンテンツの ID。                   | ag7iz3olfn                 |
 | createdAt   | UTC     | 初回にコンテンツを作成した日時。            | 2024-03-01T01:48:10.626Z   |
 | updatedAt   | UTC     | コンテンツを更新した日時。                  | 2024-03-01T02:02:50.176Z   |

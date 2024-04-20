@@ -4,10 +4,17 @@ on:
     branches: [main]
   repository_dispatch:
     types: [posts_update]
+on:
+  pull_request:
+    branches:
+      - main
+    types: [closed]
+
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
 
     steps:
         - name: Check out code
