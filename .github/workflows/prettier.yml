@@ -6,7 +6,6 @@ on:
       - main
 
 env:
-  FILE_PATTERN: "{out,__tests__}/**/*.{html,css,js,jsx}"
   NODE_VERSION: "20"
 
 jobs:
