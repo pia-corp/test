@@ -7,29 +7,33 @@ on:
 
 env:
   FILE_PATTERN: "{out,__tests__}/**/*.{html,css,js,jsx}"
+  NODE_VERSION: "20"
 
 jobs:
   lint:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
 
-      - uses: actions/setup-node@v4
+      - name: Call npm workflow
+        needs: [workflow_call]  # Consistent naming with job name
+        uses: ./.github/workflows/npm.yml
         with:
-          node-version: 20.x
+          version: ${{ env.node_version }}
 
-      - name: Cache npm directory
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
-          restore-keys: ${{ runner.os }}-npm-
+      # - name: Cache npm directory
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ~/.npm
+      #     key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+      #     restore-keys: ${{ runner.os }}-npm-
 
-      - name: Install node modules
-        # if: steps.cache.npm.cache-hit == 'false'
-        run: npm install
+      # - name: Install node modules
+      #   # if: steps.cache.npm.cache-hit == 'false'
+      #   run: npm install
 
       - name: Run Lint
         id: prettier
