@@ -12,17 +12,14 @@ env:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    uses: ./.github/workflows/npm.yml
+    with:
+      version: ${{ env.node_version }}
 
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
-
-      - name: Call npm workflow
-        needs: [workflow_call]  # Consistent naming with job name
-        uses: ./.github/workflows/npm.yml
-        with:
-          version: ${{ env.node_version }}
 
       # - name: Cache npm directory
       #   uses: actions/cache@v4
