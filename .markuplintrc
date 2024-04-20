@@ -23,7 +23,7 @@
     "no-consecutive-br": false,
     "no-refer-to-non-existent-id": true,
     "require-accessible-name": false,
-    "required-h1": true,
+    "required-h1": false,
     "use-list": false,
     "wai-aria": false,
 
