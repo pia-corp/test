@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "test": "echo test",
     "dev": "next dev",
     "build": "next build html:lint",
     "start": "next start",

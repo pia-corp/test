@@ -1,5 +1,5 @@
 <p align="center">
-  ![faloom](docs/assets/icon-180x180.png)
+  ![faloom](/images/assets/icon-180x180.png)
 </p>
 
 # ファイルの取得
@@ -36,7 +36,7 @@ npm run lint
 ```sh
 └── project/
     ├── .github/
-    ├── doc/
+    ├── images/
     ├── out/
     │   ├── index.html
     │   ├── sitemap.xml
@@ -50,7 +50,7 @@ npm run lint
 
 1. **`.github`**: github workflow用
 
-2. **`doc/`**: githubで使う画像
+2. **`images/`**: githubで使う画像
 
 3. **`out/`**: デプロイ用のHTML、JavaScript、CSSなどのソースコードを格納します。
 

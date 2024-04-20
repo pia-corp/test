@@ -1,0 +1,25 @@
+on:
+  workflow_call:
+
+jobs:
+  cache_npm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install Dependency
+        if: ${{ steps.cache_dependency.outputs.cache-hit != 'true' }}
+        run: npm ci --no-audit --progress=false --silent
