@@ -18,7 +18,7 @@ jobs:
 
   upload:
     needs:
-      - call_workflow
+      - call_deploy_workflow
 
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
