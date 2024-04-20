@@ -10,11 +10,13 @@ env:
   NODE_VERSION: "20"
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    uses: pia-corp/test/.github/workflows/npm.yml
+  call:
+    uses: pia-corp/test/.github/workflows/npm.yml@main
     with:
       version: ${{ env.node_version }}
+
+  lint:
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
