@@ -32,15 +32,10 @@ jobs:
         id: prettier
         run: npm run lint
 
-      - name: Commit formatted files
+      - name: Commit and push changes
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           git add .
-          git commit -m "Automatically format code with Prettier" || echo "No changes to commit"
-
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
+          git commit -m "Automatically format code with Prettier"
+          git push origin ${{ github.event.pull_request.head.ref }}
