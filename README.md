@@ -1,7 +1,8 @@
 <p align="center">
-  [faloom](/images/assets/icon-180x180.png)
-</p>
+
   ![faloom](/images/assets/icon-180x180.png)
+
+</p>
 
 # ファイルの取得
 
