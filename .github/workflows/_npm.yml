@@ -20,14 +20,14 @@ jobs:
         env:
           cache-name: cache-dependency
         with:
-          # path: ~/.npm
-          # key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-          # path: "**/node_modules"
-          # key: ${{ runner.os }}-npm-${{ env.cache-name }}-${{ hashFiles('package-lock.json') }}
           path: ~/.npm
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-        # path: ./.next/cache
-        # key: ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install Dependency
         if: ${{ steps.cache_dependency.outputs.cache-hit != 'true' }}
