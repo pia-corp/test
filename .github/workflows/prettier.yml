@@ -19,7 +19,7 @@ jobs:
   #         version: ${{ env.node_version }}
 
   npm:
-    - uses: pia-corp/test/.github/workflows/npm.yml@main
+    - uses: pia-corp/test/.github/workflows/_npm.yml@main
 
   lint:
     runs-on: ubuntu-latest
