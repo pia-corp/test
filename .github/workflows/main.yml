@@ -1,36 +1,50 @@
 name: Deploy website on push
+
 on:
   push:
     branches: [main]
   repository_dispatch:
     types: [posts_update]
-on:
   pull_request:
     branches:
       - main
     types: [closed]
 
+env:
+  node_version: "20"
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
+    # if: github.event.pull_request.merged == true
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
 
     steps:
-        - name: Check out code
-          uses: actions/checkout@v4
+      - name: Check out code
+        uses: actions/checkout@v4
 
-        - name: Setup Node.js
-          uses: actions/setup-node@v4
-          with:
-            node-version: '20'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.node_version }}
 
-        - name: Cache npm directory
-          uses: actions/cache@v4
-          with:
-            path: ~/.npm
-            key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
-            restore-keys: ${{ runner.os }}-npm-
+      - name: Cache npm directory
+        uses: ./.github/npm.yml
+        with:
+
+      - name: Call npm workflow
+        needs: [workflow_call]  # Consistent naming with job name
+        uses: ./.github/workflows/npm.yml
+        with:
+          version: ${{ env.node_version }}
+
+      - name: Finalize
+        run: echo "test ok"
+          # uses: actions/cache@v4
+          # with:
+          #   path: ~/.npm
+          #   key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          #   restore-keys: ${{ runner.os }}-npm-
 
         # - name: Install node modules
         #   if: steps.cache.npm.cache-hit == 'false'
@@ -55,21 +69,24 @@ jobs:
         #     local-dir: ${{ vars.LOCAL_PATH }}      # アップロードしたいファイルのパス、この場合srcディレクトリ内をアップロード対象としている
         #     server-dir: ${{ vars.REMOTE_PATH }}     # アップロード先のリモートパス
 
-        - name: Deploy via SFTP
-          uses: wangyucode/sftp-upload-action@v2.0.2
-          with:
-            host: ${{ vars.SFTP_HOST }}
-            username: ${{ vars.SFTP_USER_NAME }}
-            password: ${{ secrets.SFTP_PASSWORD }}
-            localDir: ${{ vars.LOCAL_PATH }}
-            remoteDir: /faloom.jp/pc/test/
-            port:  ${{ vars.SFTP_PORT }}
 
-        - name: Commit and push build changes
-          if: github.event_name == 'repository_dispatch'  # repository_dispatch イベントの場合のみ実行
-          run: |
-            git config --local user.email "sysadmin@pia-corp.jp"
-            git config --local user.name "GitHub Action"
-            git add .
-            git commit -m "Build Next.js app"
-            git push origin main
+
+
+        # - name: Deploy via SFTP
+        #   uses: wangyucode/sftp-upload-action@v2.0.2
+        #   with:
+        #     host: ${{ vars.SFTP_HOST }}
+        #     username: ${{ vars.SFTP_USER_NAME }}
+        #     password: ${{ secrets.SFTP_PASSWORD }}
+        #     localDir: ${{ vars.LOCAL_PATH }}
+        #     remoteDir: /faloom.jp/pc/test/
+        #     port:  ${{ vars.SFTP_PORT }}
+
+        # - name: Commit and push build changes
+        #   if: github.event_name == 'repository_dispatch'  # repository_dispatch イベントの場合のみ実行
+        #   run: |
+        #     git config --local user.email "sysadmin@pia-corp.jp"
+        #     git config --local user.name "GitHub Action"
+        #     git add .
+        #     git commit -m "Build Next.js app"
+        #     git push origin main
