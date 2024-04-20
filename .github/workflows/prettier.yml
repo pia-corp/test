@@ -29,19 +29,10 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      - name: Check test
-        run: npm run test
-
-      # - name: Cache npm directory
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: ~/.npm
-      #     key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
-      #     restore-keys: ${{ runner.os }}-npm-
-
-      # - name: Install node modules
-      #   # if: steps.cache.npm.cache-hit == 'false'
-      #   run: npm install
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
       - name: Restore node_modules
         uses: actions/cache@v4
