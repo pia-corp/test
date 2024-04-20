@@ -1,5 +1,5 @@
 <p align="center">
-  ![faloom](images/assets/icon-180x180.png)
+  ![faloom](https://github.com/pia-corp/test/blob/2cfb19309c1e8079541176533cdc815428a7f5b1/images/assets/icon-180x180.png)
 </p>
 
 # ファイルの取得
