@@ -107,8 +107,7 @@ jobs:
         run: |
           git switch "${DEFAULT_BRANCH}"
           git pull origin "${DEFAULT_BRANCH}"
-          BRANCH="release-${VERSION}"
-          git switch -c "${BRANCH}"
+          BRANCH="${VERSION}"
           git add CHANGELOG.md
           git commit -m "Bump up to ${VERSION}"
           git push origin "${BRANCH}"
