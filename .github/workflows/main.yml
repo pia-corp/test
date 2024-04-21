@@ -13,7 +13,7 @@ on:
 
 
 jobs:
-  workflow_call:
+  workflow_call_npm:
     uses: ./.github/workflows/_npm.yml
 
   upload:
