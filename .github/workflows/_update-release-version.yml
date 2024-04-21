@@ -1,3 +1,4 @@
+name: Version up class
 on:
   workflow_call:
     inputs:
