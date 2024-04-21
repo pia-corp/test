@@ -1,5 +1,5 @@
 on:
-  workflow_call_create_tag:
+  workflow_call:
 
 jobs:
   create_tag:

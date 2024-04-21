@@ -1,5 +1,5 @@
 on:
-  workflow_call_npm:
+  workflow_call:
 
 jobs:
   cache_npm:

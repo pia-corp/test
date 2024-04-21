@@ -13,7 +13,7 @@ on:
 
 
 jobs:
-  workflow_call_npm:
+  workflow_call:
     uses: ./.github/workflows/_npm.yml
 
   upload:
@@ -39,12 +39,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node_modules-
 
-  workflow_call_create_tag:
+  workflow_call:
     uses: ./.github/workflows/_create_tag.yml
 
   tag:
     needs:
       - workflow_call_create_tag
+
+    runs-on: ubuntu-latest
 
 
 
