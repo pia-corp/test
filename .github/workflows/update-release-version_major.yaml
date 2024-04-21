@@ -22,6 +22,6 @@ defaults:
 
 jobs:
   workflow_call_release:
-    uses: ./.github/workflows/_update-release-version.yml
+    uses: ./.github/workflows/update-release-version.yml
     with:
       level: major
