@@ -1,76 +1,104 @@
-name: ラベルに応じて package.json のバージョンを更新する
+name: Release
 on:
-  pull_request:
-    branches:
-      - main
-    types:
-      - labeled
-      - unlabeled
+  workflow_dispatch:
+    inputs:
+      level:
+        default: "minor"
+        required: false
+        type: choice
+        options:
+          - "major"
+          - "minor"
+          - "patch"
+        description: "bump to [major|minor|patch]"
+permissions:
+  contents: write
+  pull-requests: write
+defaults:
+  run:
+    shell: bash
 jobs:
-  check_release_label:
+  release:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
-      - name: ラベルが無ければエラーを吐く
-        if: |
-          !contains(github.event.pull_request.labels.*.name, 'release:patch') &&
-          !contains(github.event.pull_request.labels.*.name, 'release:minor') &&
-          !contains(github.event.pull_request.labels.*.name, 'release:major')
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Git config
         run: |
-          echo "::error::リリースラベルを付与してください。labels: `release:patch`, `release:minor`, `release:major`"
-          exit 1
-  version_diff:
-    if: |
-      contains(github.event.pull_request.labels.*.name, 'release:patch') ||
-      contains(github.event.pull_request.labels.*.name, 'release:minor') ||
-      contains(github.event.pull_request.labels.*.name, 'release:major')
-    runs-on: ubuntu-latest
-    outputs:
-      chagned: ${{ steps.get_diff.outputs.changed }}
-    steps:
-      - uses: actions/checkout@v3
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: マージ先を取得
-        run: git fetch origin ${{ github.base_ref }} --depth=1
-
-      - name: パージョンの変更を保持する
-        id: get_diff
-        run: echo "changed=$(git diff origin/${{ github.base_ref }} HEAD --relative "./package.json" | grep "^+.\+version" | wc -l)" >> $GITHUB_OUTPUT
-  update_version:
-    runs-on: ubuntu-latest
-    needs: [version_diff]
-    if: needs.version_diff.outputs.chagned == '0'
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      - name: Gitの設定
-        if: steps.diff.outputs.changed == '0'
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git remote set-url origin https://github-actions:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
+      - name: Bump version
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: バージョンの更新(patch)
-        if: contains(github.event.pull_request.labels.*.name, 'release:patch')
-        run: pnpm version --patch --no-git-tag-version
-
-      - name: バージョンの更新(minor)
-        if: contains(github.event.pull_request.labels.*.name, 'release:minor')
-        run: pnpm version --minor --no-git-tag-version
-
-      - name: バージョンの更新(major)
-        if: contains(github.event.pull_request.labels.*.name, 'release:major')
-        run: pnpm version --major --no-git-tag-version
-
-      - name: 変更を PR にプッシュする
+          BUMP_LEVEL: ${{ inputs.level }}
         run: |
-          git add .
-          git commit -m "v$(grep version package.json | awk -F \" '{print $4}')"
-          git push origin HEAD
+          git fetch --tag
+          CURRENT_VERSION="$(git tag --sort=-v:refname | head -1)"
+          if [[ "${CURRENT_VERSION}" == "" ]]; then
+            CURRENT_VERSION="v0.0.0"
+          fi
+          IFS='.' read -ra arr_version <<<"${CURRENT_VERSION#v}"
+          major="${arr_version[0]}"
+          minor="${arr_version[1]}"
+          patch="${arr_version[2]}"
+          case "${BUMP_LEVEL}" in
+            major)
+              major="$((major + 1))"
+              minor=0
+              patch=0
+              ;;
+            minor)
+              minor="$((minor + 1))"
+              patch=0
+              ;;
+            patch)
+              patch="$((patch + 1))"
+              ;;
+            *)
+              printf "invalid argument: %s" "${BUMP_LEVEL}" >&2
+              exit 1
+              ;;
+          esac
+          echo "VERSION=v${major}.${minor}.${patch}" >> "${GITHUB_ENV}"
+
+      - name: Push version tag
+        run: |
+          MAJOR_VERSION="${VERSION%%.*}"
+          git tag --force --message "${VERSION}" "${VERSION}"
+          git tag --force --message "${VERSION}" "${MAJOR_VERSION}"
+          git push --force origin "${VERSION}"
+          git push --force origin "${MAJOR_VERSION}"
+
+      - name: Update CHANGELOG
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          OLD_BODY=''
+          if [ -e "CHANGELOG.md" ]; then
+            OLD_BODY="$(tail -n +3 CHANGELOG.md)"
+          fi
+          ENDPOINT="/repos/${GITHUB_REPOSITORY}/releases/generate-notes"
+          RELEASE_NOTES="$(gh api "${ENDPOINT}" -f tag_name="${VERSION}" --jq .body)"
+          NEW_BODY="$(tail -n +4 <<<"${RELEASE_NOTES}" | sed 's/## New Contributors/### New Contributors/')"
+          echo -e "# Changelog\n## ${VERSION}\n${NEW_BODY}\n${OLD_BODY}" >CHANGELOG.md
+
+      - name: Format markdown
+        run: |
+          npm install -g prettier@latest
+          prettier --parser="markdown" --write CHANGELOG.md
+
+      - name: Create pull request
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="release-${VERSION}"
+          git switch -c "${BRANCH}"
+          git add CHANGELOG.md
+          git commit -m "Bump up to ${VERSION}"
+          git push origin "${BRANCH}" --force
+          gh pr create --base "${DEFAULT_BRANCH}" --head "${BRANCH}" \
+            --title "Bump up to ${VERSION}" --body "Please merge me"
