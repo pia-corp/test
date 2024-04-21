@@ -39,7 +39,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node_modules-
 
-  workflow_call:
+  workflow_call_create_tag:
     uses: ./.github/workflows/_create_tag.yml
 
   tag:
