@@ -1,0 +1,37 @@
+name: Create Tags on Master Merge
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  create_tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Get merged commit list
+        id: merged_commits
+        run: echo "::set-output name=commits::$(git log --merges --first-parent --pretty=format:"%H" ${GITHUB_SHA}^..${GITHUB_SHA})"
+
+      - name: Count commits from each branch
+        id: commit_counts
+        run: |
+          develop_count=$(git log --pretty=%H ${GITHUB_REF/refs\/heads\/develop/..HEAD} | wc -l)
+          feature_count=$(git log --pretty=%H ${GITHUB_REF/refs\/heads\/feature/..HEAD} | wc -l)
+          hotfix_count=$(git log --pretty=%H ${GITHUB_REF/refs\/heads\/hotfix/..HEAD} | wc -l)
+          echo "::set-output name=develop_count::$develop_count"
+          echo "::set-output name=feature_count::$feature_count"
+          echo "::set-output name=hotfix_count::$hotfix_count"
+
+      - name: Calculate tag
+        id: tag_calculation
+        run: |
+          total_count=$(( ${{ steps.commit_counts.outputs.develop_count }} + (${{ steps.commit_counts.outputs.feature_count }} * 1) + (${{ steps.commit_counts.outputs.hotfix_count }} * 1) ))
+          echo "::set-output name=tag::${{ steps.commit_counts.outputs.develop_count }}.${total_count}"
+
+      - name: Create tag
+        if: steps.merged_commits.outputs.commits != ''
+        run: git tag ${{ steps.tag_calculation.outputs.tag }}
