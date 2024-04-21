@@ -5,6 +5,14 @@ on:
         required: true
         type: string
 
+permissions:
+  contents: write
+  pull-requests: write
+
+defaults:
+  run:
+    shell: bash
+
 jobs:
   workflow_call_release:
     runs-on: ubuntu-latest
