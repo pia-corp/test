@@ -1,0 +1,27 @@
+name: Major version up
+on:
+  push:
+    branches:
+      - main
+  repository_dispatch:
+    types:
+      - posts_update
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+permissions:
+  contents: write
+  pull-requests: write
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  workflow_call_release:
+    uses: ./.github/workflows/_update-release-version.yml
+      with:
+        level: major
