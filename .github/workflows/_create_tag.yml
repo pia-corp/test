@@ -1,9 +1,5 @@
-name: Create Tags on Master Merge
-
 on:
-  push:
-    branches:
-      - master
+  workflow_call_create_tag:
 
 jobs:
   create_tag:

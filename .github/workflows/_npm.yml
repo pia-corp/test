@@ -1,11 +1,11 @@
 on:
-  workflow_call:
+  workflow_call_npm:
 
 jobs:
   cache_npm:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
