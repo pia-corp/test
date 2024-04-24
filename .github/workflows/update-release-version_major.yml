@@ -1,13 +1,13 @@
-name: Major version up
-on:
-  pull_request:
-    branches:
-      - release
-    types:
-      - closed
+# name: Major version up
+# on:
+#   pull_request:
+#     branches:
+#       - release
+#     types:
+#       - closed
 
-jobs:
-  workflow_call_release:
-    uses: ./.github/workflows/_update-release-version.yml
-    with:
-      level: major
+# jobs:
+#   workflow_call_release:
+#     uses: ./.github/workflows/_update-release-version.yml
+#     with:
+#       level: major
