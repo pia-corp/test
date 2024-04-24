@@ -2,7 +2,7 @@ name: Major version up
 on:
   pull_request:
     branches:
-      - main
+      - release
     types:
       - closed
 
