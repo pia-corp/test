@@ -88,21 +88,15 @@ jobs:
           npm install -g prettier@latest
           prettier --parser="markdown" --write CHANGELOG.md
 
-      - name: 変更を PR にプッシュする
+      - name: Create pull request
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git add .
-          git commit -m "v$(grep version package.json | awk -F \" '{print $4}')"
-          git push origin HEAD
-
-      # - name: Create pull request
-      #   env:
-      #     DEFAULT_BRANCH: main
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: |
-      #     BRANCH="release-${VERSION}"
-      #     git switch -c "${BRANCH}"
-      #     git add CHANGELOG.md
-      #     git commit -m "Bump up to ${VERSION}"
-      #     git push origin "${BRANCH}" --force
-      #     gh pr create --base "${DEFAULT_BRANCH}" --head "${BRANCH}" \
-      #       --title "Bump up to ${VERSION}" --body "Please merge me"
+          BRANCH="release-${VERSION}"
+          git switch -c "${BRANCH}"
+          git add CHANGELOG.md
+          git commit -m "Bump up to ${VERSION}"
+          git push origin "${BRANCH}" --force
+          gh pr create --base "${DEFAULT_BRANCH}" --head "${BRANCH}" \
+            --title "Bump up to ${VERSION}" --body "Please merge me"
