@@ -2,8 +2,7 @@ name: Markup write
 on:
   pull_request:
     branches:
-      - feature/**
-      - develop/**
+      - main
 
 jobs:
   call_workflow:
