@@ -2,9 +2,8 @@ name: Markup write
 on:
   pull_request:
     branches:
-      - main
-    paths-ignore:
-      - '**'
+      - feature/**
+      - develop/**
 
 jobs:
   call_workflow:

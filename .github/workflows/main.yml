@@ -5,10 +5,9 @@ on:
       - posts_update
   pull_request:
     branches:
-      - main
+      - release
     types:
       - closed
-
 
 jobs:
   workflow_call_npm:
