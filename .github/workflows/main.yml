@@ -5,9 +5,11 @@ on:
       - posts_update
   pull_request:
     branches:
-      - release
+      - main
     types:
       - closed
+
+      # バージョン判定でデプロイにするのがいいかも
 
 jobs:
   workflow_call_npm:

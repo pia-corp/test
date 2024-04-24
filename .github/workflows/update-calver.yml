@@ -1,0 +1,27 @@
+name: Bump version
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get tag
+        id: tag
+        run: |
+          echo "::set-output name=date::$(date +'%Y%m%d')"
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@6
+        id: bump
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          CUSTOM_TAG: v${{ steps.tag.outputs.date }}-${{ steps.tag.outputs.sha_short }}
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ steps.bump.outputs.new_tag }}
+          tag_name: ${{ steps.bump.outputs.new_tag }}
