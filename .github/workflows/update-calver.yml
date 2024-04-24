@@ -3,10 +3,12 @@ on:
   pull_request:
     branches:
       - main
+    types:
+      - closed
 
 # on:
 #   push:
-#     branches: [ main ]2
+#     branches: [ main ]
 
 jobs:
   create-release-tag:
