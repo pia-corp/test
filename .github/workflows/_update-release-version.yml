@@ -100,3 +100,5 @@ jobs:
           git push origin "${BRANCH}" --force
           gh pr create --base "${DEFAULT_BRANCH}" --head "${BRANCH}" \
             --title "Bump up to ${VERSION}" --body "Please merge me"
+
+          gh pr merge "${DEFAULT_BRANCH}" --delete-branch
