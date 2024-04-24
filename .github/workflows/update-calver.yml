@@ -1,4 +1,4 @@
-name: Bump version2
+name: Bump version
 on:
   pull_request:
     branches:
