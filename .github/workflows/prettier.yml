@@ -1,4 +1,5 @@
-name: Markup write
+name: Markup lint and rewrite
+
 on:
   pull_request:
     branches:
