@@ -14,7 +14,6 @@ jobs:
       - call_workflow
 
     runs-on: ubuntu-latest
-    run: echo "github.head_ref"
     if: github.event_name == 'pull_request' && contains(github.head_ref, 'develop/develop-')
 
     steps:
