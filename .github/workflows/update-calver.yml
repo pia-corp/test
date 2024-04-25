@@ -10,6 +10,10 @@ on:
 jobs:
   create-release-tag:
     runs-on: ubuntu-latest
+    run: echo "github.event_name"
+    run: echo "github.event.action"
+    run: echo "github.event.pull_request.merged"
+    run: echo "github.head_ref"
     if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && contains(github.head_ref, 'develop/develop-')
 
     env:
