@@ -19,15 +19,11 @@ jobs:
       - workflow_call_npm
 
     runs-on: ubuntu-latest
-    # if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && contains(github.head_ref, 'develop/develop-')
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && startsWith(github.head_ref, 'develop')
 
 
     steps:
       - uses: actions/checkout@v4
-      - run: echo "${{ github.event_name }}"
-      - run: echo "${{ github.event.action }}"
-      - run: echo "${{ github.event.pull_request.merged }}"
-      - run: echo "${{ github.head_ref }}"
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
