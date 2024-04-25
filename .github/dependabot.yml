@@ -13,3 +13,4 @@ updates:
       dependencies:
         patterns:
           - "*"
+    target-branch: "develop"
