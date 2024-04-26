@@ -16,7 +16,7 @@ jobs:
       contents: write
 
     name: Run PR Agent
-    if: ${{ github.event.sender.type != 'Bot' }}
+    if: ${{ github.event.sender.type != 'Bot' && github.event.issue.pull_request }}
     steps:
       - name: PR Agent action step
         id: pragent
