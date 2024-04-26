@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/assets/icon-180x180.png">
+  <img src="images/assets/logo.svg">
 </p>
 
 # ファイルの取得
