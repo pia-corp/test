@@ -1,0 +1,14 @@
+name: Handle PR from Develop Branch
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  error_handling:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if PR is from develop branch
+        if: github.event.pull_request.base.ref != 'develop'
+        run: exit 1
