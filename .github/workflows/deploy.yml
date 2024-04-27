@@ -7,8 +7,6 @@ on:
     types:
       - closed
 
-env: {NODE_VERSION: 20}
-
 jobs:
   workflow_call_npm:
     uses: ./.github/workflows/_npm.yml
@@ -32,7 +30,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '${{ env.NODE_VERSION }}'
+          node-version: '${{ fromJSON(needs.env.outputs.env).NODE_VERSION }}'
 
       - name: Restore node_modules
         uses: actions/cache@v4
