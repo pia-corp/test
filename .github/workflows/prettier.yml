@@ -5,15 +5,25 @@ on:
     branches:
       - main
 
+permissions:
+  pull-requests: read
+
 jobs:
   call_workflow:
     uses: ./.github/workflows/_npm.yml
+    permissions:
+      pull-requests: read
 
   linter:
     needs:
       - call_workflow
 
     runs-on: ubuntu-latest
+
+    permissions:
+      pull-requests: write
+
+    timeout-minutes: 5
 
     steps:
       - uses: actions/checkout@v4
@@ -23,7 +33,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '${{ fromJSON(needs.env.outputs.env).NODE_VERSION }}'
 
       - name: Restore node_modules
         uses: actions/cache@v4

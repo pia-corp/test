@@ -5,9 +5,15 @@ on:
     branches:
       - main
 
+permissions:
+  pull-requests: read
+
 jobs:
   error_handling:
     runs-on: ubuntu-latest
+
+    timeout-minutes: 3
+
     steps:
       - name: Check if PR is from develop branch
         if: github.event_name == 'pull_request' && !startsWith(github.head_ref, 'develop')

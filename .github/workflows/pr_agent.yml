@@ -1,4 +1,4 @@
-name: pr agent
+name: PR Agent for Pull Requests
 
 on:
   pull_request:
@@ -14,6 +14,8 @@ jobs:
       issues: write
       pull-requests: write
       contents: write
+
+    timeout-minutes: 5
 
     name: Run PR Agent
     if: ${{ github.event.sender.type != 'Bot' }}

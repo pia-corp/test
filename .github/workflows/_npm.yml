@@ -3,9 +3,16 @@ name: npm cache
 on:
   workflow_call:
 
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
   cache_npm:
     runs-on: ubuntu-latest
+
+    timeout-minutes: 5
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -13,7 +20,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version:  '${{ fromJSON(needs.env.outputs.env).NODE_VERSION }}'
           cache: npm
 
       - name: Cache node_modules
