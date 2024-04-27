@@ -1,14 +1,13 @@
-name: Deploy to develop
+name: Deploy to Develop Branch
 
 on:
-  repository_dispatch:
-    types:
-      - posts_update
   pull_request:
     branches:
       - main
     types:
       - closed
+
+env: {NODE_VERSION: 20}
 
 jobs:
   workflow_call_npm:
@@ -21,6 +20,11 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && startsWith(github.head_ref, 'develop')
 
+    permissions:
+      contents: write
+      pull-requests: write
+
+    timeout-minutes: 5
 
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +32,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '${{ env.NODE_VERSION }}'
 
       - name: Restore node_modules
         uses: actions/cache@v4

@@ -2,10 +2,14 @@
   <img src="images/assets/logo.svg">
 </p>
 
-[![npm version](https://badge.fury.io/js/npm.svg)](https://badge.fury.io/js/npm)
-[![Markup lint and rewrite](https://github.com/pia-corp/test/actions/workflows/prettier.yml/badge.svg)](https://github.com/pia-corp/test/actions/workflows/prettier.yml)
-[![Deploy to develop](https://github.com/pia-corp/test/actions/workflows/deploy.yml/badge.svg)](https://github.com/pia-corp/test/actions/workflows/deploy.yml)
-[![Actionlint](https://github.com/pia-corp/test/actions/workflows/actionlint.yml/badge.svg)](https://github.com/pia-corp/test/actions/workflows/actionlint.yml)
+[![npm version](https://img.shields.io/npm/v/react.svg?style=flat)](https://www.npmjs.com/package/react)
+[![Linter](https://github.com/pia-corp/test/actions/workflows/prettier.yml/badge.svg)](https://github.com/pia-corp/test/actions/workflows/prettier.yml)
+[![deploy](https://github.com/pia-corp/test/actions/workflows/deploy.yml/badge.svg)](https://github.com/pia-corp/test/actions/workflows/deploy.yml)
+
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS](https://img.shields.io/badge/CSS-239120?&style=for-the-badge&logo=css3&logoColor=white)
+![JAVASCRIPT](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![Next.js](https://img.shields.io/badge/-Next.js-000000.svg?logo=next.js&style=for-the-badge)
 
 # ファイルの取得
 
