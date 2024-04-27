@@ -2,6 +2,7 @@
   <img src="images/assets/logo.svg">
 </p>
 
+[![npm version](https://badge.fury.io/js/npm.svg)](https://badge.fury.io/js/npm)
 [![Markup lint and rewrite](https://github.com/pia-corp/test/actions/workflows/prettier.yml/badge.svg)](https://github.com/pia-corp/test/actions/workflows/prettier.yml)
 [![Deploy to develop](https://github.com/pia-corp/test/actions/workflows/deploy.yml/badge.svg)](https://github.com/pia-corp/test/actions/workflows/deploy.yml)
 [![Actionlint](https://github.com/pia-corp/test/actions/workflows/actionlint.yml/badge.svg)](https://github.com/pia-corp/test/actions/workflows/actionlint.yml)
