@@ -1,6 +1,10 @@
-<p align="center">
+<p align="center" style="width:50%;">
   <img src="images/assets/logo.svg">
 </p>
+
+[![Markup lint and rewrite](https://github.com/pia-corp/test/actions/workflows/prettier.yml/badge.svg)](https://github.com/pia-corp/test/actions/workflows/prettier.yml)
+[![Deploy to develop](https://github.com/pia-corp/test/actions/workflows/deploy.yml/badge.svg)](https://github.com/pia-corp/test/actions/workflows/deploy.yml)
+[![Actionlint](https://github.com/pia-corp/test/actions/workflows/actionlint.yml/badge.svg)](https://github.com/pia-corp/test/actions/workflows/actionlint.yml)
 
 # ファイルの取得
 
