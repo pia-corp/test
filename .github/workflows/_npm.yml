@@ -3,13 +3,12 @@ name: npm cache
 on:
   workflow_call:
     inputs:
-      node_version: '${{ fromJSON(needs.env.outputs.env).NODE_VERSION }}'
+      node_version:
         required: true
 
 permissions:
   contents: write
   pull-requests: read
-  checks: write
 
 jobs:
   cache_npm:
