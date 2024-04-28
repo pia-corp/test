@@ -10,7 +10,8 @@ on:
 jobs:
   workflow_call_npm:
     uses: ./.github/workflows/_npm.yml
-
+    with:
+      node_version: '${{ fromJSON(needs.env.outputs.env).NODE_VERSION }}'
   upload:
     needs:
       - workflow_call_npm
