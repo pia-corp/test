@@ -5,6 +5,7 @@ on:
     inputs:
       node_version:
         required: true
+        types: [opened, synchronize, reopend]
 
 permissions:
   contents: write
