@@ -11,10 +11,11 @@ permissions:
 jobs:
   call_workflow:
     uses: ./.github/workflows/_npm.yml
+    with:
+      node_version: '${{ fromJSON(needs.env.outputs.env).NODE_VERSION }}'
     permissions:
       pull-requests: read
       contents: write
-      checks: write
 
   linter:
     needs:
