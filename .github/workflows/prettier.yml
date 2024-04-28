@@ -13,6 +13,7 @@ jobs:
     uses: ./.github/workflows/_npm.yml
     permissions:
       pull-requests: read
+      contents: read
 
   linter:
     needs:
