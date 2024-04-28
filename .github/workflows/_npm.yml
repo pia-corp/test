@@ -3,13 +3,12 @@ name: npm cache
 on:
   workflow_call:
     inputs:
-      node_version: '${{ fromJSON(needs.env.outputs.env).NODE_VERSION }}'
+      node_version:
         required: true
 
 permissions:
   contents: write
   pull-requests: read
-  checks: write
 
 jobs:
   cache_npm:
@@ -24,7 +23,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version:  ${{ inputs.node_version }}
+          node-version: ${{ inputs.node_version }}
           cache: npm
 
       - name: Cache node_modules
