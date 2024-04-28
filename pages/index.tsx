@@ -1,31 +1,24 @@
 import Link from "next/link";
-import { client } from "../libs/client";
-import { Pagination } from "../components/Pagination";
-import styles from "../styles/Home.module.css";
+import { client } from "@/libs/client";
+import { INewsProps, INewsItem } from '@/interface/index';
+import { GetStaticProps } from 'next';
+import styles from "@/styles/Home.module.css";
 
-interface NewsItem {
-  id: string;
-  title: string;
-}
+export const getStaticProps: GetStaticProps = async () => {
+  const data: INewsProps = await client.get({ endpoint: 'news', queries: { offset: 0, limit: parseInt(process.env.PER_PAGE as string) }});
 
-interface NewsData {
-  contents: NewsItem[];
-  totalCount: number;
-}
-
-export const getStaticProps = async () => {
-  const data: NewsData = await client.get({ endpoint: 'news', queries: { offset: 0, limit: 5 }});
   return {
     props: {
       news: data.contents,
+      limit: data.limit,
       totalCount: data.totalCount
     }
   };
 };
 
-export default function Home({ news }: { news: NewsItem[] }, totalCount: number) {
+export default function Home ({ news }: { news:INewsItem[] }) {
   return (
-		<main className={styles.main}>
+    <main className={styles.main}>
       <div>
         {news.map((newsItem) => (
           <li key={newsItem.id}>
@@ -35,7 +28,7 @@ export default function Home({ news }: { news: NewsItem[] }, totalCount: number)
           </li>
         ))}
       </div>
-  		{/* <Pagination totalCount={totalCount} /> */}
+      <Link href={`news/page/1`}>一覧</Link>
     </main>
   );
-}
+};
