@@ -2,7 +2,6 @@
   "rules": {
     "attr-duplication": true,
     "attr-value-quotes": "double",
-    "case-sensitive-attr-name": "lower",
     "case-sensitive-tag-name": "lower",
     "character-reference": false,
     "class-naming": false,
@@ -14,7 +13,11 @@
     "heading-levels": false,
     "id-duplication": true,
     "ineffective-attr": false,
-    "invalid-attr": false,
+    "invalid-attr": {
+      "options": {
+        "ignoreAttrNamePrefix": "charSet"
+      }
+    },
     "label-has-control": false,
     "landmark-roles": false,
     "neighbor-popovers": false,
@@ -49,5 +52,5 @@
       }
     }
   ],
-  "excludeFiles": ["./out/contact/index.html"]
+  "excludeFiles": ["./out/contact/index.html"],
 }

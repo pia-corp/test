@@ -1,0 +1,23 @@
+{
+    "pageProps": {
+        "news": {
+            "id": "osyykx4_lh",
+            "createdAt": "2024-04-27T08:06:18.080Z",
+            "updatedAt": "2024-04-27T08:06:18.080Z",
+            "publishedAt": "2024-04-27T08:06:18.080Z",
+            "revisedAt": "2024-04-27T08:06:18.080Z",
+            "title": "test7",
+            "body": "<p>test7</p>",
+            "external": false,
+            "category": {
+                "id": "sq7atso78",
+                "createdAt": "2024-04-12T14:54:28.512Z",
+                "updatedAt": "2024-04-12T14:54:28.512Z",
+                "publishedAt": "2024-04-12T14:54:28.512Z",
+                "revisedAt": "2024-04-12T14:54:28.512Z",
+                "name": "molak"
+            }
+        }
+    },
+    "__N_SSG": true
+}

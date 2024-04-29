@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CustomHead from '@/components/head';
 import { client } from "@/libs/client";
 import { INewsProps, INewsItem } from '@/interface/index';
 import { GetStaticProps } from 'next';
@@ -17,18 +18,24 @@ export const getStaticProps: GetStaticProps = async () => {
 };
 
 export default function Home ({ news }: { news:INewsItem[] }) {
+  const title = "これはWebページのタイトル";
   return (
-    <main className={styles.main}>
-      <div>
-        {news.map((newsItem) => (
-          <li key={newsItem.id}>
-            <Link href={`news/${newsItem.id}`}>
-              {newsItem.title}
-            </Link>
-          </li>
-        ))}
-      </div>
-      <Link href={`news/page/1`}>一覧</Link>
-    </main>
+    <>
+      <CustomHead title={title} />
+      <main className={styles.main}>
+        <div>
+          <ul>
+            {news.map((newsItem) => (
+              <li key={newsItem.id}>
+                <Link href={`news/${newsItem.id}`}>
+                  {newsItem.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <Link href={`news/page/1`}>一覧</Link>
+      </main>
+    </>
   );
 };

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import CustomHead from '@/components/head';
 import { Pagination } from '@/components/Pagination';
 import { client } from "@/libs/client";
 import { GetStaticPropsContext } from 'next';
@@ -12,21 +13,25 @@ interface HomeProps {
 }
 
 export default function BlogPageId({ news, totalCount, current_page }: HomeProps) {
+  const title = "これはWebページのタイトル";
   return (
-    <main className={styles.main}>
-      <div>
-        <ul>
-          {news.map(news => (
-            <li key={news.id}>
-              <Link href={`/news/${news.id}`}>{news.title}</Link>
-            </li>
-          ))}
-        </ul>
-        <Pagination totalCount={totalCount} current_page={current_page} />
-        <p>Total Item: {totalCount}</p>
-        <p>Current page: {current_page}</p>
-      </div>
-    </main>
+    <>
+      <CustomHead title={title} />
+      <main className={styles.main}>
+        <div>
+          <ul>
+            {news.map(news => (
+              <li key={news.id}>
+                <Link href={`/news/${news.id}`}>{news.title}</Link>
+              </li>
+            ))}
+          </ul>
+          <Pagination totalCount={totalCount} current_page={current_page} />
+          <p>Total Item: {totalCount}</p>
+          <p>Current page: {current_page}</p>
+        </div>
+      </main>
+    </>
   );
 }
 
@@ -42,7 +47,8 @@ export const getStaticPaths = async () => {
 // データを取得
 export const getStaticProps = async (context: GetStaticPropsContext) => {
 	const id = context.params?.id;
-  const current_page:number = parseInt(id);
+  // const current_page:number = parseInt(id);
+  const current_page: number = typeof id === 'string' ? parseInt(id) : 1;
 	let data;
   // console.log(id); // current page
   // console.log(data);

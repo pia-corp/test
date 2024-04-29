@@ -1,0 +1,189 @@
+{
+    "pageProps": {
+        "news": [
+            {
+                "id": "trz6rxc9_4hv",
+                "createdAt": "2024-04-28T02:50:18.231Z",
+                "updatedAt": "2024-04-28T02:50:18.231Z",
+                "publishedAt": "2024-04-28T02:50:18.231Z",
+                "revisedAt": "2024-04-28T02:50:18.231Z",
+                "title": "test15",
+                "body": "<p>test15</p>",
+                "external": false,
+                "category": {
+                    "id": "rrxee8qlae",
+                    "createdAt": "2024-03-08T06:49:26.172Z",
+                    "updatedAt": "2024-03-08T06:49:26.172Z",
+                    "publishedAt": "2024-03-08T06:49:26.172Z",
+                    "revisedAt": "2024-03-08T06:49:26.172Z",
+                    "name": "テクノロジー"
+                }
+            },
+            {
+                "id": "18jevod--7-y",
+                "createdAt": "2024-04-28T02:50:06.141Z",
+                "updatedAt": "2024-04-28T02:50:06.141Z",
+                "publishedAt": "2024-04-28T02:50:06.141Z",
+                "revisedAt": "2024-04-28T02:50:06.141Z",
+                "title": "test14",
+                "body": "<p>test14</p>",
+                "external": false,
+                "category": {
+                    "id": "rrxee8qlae",
+                    "createdAt": "2024-03-08T06:49:26.172Z",
+                    "updatedAt": "2024-03-08T06:49:26.172Z",
+                    "publishedAt": "2024-03-08T06:49:26.172Z",
+                    "revisedAt": "2024-03-08T06:49:26.172Z",
+                    "name": "テクノロジー"
+                }
+            },
+            {
+                "id": "1mjtm8xu0e",
+                "createdAt": "2024-04-28T02:49:54.101Z",
+                "updatedAt": "2024-04-28T02:49:54.101Z",
+                "publishedAt": "2024-04-28T02:49:54.101Z",
+                "revisedAt": "2024-04-28T02:49:54.101Z",
+                "title": "test13",
+                "body": "<p>test13</p>",
+                "external": false,
+                "category": {
+                    "id": "fwocygh--k4",
+                    "createdAt": "2024-03-08T06:49:26.295Z",
+                    "updatedAt": "2024-03-08T06:49:26.295Z",
+                    "publishedAt": "2024-03-08T06:49:26.295Z",
+                    "revisedAt": "2024-03-08T06:49:26.295Z",
+                    "name": "チュートリアル"
+                }
+            },
+            {
+                "id": "ghh_r29u9",
+                "createdAt": "2024-04-28T02:49:42.348Z",
+                "updatedAt": "2024-04-28T02:49:42.348Z",
+                "publishedAt": "2024-04-28T02:49:42.348Z",
+                "revisedAt": "2024-04-28T02:49:42.348Z",
+                "title": "test12",
+                "body": "<p>test12</p>",
+                "external": false,
+                "category": {
+                    "id": "fwocygh--k4",
+                    "createdAt": "2024-03-08T06:49:26.295Z",
+                    "updatedAt": "2024-03-08T06:49:26.295Z",
+                    "publishedAt": "2024-03-08T06:49:26.295Z",
+                    "revisedAt": "2024-03-08T06:49:26.295Z",
+                    "name": "チュートリアル"
+                }
+            },
+            {
+                "id": "368ej7d2l",
+                "createdAt": "2024-04-28T02:49:30.672Z",
+                "updatedAt": "2024-04-28T02:49:30.672Z",
+                "publishedAt": "2024-04-28T02:49:30.672Z",
+                "revisedAt": "2024-04-28T02:49:30.672Z",
+                "title": "test11",
+                "body": "<p>test11</p>",
+                "external": false,
+                "category": {
+                    "id": "6rl7tlh50gl",
+                    "createdAt": "2024-03-08T06:49:26.490Z",
+                    "updatedAt": "2024-03-08T06:49:26.490Z",
+                    "publishedAt": "2024-03-08T06:49:26.490Z",
+                    "revisedAt": "2024-03-08T06:49:26.490Z",
+                    "name": "更新情報"
+                }
+            },
+            {
+                "id": "ew5kd-u4m",
+                "createdAt": "2024-04-28T02:49:20.129Z",
+                "updatedAt": "2024-04-28T02:49:20.129Z",
+                "publishedAt": "2024-04-28T02:49:20.129Z",
+                "revisedAt": "2024-04-28T02:49:20.129Z",
+                "title": "test10",
+                "body": "<p>test10</p>",
+                "external": false,
+                "category": {
+                    "id": "8-bqt7g2tv",
+                    "createdAt": "2024-04-13T17:20:13.264Z",
+                    "updatedAt": "2024-04-13T17:20:13.264Z",
+                    "publishedAt": "2024-04-13T17:20:13.264Z",
+                    "revisedAt": "2024-04-13T17:20:13.264Z",
+                    "name": "topards"
+                }
+            },
+            {
+                "id": "6-1emj13b",
+                "createdAt": "2024-04-28T02:49:06.530Z",
+                "updatedAt": "2024-04-28T02:49:06.530Z",
+                "publishedAt": "2024-04-28T02:49:06.530Z",
+                "revisedAt": "2024-04-28T02:49:06.530Z",
+                "title": "test9",
+                "body": "<p>test9</p>",
+                "external": false,
+                "category": {
+                    "id": "sq7atso78",
+                    "createdAt": "2024-04-12T14:54:28.512Z",
+                    "updatedAt": "2024-04-12T14:54:28.512Z",
+                    "publishedAt": "2024-04-12T14:54:28.512Z",
+                    "revisedAt": "2024-04-12T14:54:28.512Z",
+                    "name": "molak"
+                }
+            },
+            {
+                "id": "rwlepmaplrg",
+                "createdAt": "2024-04-28T02:48:52.480Z",
+                "updatedAt": "2024-04-28T02:48:52.480Z",
+                "publishedAt": "2024-04-28T02:48:52.480Z",
+                "revisedAt": "2024-04-28T02:48:52.480Z",
+                "title": "test8",
+                "body": "<p>test8</p>",
+                "external": false,
+                "category": {
+                    "id": "sq7atso78",
+                    "createdAt": "2024-04-12T14:54:28.512Z",
+                    "updatedAt": "2024-04-12T14:54:28.512Z",
+                    "publishedAt": "2024-04-12T14:54:28.512Z",
+                    "revisedAt": "2024-04-12T14:54:28.512Z",
+                    "name": "molak"
+                }
+            },
+            {
+                "id": "osyykx4_lh",
+                "createdAt": "2024-04-27T08:06:18.080Z",
+                "updatedAt": "2024-04-27T08:06:18.080Z",
+                "publishedAt": "2024-04-27T08:06:18.080Z",
+                "revisedAt": "2024-04-27T08:06:18.080Z",
+                "title": "test7",
+                "body": "<p>test7</p>",
+                "external": false,
+                "category": {
+                    "id": "sq7atso78",
+                    "createdAt": "2024-04-12T14:54:28.512Z",
+                    "updatedAt": "2024-04-12T14:54:28.512Z",
+                    "publishedAt": "2024-04-12T14:54:28.512Z",
+                    "revisedAt": "2024-04-12T14:54:28.512Z",
+                    "name": "molak"
+                }
+            },
+            {
+                "id": "pioeltd9fgwm",
+                "createdAt": "2024-04-27T05:39:18.618Z",
+                "updatedAt": "2024-04-27T05:39:18.618Z",
+                "publishedAt": "2024-04-27T05:39:18.618Z",
+                "revisedAt": "2024-04-27T05:39:18.618Z",
+                "title": "test6",
+                "body": "<p>test6</p>",
+                "external": false,
+                "category": {
+                    "id": "rrxee8qlae",
+                    "createdAt": "2024-03-08T06:49:26.172Z",
+                    "updatedAt": "2024-03-08T06:49:26.172Z",
+                    "publishedAt": "2024-03-08T06:49:26.172Z",
+                    "revisedAt": "2024-03-08T06:49:26.172Z",
+                    "name": "テクノロジー"
+                }
+            }
+        ],
+        "limit": 10,
+        "totalCount": 15
+    },
+    "__N_SSG": true
+}

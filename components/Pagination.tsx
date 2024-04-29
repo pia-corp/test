@@ -1,17 +1,21 @@
 import Link from 'next/link';
 import { GetStaticProps } from 'next';
-import { PAGE_NAVI } from "@/const/setting";
+// import { PAGE_NAVI } from "@/const/setting";
 // import { IPaginationProps } from "@/interface/Pagination";
 import styles_pagination from "@/styles/pagination.module.css";
 
+interface Pagination {
+  totalCount: number;
+  current_page: number;
+}
 
-export const Pagination = ({ totalCount, current_page }) => {
+export const Pagination = ({ totalCount, current_page }: Pagination) => {
   const ITEMS_PER_PAGE = 2;
   const total_pages = Math.ceil(totalCount / ITEMS_PER_PAGE);
   // console.log(typeof totalCount) // number
   // console.log(typeof current_page) // string
 
-  const range = (start, end) =>
+  const range = (start: number, end: number) =>
         [...Array(end - start + 1)].map((_, i) => start + i)
 
   const generateListItem = (page_number: number) => {
