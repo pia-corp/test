@@ -1,0 +1,23 @@
+name: test2
+on:
+  workflow_dispatch:
+
+jobs:
+  repo:
+    runs-on: ubuntu-latest
+    steps:
+      # リポジトリレベルの変数を参照
+      - run: echo ${{ vars.GIT_ACTIONS_NODE_VER }}
+
+  env:
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      # 環境レベルの変数を参照
+      - run: echo ${{ vars.GIT_ACTIONS_NODE_VER }}
+
+  org:
+    runs-on: ubuntu-latest
+    steps:
+      # 組織レベルの変数を参照
+      - run: echo ${{ vars.GIT_ACTIONS_NODE_VER }}
