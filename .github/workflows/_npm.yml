@@ -7,10 +7,6 @@ on:
         type: string
         required: true
 
-permissions:
-  contents: write
-  pull-requests: read
-
 jobs:
   cache_npm:
     runs-on: ubuntu-latest
