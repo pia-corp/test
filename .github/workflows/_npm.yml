@@ -4,8 +4,8 @@ on:
   workflow_call:
     inputs:
       node_version:
+        type: string
         required: true
-        types: [opened, synchronize, reopend]
 
 permissions:
   contents: write
@@ -24,7 +24,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ inputs.node_version }}
+          node-version: '${{ inputs.node_version }}'
           cache: npm
 
       - name: Cache node_modules
