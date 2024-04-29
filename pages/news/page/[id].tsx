@@ -42,7 +42,8 @@ export const getStaticPaths = async () => {
 // データを取得
 export const getStaticProps = async (context: GetStaticPropsContext) => {
 	const id = context.params?.id;
-  const current_page:number = parseInt(id);
+  // const current_page:number = parseInt(id);
+  const current_page: number = typeof id === 'string' ? parseInt(id) : 1;
 	let data;
   // console.log(id); // current page
   // console.log(data);
