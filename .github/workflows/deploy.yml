@@ -22,15 +22,16 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.0.2
         with:
           node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
 
       - name: Restore node_modules
-        uses: actions/cache@v4
+        uses: actions/cache@v4.0.2
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
