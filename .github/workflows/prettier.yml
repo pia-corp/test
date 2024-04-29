@@ -27,7 +27,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: GIT_ACTIONS_NODE_VER
+          node-version: env.GIT_ACTIONS_NODE_VER
 
       - name: Restore node_modules
         uses: actions/cache@v4

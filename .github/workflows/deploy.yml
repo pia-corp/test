@@ -11,7 +11,7 @@ jobs:
   workflow_call_npm:
     uses: ./.github/workflows/_npm.yml
     with:
-      node_version: GIT_ACTIONS_NODE_VER
+      node_version: env.GIT_ACTIONS_NODE_VER
   upload:
     needs:
       - workflow_call_npm
@@ -27,7 +27,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: GIT_ACTIONS_NODE_VER
+          node-version: env.GIT_ACTIONS_NODE_VER
 
       - name: Restore node_modules
         uses: actions/cache@v4
