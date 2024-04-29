@@ -13,10 +13,11 @@ interface HomeProps {
 }
 
 export default function BlogPageId({ news, totalCount, current_page }: HomeProps) {
-  const title = "これはWebページのタイトル";
   return (
     <>
-      <CustomHead title={title} />
+      {news.map(news => (
+        <CustomHead title={news.title} />
+      ))}
       <main className={styles.main}>
         <div>
           <ul>
