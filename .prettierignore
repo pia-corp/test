@@ -7,7 +7,7 @@ test
 *.md
 
 # すべての HTML ファイルを無視：
-**/contact/index.html
+**/news/.html
 
 # .で始まるすべてのファイルを無視：
 .*
