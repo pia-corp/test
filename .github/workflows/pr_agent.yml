@@ -3,6 +3,8 @@ name: PR Agent for Pull Requests
 on:
   pull_request:
     types: [opened, reopened, synchronize]
+  issue_comment:
+    types: [created, edited]
   push:
     branches:
       - main
