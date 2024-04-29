@@ -6,9 +6,11 @@ interface CustomHeadProps {
 
 const CustomHead = ({ title }: CustomHeadProps) => {
   return (
-    <Head>
-      <title>{title} | サイト名</title>
-    </Head>
+		<>
+			<Head>
+				<title>{title} | サイト名</title>
+			</Head>
+		</>
   )
 }
 

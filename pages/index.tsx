@@ -24,13 +24,15 @@ export default function Home ({ news }: { news:INewsItem[] }) {
       <CustomHead title={title} />
       <main className={styles.main}>
         <div>
-          {news.map((newsItem) => (
-            <li key={newsItem.id}>
-              <Link href={`news/${newsItem.id}`}>
-                {newsItem.title}
-              </Link>
-            </li>
-          ))}
+          <ul>
+            {news.map((newsItem) => (
+              <li key={newsItem.id}>
+                <Link href={`news/${newsItem.id}`}>
+                  {newsItem.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
         <Link href={`news/page/1`}>一覧</Link>
       </main>
