@@ -15,6 +15,8 @@ jobs:
     timeout-minutes: 3
 
     steps:
+        run: echo "${{ vars.GIT_ACTIONS_NODE_VER }}"
+        run: echo "`${{ vars.GIT_ACTIONS_NODE_VER }}`"
       - name: Check if PR is from develop branch
         if: github.event_name == 'pull_request' && !startsWith(github.head_ref, 'develop')
         run: exit 1
