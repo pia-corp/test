@@ -9,7 +9,7 @@ jobs:
   call_workflow:
     uses: ./.github/workflows/_npm.yml
     with:
-      node_version: '${{ fromJSON(needs.env.outputs.env).NODE_VERSION }}'
+      node_version: `${{ vars.GIT_ACTIONS_NODE_VER }}`
 
   linter:
     needs:
@@ -27,7 +27,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '${{ fromJSON(needs.env.outputs.env).NODE_VERSION }}'
+          node-version: `${{ vars.GIT_ACTIONS_NODE_VER }}`
 
       - name: Restore node_modules
         uses: actions/cache@v4
