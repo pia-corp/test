@@ -1,4 +1,5 @@
 import { client } from "@/libs/client";
+import CustomHead from '@/components/head';
 import sanitize from 'sanitize-html';
 import styles from "@/styles/Home.module.css";
 import { GetStaticPropsContext, GetStaticPropsResult } from 'next';
@@ -35,12 +36,16 @@ export const getStaticPaths = async () => {
 
 export default function NewsId({ news }: Props) {
   const sanitizedHtml = sanitize(news.body);
+  const title = "これはWebページのタイトル";
   return (
-    <main className={styles.main}>
-      <h1 className={styles.title}>{news.title}</h1>
-      <p className={styles.publishedAt}>{news.publishedAt}</p>
-      <div className={styles.body} dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />
-    </main>
+    <>
+      <CustomHead title={title} />
+      <main className={styles.main}>
+        <h1 className={styles.title}>{news.title}</h1>
+        <p className={styles.publishedAt}>{news.publishedAt}</p>
+        <div className={styles.body} dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />
+      </main>
+    </>
   )
 };
 

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import CustomHead from '@/components/head';
 import { Pagination } from '@/components/Pagination';
 import { client } from "@/libs/client";
 import { GetStaticPropsContext } from 'next';
@@ -12,21 +13,25 @@ interface HomeProps {
 }
 
 export default function BlogPageId({ news, totalCount, current_page }: HomeProps) {
+  const title = "これはWebページのタイトル";
   return (
-    <main className={styles.main}>
-      <div>
-        <ul>
-          {news.map(news => (
-            <li key={news.id}>
-              <Link href={`/news/${news.id}`}>{news.title}</Link>
-            </li>
-          ))}
-        </ul>
-        <Pagination totalCount={totalCount} current_page={current_page} />
-        <p>Total Item: {totalCount}</p>
-        <p>Current page: {current_page}</p>
-      </div>
-    </main>
+    <>
+      <CustomHead title={title} />
+      <main className={styles.main}>
+        <div>
+          <ul>
+            {news.map(news => (
+              <li key={news.id}>
+                <Link href={`/news/${news.id}`}>{news.title}</Link>
+              </li>
+            ))}
+          </ul>
+          <Pagination totalCount={totalCount} current_page={current_page} />
+          <p>Total Item: {totalCount}</p>
+          <p>Current page: {current_page}</p>
+        </div>
+      </main>
+    </>
   );
 }
 
