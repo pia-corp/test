@@ -1,6 +1,8 @@
 name: PR Agent for Pull Requests
 
 on:
+  pull_request:
+    types: [opened, reopened, synchronize]
   push:
     branches:
       - main
