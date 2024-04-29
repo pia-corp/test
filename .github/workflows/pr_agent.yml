@@ -7,7 +7,7 @@ on:
     types: [created, edited]
   push:
     branches:
-      - develop
+      - 'develop*'
 
 jobs:
   pr_agent_job:
