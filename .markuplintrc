@@ -15,7 +15,7 @@
     "ineffective-attr": false,
     "invalid-attr": {
       "options": {
-        "ignoreAttrNamePrefix"?: "charSet"
+        "ignoreAttrNamePrefix": "charSet"
       }
     },
     "label-has-control": false,
