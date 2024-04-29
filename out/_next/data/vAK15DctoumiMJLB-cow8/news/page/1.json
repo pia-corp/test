@@ -1,1 +1,45 @@
-{"pageProps":{"news":[{"id":"trz6rxc9_4hv","createdAt":"2024-04-28T02:50:18.231Z","updatedAt":"2024-04-28T02:50:18.231Z","publishedAt":"2024-04-28T02:50:18.231Z","revisedAt":"2024-04-28T02:50:18.231Z","title":"test15","body":"<p>test15</p>","external":false,"category":{"id":"rrxee8qlae","createdAt":"2024-03-08T06:49:26.172Z","updatedAt":"2024-03-08T06:49:26.172Z","publishedAt":"2024-03-08T06:49:26.172Z","revisedAt":"2024-03-08T06:49:26.172Z","name":"テクノロジー"}},{"id":"18jevod--7-y","createdAt":"2024-04-28T02:50:06.141Z","updatedAt":"2024-04-28T02:50:06.141Z","publishedAt":"2024-04-28T02:50:06.141Z","revisedAt":"2024-04-28T02:50:06.141Z","title":"test14","body":"<p>test14</p>","external":false,"category":{"id":"rrxee8qlae","createdAt":"2024-03-08T06:49:26.172Z","updatedAt":"2024-03-08T06:49:26.172Z","publishedAt":"2024-03-08T06:49:26.172Z","revisedAt":"2024-03-08T06:49:26.172Z","name":"テクノロジー"}}],"totalCount":15,"current_page":1},"__N_SSG":true}
+{
+    "pageProps": {
+        "news": [
+            {
+                "id": "trz6rxc9_4hv",
+                "createdAt": "2024-04-28T02:50:18.231Z",
+                "updatedAt": "2024-04-28T02:50:18.231Z",
+                "publishedAt": "2024-04-28T02:50:18.231Z",
+                "revisedAt": "2024-04-28T02:50:18.231Z",
+                "title": "test15",
+                "body": "<p>test15</p>",
+                "external": false,
+                "category": {
+                    "id": "rrxee8qlae",
+                    "createdAt": "2024-03-08T06:49:26.172Z",
+                    "updatedAt": "2024-03-08T06:49:26.172Z",
+                    "publishedAt": "2024-03-08T06:49:26.172Z",
+                    "revisedAt": "2024-03-08T06:49:26.172Z",
+                    "name": "テクノロジー"
+                }
+            },
+            {
+                "id": "18jevod--7-y",
+                "createdAt": "2024-04-28T02:50:06.141Z",
+                "updatedAt": "2024-04-28T02:50:06.141Z",
+                "publishedAt": "2024-04-28T02:50:06.141Z",
+                "revisedAt": "2024-04-28T02:50:06.141Z",
+                "title": "test14",
+                "body": "<p>test14</p>",
+                "external": false,
+                "category": {
+                    "id": "rrxee8qlae",
+                    "createdAt": "2024-03-08T06:49:26.172Z",
+                    "updatedAt": "2024-03-08T06:49:26.172Z",
+                    "publishedAt": "2024-03-08T06:49:26.172Z",
+                    "revisedAt": "2024-03-08T06:49:26.172Z",
+                    "name": "テクノロジー"
+                }
+            }
+        ],
+        "totalCount": 15,
+        "current_page": 1
+    },
+    "__N_SSG": true
+}

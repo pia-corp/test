@@ -1,1 +1,45 @@
-{"pageProps":{"news":[{"id":"368ej7d2l","createdAt":"2024-04-28T02:49:30.672Z","updatedAt":"2024-04-28T02:49:30.672Z","publishedAt":"2024-04-28T02:49:30.672Z","revisedAt":"2024-04-28T02:49:30.672Z","title":"test11","body":"<p>test11</p>","external":false,"category":{"id":"6rl7tlh50gl","createdAt":"2024-03-08T06:49:26.490Z","updatedAt":"2024-03-08T06:49:26.490Z","publishedAt":"2024-03-08T06:49:26.490Z","revisedAt":"2024-03-08T06:49:26.490Z","name":"更新情報"}},{"id":"ew5kd-u4m","createdAt":"2024-04-28T02:49:20.129Z","updatedAt":"2024-04-28T02:49:20.129Z","publishedAt":"2024-04-28T02:49:20.129Z","revisedAt":"2024-04-28T02:49:20.129Z","title":"test10","body":"<p>test10</p>","external":false,"category":{"id":"8-bqt7g2tv","createdAt":"2024-04-13T17:20:13.264Z","updatedAt":"2024-04-13T17:20:13.264Z","publishedAt":"2024-04-13T17:20:13.264Z","revisedAt":"2024-04-13T17:20:13.264Z","name":"topards"}}],"totalCount":15,"current_page":3},"__N_SSG":true}
+{
+    "pageProps": {
+        "news": [
+            {
+                "id": "368ej7d2l",
+                "createdAt": "2024-04-28T02:49:30.672Z",
+                "updatedAt": "2024-04-28T02:49:30.672Z",
+                "publishedAt": "2024-04-28T02:49:30.672Z",
+                "revisedAt": "2024-04-28T02:49:30.672Z",
+                "title": "test11",
+                "body": "<p>test11</p>",
+                "external": false,
+                "category": {
+                    "id": "6rl7tlh50gl",
+                    "createdAt": "2024-03-08T06:49:26.490Z",
+                    "updatedAt": "2024-03-08T06:49:26.490Z",
+                    "publishedAt": "2024-03-08T06:49:26.490Z",
+                    "revisedAt": "2024-03-08T06:49:26.490Z",
+                    "name": "更新情報"
+                }
+            },
+            {
+                "id": "ew5kd-u4m",
+                "createdAt": "2024-04-28T02:49:20.129Z",
+                "updatedAt": "2024-04-28T02:49:20.129Z",
+                "publishedAt": "2024-04-28T02:49:20.129Z",
+                "revisedAt": "2024-04-28T02:49:20.129Z",
+                "title": "test10",
+                "body": "<p>test10</p>",
+                "external": false,
+                "category": {
+                    "id": "8-bqt7g2tv",
+                    "createdAt": "2024-04-13T17:20:13.264Z",
+                    "updatedAt": "2024-04-13T17:20:13.264Z",
+                    "publishedAt": "2024-04-13T17:20:13.264Z",
+                    "revisedAt": "2024-04-13T17:20:13.264Z",
+                    "name": "topards"
+                }
+            }
+        ],
+        "totalCount": 15,
+        "current_page": 3
+    },
+    "__N_SSG": true
+}
