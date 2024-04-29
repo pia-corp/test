@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # リポジトリレベルの変数を参照
-      - run: echo ${{ vars.GIT_ACTIONS_NODE_VER }}
+      - run: echo "${{ vars.GIT_ACTIONS_NODE_VER }}"
 
   env:
     runs-on: ubuntu-latest
