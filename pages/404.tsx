@@ -1,3 +1,11 @@
+import CustomHead from '@/components/head';
+
 export default function NotFound() {
-  return <h1>404 - Page Not Found</h1>
+  const title = "これはWebページのタイトル";
+  return (
+    <>
+      <CustomHead title={title} />
+      <h1>404 - Page Not Found</h1>
+    </>
+  );
 }
