@@ -13,4 +13,4 @@ updates:
       dependencies:
         patterns:
           - "*"
-    target-branch: "develop"
+    target-branch: "main"
