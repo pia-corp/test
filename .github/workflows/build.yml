@@ -1,0 +1,43 @@
+name: Build
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  call_workflow:
+    uses: ./.github/workflows/_npm.yml
+    with:
+      node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+
+  build:
+    needs:
+      - workflow_call_npm
+
+    runs-on: ubuntu-latest
+    timeou-minutes: 5
+
+    steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+
+      - name: Restore node_modules
+        uses: actions/cache@v4.0.2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules-
+
+      - name: Dependency Installation (If there is no cache)
+        if: steps.cache_dependency.outputs.cache-hit != 'true'
+        run: npm ci --no-audit --progress=false --silent
+
+      - name: Build Next.js App
+        run: npm run build
+        env:
+          MICROCMS_SERVICE_DOMAIN: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
