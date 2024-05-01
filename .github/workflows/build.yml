@@ -34,7 +34,7 @@ jobs:
 
       - name: Dependency Installation (If there is no cache)
         if: steps.restore_node_modules.outputs.cache-hit != 'true'
-        run: npm ci --no-audit --progress=false --silent
+        run: npm ci
 
       - name: Build Next.js App
         run: npm run build
