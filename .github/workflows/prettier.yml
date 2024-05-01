@@ -1,9 +1,8 @@
-name: Markup lint and rewrite
+name: Markup Lint & Rewrite
 
 on:
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   call_workflow:
@@ -11,18 +10,16 @@ jobs:
     with:
       node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
 
-  linter:
+  lint-and-rewrite:
     needs:
       - call_workflow
 
     runs-on: ubuntu-latest
-
     timeout-minutes: 5
 
     name: MarkUp Linter
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4.1.4
+      - uses: actions/checkout@v4.1.4
         with:
           ref: ${{ github.head_ref }}
 
@@ -39,10 +36,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node_modules-
 
-      - name: Run Lint
+      - name: Dependency Installation (If there is no cache)
+        if: steps.cache_dependency.outputs.cache-hit != 'true'
+        run: npm ci --no-audit --progress=false --silent
+
+      - name: Lint and rewrite markup
         run: npm run lint
 
-      - name: Auto Commit
+      - name: Auto-commit changes (optional)
         uses: stefanzweifel/git-auto-commit-action@v5.0.1
         with:
           commit_message: Automatically format code with Prettier
