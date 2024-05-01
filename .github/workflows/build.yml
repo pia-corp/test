@@ -1,0 +1,64 @@
+name: Build
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  call_workflow:
+    uses: ./.github/workflows/_npm.yml
+    with:
+      node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+
+  build:
+    needs:
+      - call_workflow
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4.1.4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+
+      - name: Restore node_modules
+        uses: actions/cache@v4.0.2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules-
+
+      - name: Check if package-lock.json exists
+        run: echo "$([[ -e 'package-lock.json' ]] && echo 'yes' || echo 'no')"
+        id: check_package_lock
+
+      - name: Dependency Installation (If there is no cache)
+        if: steps.restore_node_modules.outputs.cache-hit != 'true' || steps.check_package_lock.outputs.result == 'no'
+        run: npm install
+
+      # - name: Build Next.js App
+      #   run: npm run build
+      #   env:
+      #     MICROCMS_SERVICE_DOMAIN: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
+      #     MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+
+      # - name: Commit and push changes
+      #   run: |
+      #     git config --global user.email "actions@github.com"
+      #     git config --global user.name "GitHub Actions"
+      #     git add .
+      #     git commit -m "Build Next.js"
+      #     git push origin ${{ github.head_ref }}
+
+      # - name: Auto-commit changes (optional)
+      #   uses: stefanzweifel/git-auto-commit-action@v5.0.1
+      #   with:
+      #     commit_message: Build Next.js
