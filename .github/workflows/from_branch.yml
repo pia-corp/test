@@ -11,10 +11,10 @@ permissions:
 jobs:
   error_handling:
     runs-on: ubuntu-latest
-
     timeout-minutes: 3
 
     name: PR from Develop Branch
+    if: ${{ github.event.sender.type != 'Bot'}}
     steps:
       - name: Check if PR is from develop branch
         if: github.event_name == 'pull_request' && !startsWith(github.head_ref, 'develop')
