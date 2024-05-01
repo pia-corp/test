@@ -33,7 +33,7 @@ jobs:
             ${{ runner.os }}-node_modules-
 
       - name: Dependency Installation (If there is no cache)
-        if: steps.cache_dependency.outputs.cache-hit != 'true'
+        if: steps.restore_node_modules.outputs.cache-hit != 'true'
         run: npm ci --no-audit --progress=false --silent
 
       - name: Build Next.js App
