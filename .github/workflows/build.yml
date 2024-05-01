@@ -33,7 +33,7 @@ jobs:
             ${{ runner.os }}-node_modules-
 
       - name: Check if package-lock.json exists
-        run: echo "File exists: $([[ -e 'package-lock.json' ]] && echo 'yes' || echo 'no')"
+        run: echo "$([[ -e 'package-lock.json' ]] && echo 'yes' || echo 'no')"
         id: check_package_lock
 
       - name: Dependency Installation (If there is no cache)
