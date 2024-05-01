@@ -49,3 +49,8 @@ jobs:
         env:
           MICROCMS_SERVICE_DOMAIN: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
           MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+
+      - name: Auto-commit changes (optional)
+        uses: stefanzweifel/git-auto-commit-action@v5.0.1
+        with:
+          commit_message: Build Next.js
