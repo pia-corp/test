@@ -1,8 +1,9 @@
 name: Markup Lint & Rewrite
 
 on:
-  pull_request:
-    branches: [ main ]
+  push:
+    branches:
+      - 'develop/**'
 
 jobs:
   call_workflow:
