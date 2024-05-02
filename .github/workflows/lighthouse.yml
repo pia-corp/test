@@ -1,8 +1,10 @@
 name: Build project and Run Lighthouse CI
 on:
+  workflow_dispatch:
   push:
     branches:
-      - development
+      - develop
+      - main
 jobs:
   lhci:
     name: Lighthouse CI
