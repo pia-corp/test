@@ -102,7 +102,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const output = `#### Terraform Format and Style 🖌\`${{ steps.format_lighthouse_score.outputs.comment }}\`
+            const output = `#### Terraform Format and Style 🖌${{ steps.format_lighthouse_score.outputs.comment }}`
             github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,

@@ -3,7 +3,10 @@
     "collect": {
       "staticDistDir": "./out/",
 			"numberOfRuns": 1,
-			"staticDirFileDiscoveryDepth": 3
+			"staticDirFileDiscoveryDepth": 3,
+      "settings": {
+        "locale": "ja"
+      }
     },
     "upload": {
       "target": "temporary-public-storage"
