@@ -49,18 +49,18 @@ jobs:
         if: steps.restore_node_modules.outputs.cache-hit != 'true'
         run: npm ci --no-audit --progress=false --silent
 
-      # - name: run Lighthouse CI
-      #   run: |
-      #     npm install -g @lhci/cli@0.13.x
-      #     lhci autorun --preset=lighthouse:recommended
-      #   env:
-      #     LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+      - name: run Lighthouse CI
+        run: |
+          npm install -g @lhci/cli@0.13.x
+          lhci autorun --preset=lighthouse:recommended
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
 
-      - name: Run Lighthouse against a static dist dir
-        uses: treosh/lighthouse-ci-action@v11
-        with:
-          configPath: './.lighthouserc.json'
+      # - name: Run Lighthouse against a static dist dir
+      #   uses: treosh/lighthouse-ci-action@v11
+      #   with:
+      #     configPath: './.lighthouserc.json'
 
       - name: Comment on PR
         uses: actions/github-script@v7.0.1
