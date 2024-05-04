@@ -48,7 +48,7 @@ jobs:
         id: lighthouse_audit
         run: |
           npm install -g @lhci/cli@0.13.x
-          lhci autorun --upload.target=temporary-public-storage
+          lhci autorun --outputDir=outputs
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
