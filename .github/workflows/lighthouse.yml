@@ -9,9 +9,10 @@ on:
 
 jobs:
   call_workflow:
-    uses: ./.github/workflows/_npm.yml
-    with:
-      node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+    steps:
+    - uses: ./.github/workflows/_npm.yml
+      with:
+        node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
 
   lhci:
     needs:
