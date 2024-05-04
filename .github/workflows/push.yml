@@ -6,17 +6,9 @@ on:
       - main
 
 jobs:
-  workflow_push:
-    runs-on: ubuntu-latest
-    steps:
-      - name: NPM_CACHE
-        uses: ./.github/workflows/_npm.yml
-        with:
-          node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+  LINTER:
+    uses: ./.github/workflows/prettier.yml
 
-      - name: LINTER
-        needs: NPM_CACHE
-        uses: ./.github/workflows/prettier.yml
-
-      - name: LIGHTHOUSE
-        uses: ./.github/workflows/lighthouse.yml
+  LIGHTHOUSE:
+    needs: LINTER
+    uses: ./.github/workflows/lighthouse.yml
