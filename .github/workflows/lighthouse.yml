@@ -42,14 +42,14 @@ jobs:
       - name: Print file URLs
         run: |
           echo "File URLs:"
-          git show ${{ github.sha }} --name-only
+          git show $GITHUB_SHA --name-only
 
       - name: Run Lighthouse against a static dist dir
         id: lighthouse_audit
         uses: treosh/lighthouse-ci-action@v11
         with:
           urls: |
-            git show ${{ github.sha }} --name-only
+            git show $GITHUB_SHA --name-only
           configPath: './.lighthouserc.json'
           temporaryPublicStorage: true
 
