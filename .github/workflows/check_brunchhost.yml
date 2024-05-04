@@ -10,4 +10,4 @@ jobs:
     steps:
       - name: PR from Develop Branch
         if: ${{ github.event.sender.type != 'Bot' && github.event_name == 'pull_request' && !startsWith(github.head_ref, 'develop') }}
-        run: exit 11
+        run: exit 1
