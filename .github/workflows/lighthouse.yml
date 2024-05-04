@@ -2,9 +2,9 @@ name: Preview URL Lighthouse Audit
 
 on:
   workflow_call:
-    inputs:
-      secretValue: ${{ github.event.inputs.secretValue }}
-      required: true
+    secrets:
+      TOKEN:
+        required: true
 
 jobs:
   # call_workflow:
@@ -49,7 +49,7 @@ jobs:
           npm install -g @lhci/cli@0.13.x
           lhci autorun
         env:
-          LHCI_GITHUB_APP_TOKEN: ${{ secrets.SECRET_VALUE }}
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.TOKEN }}
           temporaryPublicStorage: true
 
 

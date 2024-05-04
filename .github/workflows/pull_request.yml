@@ -19,14 +19,6 @@ jobs:
     uses: ./.github/workflows/prettier.yml
 
   LIGHTHOUSE:
-    # uses: ./.github/workflows/lighthouse.yml
-    # with:
-    #   secret_name: "${{ secrets.LHCI_GITHUB_APP_TOKEN }}"
-
-    - name: Trigger another workflow
-      uses: actions/workflow-dispatch@v2
-      with:
-        workflow: ./.github/workflows/lighthouse.yml
-        token: ${{ secrets.GITHUB_TOKEN }}
-        inputs:
-          secretValue: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+    uses: ./.github/workflows/lighthouse.yml
+    secrets:
+      TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
