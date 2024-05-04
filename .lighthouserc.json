@@ -16,7 +16,7 @@
       "assertions": {
         "categories:performance": [
 					"warn", {
-						"median": 0.89
+						"minScore": 0.89
 					}
 				]
       }
