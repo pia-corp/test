@@ -44,14 +44,24 @@ jobs:
       #     echo "File URLs:"
       #     git show $GITHUB_SHA --name-only
 
-      - name: Run Lighthouse against a static dist dir
+      - name: run Lighthouse CI
         id: lighthouse_audit
-        uses: treosh/lighthouse-ci-action@v11
-        with:
-          # urls: |
-          #   git show $GITHUB_SHA --name-only
-          configPath: './.lighthouserc.json'
+        run: |
+          npm install -g @lhci/cli@0.13.x
+          lhci autorun --outputDir=outputs
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
           temporaryPublicStorage: true
+
+
+      # - name: Run Lighthouse against a static dist dir
+      #   id: lighthouse_audit
+      #   uses: treosh/lighthouse-ci-action@v11
+      #   with:
+      #     # urls: |
+      #     #   git show $GITHUB_SHA --name-only
+      #     configPath: './.lighthouserc.json'
+      #     temporaryPublicStorage: true
 
       - name: Comment on PR
         id: format_lighthouse_score
@@ -59,7 +69,8 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const result = ${{ steps.lighthouse_audit.outputs.manifest }}[0].summary;
+            const result２ = ${{ steps.lighthouse_audit.outputs.manifest }}[0].summary;
+            const result = require('./outputs/lhci-report.json');
             const obj = ${{ steps.lighthouse_audit.outputs.manifest }};
             const formatResult = (res) => Math.round((res * 100));
             const file_name = (url) => { return url.replace(/^http:\/\/localhost:\d+\//, ""); };
