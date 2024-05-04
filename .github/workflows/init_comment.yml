@@ -8,7 +8,12 @@ on:
       - opened
 
 jobs:
+  pr_agent:
+    uses: ./.github/workflows/pr_agent.yml
+
   comment_opening_announce:
+    needs: pr_agent
+
     runs-on: ubuntu-latest
     permissions:
       issues: write
