@@ -75,30 +75,31 @@ jobs:
           script: |
             const result = ${{ steps.lighthouse_audit.outputs.manifest }}[0].summary;
             const obj = ${{ steps.lighthouse_audit.outputs.manifest }};
-            const score = res => res >= 90 ? '🟢' : res >= 50 ? '🟠' : '🔴'
+            const formatResult = (res) => Math.round((res * 100));
+            const score = res => res >= 90 ? '🟢' : res >= 50 ? '🟠' : '🔴';
 
-            const table_body = (urlArray, result) => (
-              return `| urlArray.url | ${score(result.performance)} ${result.performance} | ${score(result.accessibility)} ${result.accessibility} | ${score(result['best-practices'])} ${result['best-practices']} | ${score(result.seo)} ${result.seo} | ${score(result.pwa)} ${result.pwa} |`;
-            );
-            let text += Object.keys(obj).forEach(key => obj[key] = table_body(obj[key], result[key]));
-            echo text;
-
-            const params = {
+            let view_text = {
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: `⚡️ [Lighthouse report]:
 
-                | file | Performance | Accessibility | Best practices | SEO | PWA |
-                | --- | --- | --- | --- | --- | --- |
-                ${text}
+            | file | Performance | Accessibility | Best practices | SEO | PWA |
+            | --- | --- | --- | --- | --- | --- |
+            `};
 
-              *Lighthouse ran on [${Object.keys(links)[0]}](${Object.keys(links)[0]})*`};
+            const table_body = (urlArray) => {
+              const accessibility = formatResult(urlArray.summary["accessibility"]);
+              const practices = formatResult(urlArray.summary["best-practices"]);
+              const performance = formatResult(urlArray.summary["performance"]);
+              const pwa = formatResult(urlArray.summary["pwa"]);
+              const seo = formatResult(urlArray.summary["seo"]);
+              view_text += `${urlArray.url} | ${score(performance)} ${urlArray.summary["performance"]} | ${score(accessibility)} ${urlArray.summary["accessibility"]} | ${score(practices)} ${urlArray.summary["best-practices"]} | ${score(seo)} ${urlArray.summary["seo"]} | ${score(pwa)} ${urlArray.summary["pwa"]} |
+            `;
+            };
+            Object.keys(obj).forEach(key => obj[key] = table_body(obj[key]));
 
-            # const formatResult = (res) => Math.round((res * 100));
-            # Object.keys(result).forEach(key => result[key] = formatResult(result[key]));
-
-            await github.rest.issues.createComment(params);
+            await github.rest.issues.createComment(view_text);
 
 
       # - name: Format lighthouse score
