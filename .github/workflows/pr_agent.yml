@@ -3,7 +3,6 @@ name: PR Agent for Pull Requests
 on:
   pull_request:
     types: [opened, reopened]
-  push:
     branches:
       - 'develop/**'
 
