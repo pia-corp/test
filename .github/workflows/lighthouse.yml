@@ -60,7 +60,7 @@ jobs:
             const result = ${{ steps.lighthouse_audit.outputs.manifest }}[0].summary;
             const obj = ${{ steps.lighthouse_audit.outputs.manifest }};
             const formatResult = (res) => Math.round((res * 100));
-            const file_name = url.replace(/^http:\/\/localhost:\d+\//, "");
+            const file_name = (url) => { return url.replace(/^http:\/\/localhost:\d+\//, ""); };
             const score = res => res >= 90 ? '🟢' : res >= 50 ? '🟠' : '🔴';
             let view_text = "";
 
