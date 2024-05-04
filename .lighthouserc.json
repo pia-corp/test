@@ -1,7 +1,6 @@
 {
   "ci": {
     "collect": {
-			"staticDistDir": "./out/",
       "autodiscoverUrlBlocklist": "./out/news/page/",
 			"numberOfRuns": 3,
 			"maxAutodiscoverUrls": 5,

@@ -42,14 +42,14 @@ jobs:
       - name: Print file URLs
         run: |
           echo "File URLs:"
-          git diff --diff-filter=d --name-only origin/master HEAD
+          git show commit_id --name-only
 
       - name: Run Lighthouse against a static dist dir
         id: lighthouse_audit
         uses: treosh/lighthouse-ci-action@v11
         with:
           urls: |
-            git diff --diff-filter=d --name-only origin/master HEAD
+            git show commit_id --name-only
           configPath: './.lighthouserc.json'
           temporaryPublicStorage: true
 
