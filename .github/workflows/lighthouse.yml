@@ -8,16 +8,7 @@ on:
       - 'develop/**'
 
 jobs:
-  call_workflow:
-    steps:
-    - uses: ./.github/workflows/_npm.yml
-      with:
-        node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
-
   lhci:
-    needs:
-      - call_workflow
-
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -32,17 +23,10 @@ jobs:
         with:
           node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
 
-      - name: Restore node_modules
-        uses: actions/cache@v4.0.2
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node_modules-
-
-      - name: Dependency Installation (If there is no cache)
-        if: steps.restore_node_modules.outputs.cache-hit != 'true'
-        run: npm ci --no-audit --progress=false --silent
+      - name: npm install, build
+        run: |
+          npm install
+          npm run build
 
       - name: run Lighthouse CI
         run: |
