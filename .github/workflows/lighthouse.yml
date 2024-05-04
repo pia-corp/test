@@ -22,8 +22,13 @@ jobs:
     name: Lighthouse
     steps:
       - uses: actions/checkout@v4.1.4
+      - name: Audit preview URL with Lighthouse
+        id: lighthouse_audit
+        uses: treosh/lighthouse-ci-action@v11.4.0
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          configPath: './lighthouserc.json'
+          uploadArtifacts: true
+          temporaryPublicStorage: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v4.0.2
