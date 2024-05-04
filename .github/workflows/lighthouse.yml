@@ -1,22 +1,17 @@
 name: Preview URL Lighthouse Audit
 
 on:
-  workflow_dispatch:
-  pull_request:
-    types: [ opened, synchronize, reopened ]
-  issue_comment:
-    types: [edited]
+  workflow_call:
 
 jobs:
-  call_workflow:
-    if: github.event.action == 'synchronize'
-    uses: ./.github/workflows/_npm.yml
-    with:
-      node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+  # call_workflow:
+  #   uses: ./.github/workflows/_npm.yml
+  #   with:
+  #     node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
 
   lhci:
-    needs:
-      - call_workflow
+    # needs:
+    #   - call_workflow
 
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -44,10 +39,17 @@ jobs:
         if: steps.restore_node_modules.outputs.cache-hit != 'true'
         run: npm ci --no-audit --progress=false --silent
 
+      # - name: Print file URLs
+      #   run: |
+      #     echo "File URLs:"
+      #     git show $GITHUB_SHA --name-only
+
       - name: Run Lighthouse against a static dist dir
         id: lighthouse_audit
         uses: treosh/lighthouse-ci-action@v11
         with:
+          # urls: |
+          #   git show $GITHUB_SHA --name-only
           configPath: './.lighthouserc.json'
           temporaryPublicStorage: true
 
@@ -70,7 +72,7 @@ jobs:
               const performance = formatResult(urlArray.summary["performance"]);
               const pwa = formatResult(urlArray.summary["pwa"]);
               const seo = formatResult(urlArray.summary["seo"]);
-              view_text += `${file_name(urlArray.url)} | ${score(performance)} ${urlArray.summary["performance"]} | ${score(accessibility)} ${urlArray.summary["accessibility"]} | ${score(practices)} ${urlArray.summary["best-practices"]} | ${score(seo)} ${urlArray.summary["seo"]} | ${score(pwa)} ${urlArray.summary["pwa"]} |
+              view_text += `${file_name(urlArray.url)} | ${score(performance)} ${score(urlArray.summary["performance"])} | ${score(accessibility)} ${score(urlArray.summary["accessibility"])} | ${score(practices)} ${score(urlArray.summary["best-practices"])} | ${score(seo)} ${score(urlArray.summary["seo"])} | ${score(pwa)} ${score(urlArray.summary["pwa"])} |
             `;
             };
             Object.keys(obj).forEach(key => obj[key] = table_body(obj[key]));
@@ -79,7 +81,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `⚡️ [Lighthouse report]:
+              body: `⚡️ [Lighthouse monile report]:
 
             | File name | Performance | Accessibility | Best practices | SEO | PWA |
             | --- | --- | --- | --- | --- | --- |

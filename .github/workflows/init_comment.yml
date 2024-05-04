@@ -1,17 +1,13 @@
 name: Comment opening announce
 
 on:
-  pull_request:
-    branches:
-      - 'develop*'
-    types:
-      - opened
+  workflow_call:
 
 jobs:
   comment_opening_announce:
     runs-on: ubuntu-latest
+
     permissions:
-      issues: write
       pull-requests: write
 
     steps:

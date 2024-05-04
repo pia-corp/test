@@ -1,0 +1,14 @@
+name: Push
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  LINTER:
+    uses: ./.github/workflows/prettier.yml
+
+  LIGHTHOUSE:
+    needs: LINTER
+    uses: ./.github/workflows/lighthouse.yml
