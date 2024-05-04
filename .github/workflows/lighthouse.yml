@@ -63,12 +63,14 @@ jobs:
           configPath: './.lighthouserc.json'
 
       - name: Comment on PR
-        uses: actions/github-script@v7
+        uses: actions/github-script@v7.0.1
+        env:
+          LINK: ${{ steps.lighthouse_audit.outputs.manifest }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const result = ${{ steps.lighthouse_audit.outputs.manifest }}[0].summary
-            const links = ${{ steps.lighthouse_audit.outputs.links }}
+            const result = ${process.env.LINK}[0].summary
+            const links = ${process.env.LINK}
 
             const formatResult = (res) => Math.round((res * 100))
             Object.keys(result).forEach(key => result[key] = formatResult(result[key]))
