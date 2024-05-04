@@ -1,9 +1,7 @@
 name: Handle PR from Develop Branch & Build
 
 on:
-  pull_request:
-    branches:
-      - main
+  workflow_call:
 
 jobs:
   error_handling:

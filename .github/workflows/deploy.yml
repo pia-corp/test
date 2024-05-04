@@ -1,11 +1,7 @@
 name: Deploy to Develop Branch & Create release tag and release note.
 
 on:
-  pull_request:
-    branches:
-      - main
-    types:
-      - closed
+  workflow_call:
 
 jobs:
   call_workflow:
