@@ -3,9 +3,8 @@ name: Preview URL Lighthouse Audit
 on:
   workflow_dispatch:
   push:
-  pull_request:
-    branches:
-      - 'develop/**'
+  issue_comment:
+    types: [edited]
 
 jobs:
   lhci:
