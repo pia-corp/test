@@ -82,10 +82,10 @@ jobs:
               issue_number: context.payload.pull_request.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `⚡️ [Lighthouse report](${Object.values(links)[0]}) for the changes in this PR:`
+              body: "⚡️ [Lighthouse report](${Object.values(links)[0]}) for the changes in this PR:"
             }
 
-            await github.rest.issues.createComment(params)
+            await github.rest.issues.createComment(params);
 
 
       # - name: Format lighthouse score
