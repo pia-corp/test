@@ -2,11 +2,13 @@ name: Preview URL Lighthouse Audit
 
 on:
   workflow_dispatch:
-  push:
+  pull_request:
+    types: [ opened, synchronize, reopened ]
   issue_comment:
     types: [edited]
 
 jobs:
+  if: github.event.action == 'synchronize'
   call_workflow:
     uses: ./.github/workflows/_npm.yml
     with:
@@ -66,7 +68,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            await github.rest.issues.createComment({
+            github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
