@@ -1,15 +1,11 @@
 name: Preview URL Lighthouse Audit
 
 on:
-  workflow_dispatch:
   pull_request:
     types: [ opened, synchronize, reopened ]
-  issue_comment:
-    types: [edited]
 
 jobs:
   call_workflow:
-    if: github.event.action == 'synchronize'
     uses: ./.github/workflows/_npm.yml
     with:
       node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
