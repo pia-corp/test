@@ -21,4 +21,4 @@ jobs:
   LIGHTHOUSE:
     uses: ./.github/workflows/lighthouse.yml
     with:
-      node_version: "${{ secrets.LHCI_GITHUB_APP_TOKEN }}"
+      secret_name: "${{ secrets.LHCI_GITHUB_APP_TOKEN }}"
