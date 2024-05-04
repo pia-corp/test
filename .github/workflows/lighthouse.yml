@@ -37,7 +37,7 @@ jobs:
         uses: peter-evans/create-or-update-comment@v4.0.0
         with:
           comment-id: ${{ github.event.comment.id }}
-          issue_number: ${{ github.event.pull_request.number }}
+          reactions: eyes
           body: |
             ## Lighthouse Audit Results
 
