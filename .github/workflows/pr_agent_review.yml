@@ -3,13 +3,13 @@ name: PR Agent Review
 on:
   push:
     branches:
-      - 'develop*'
+      - 'develop/**'
   issue_comment:
     types: [edited]
 
 jobs:
   call_workflow:
-    if: github.event.action == 'synchronize'
+    if: github.event.action != 'opened' || github.event.action != 'reopened'
     uses: ./.github/workflows/_npm.yml
     with:
       node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"

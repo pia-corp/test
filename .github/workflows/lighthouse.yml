@@ -79,17 +79,6 @@ jobs:
             const score = res => res >= 90 ? '🟢' : res >= 50 ? '🟠' : '🔴';
             let view_text = "";
 
-            let param = {
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `⚡️ [Lighthouse report]:
-
-            | file | Performance | Accessibility | Best practices | SEO | PWA |
-            | --- | --- | --- | --- | --- | --- |
-            ${view_text}
-            `};
-
             const table_body = (urlArray) => {
               const accessibility = formatResult(urlArray.summary["accessibility"]);
               const practices = formatResult(urlArray.summary["best-practices"]);
@@ -100,6 +89,17 @@ jobs:
             `;
             };
             Object.keys(obj).forEach(key => obj[key] = table_body(obj[key]));
+
+            let param = {
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `⚡️ [Lighthouse report]:
+
+            | file | Performance | Accessibility | Best practices | SEO | PWA |
+            | --- | --- | --- | --- | --- | --- |
+            ${view_text}
+            `};
 
             await github.rest.issues.createComment(param);
 
