@@ -44,7 +44,7 @@ jobs:
         id: lighthouse_audit
         run: |
           npm install -g @lhci/cli@0.13.x
-          lhci autorun --outputDir=outputs
+          lhci autorun
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
           temporaryPublicStorage: true
@@ -66,7 +66,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const result２ = ${{ steps.lighthouse_audit.outputs.manifest }}[0].summary;
-            const result = require('./outputs/lhci-report.json');
+            const result = require('./lhci-report.json');
             const obj = ${{ steps.lighthouse_audit.outputs.manifest }};
             const formatResult = (res) => Math.round((res * 100));
             const file_name = (url) => { return url.replace(/^http:\/\/localhost:\d+\//, ""); };
