@@ -16,9 +16,10 @@ jobs:
     needs:
       - call_workflow
 
-    name: Lighthouse
-    timeout-minutes: 30
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    name: Lighthouse
     steps:
       - uses: actions/checkout@v4.1.4
         with:
