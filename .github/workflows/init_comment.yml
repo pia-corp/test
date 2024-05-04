@@ -3,7 +3,7 @@ name: Comment opening announce
 on:
   pull_request:
     branches:
-      - 'develop*'
+      - main
     types:
       - opened
 
