@@ -7,8 +7,33 @@ on:
       - 'develop/**'
 
 jobs:
+  call_workflow:
+    if: github.event.action == 'synchronize'
+    uses: ./.github/workflows/_npm.yml
+    with:
+      node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+
   review:
     steps:
+      - uses: actions/checkout@v4.1.4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+
+      - name: Restore node_modules
+        uses: actions/cache@v4.0.2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules-
+
+      - name: Dependency Installation (If there is no cache)
+        if: steps.restore_node_modules.outputs.cache-hit != 'true'
+        run: npm ci --no-audit --progress=false --silent
+
       - name: Review
         uses: actions/github-script@v7.0.1
         with:
