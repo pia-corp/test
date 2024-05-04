@@ -96,6 +96,20 @@ jobs:
       - name: Output Lighthouse comment
         run: echo "${{ steps.format_lighthouse_score.outputs.comment }}"
 
+
+      - name: Comment PR
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `#### Terraform Format and Style 🖌\`${{ steps.format_lighthouse_score.outputs.comment }}\`
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## Terraform checks in directory out\n` + output
+            })
+
       #     #  ${{ steps.format_lighthouse_score.outputs.comment }}
       # - name: Post Lighthouse Audit Comment
       #   uses: actions/github-script@v7.0.1
