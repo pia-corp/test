@@ -1,8 +1,10 @@
 name: Preview URL Lighthouse Audit
 
 on:
-  pull_request:
-    types: [ opened, synchronize, reopened ]
+  push:
+    types: [opened, reopened]
+    branches:
+      - 'develop/**'
 
 jobs:
   call_workflow:
