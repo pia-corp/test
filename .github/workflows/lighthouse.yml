@@ -36,16 +36,16 @@ jobs:
         uses: peter-evans/create-issue-comment@v4.0.0
         with:
           issue_number: ${{ github.event.pull_request.number }}
-        body: |
-          ## Lighthouse Audit Results
+          body: |
+            ## Lighthouse Audit Results
 
-          **Summary:**
-          * Score: ${{ steps.lhci.outputs.ci_overall_score }}
-          * Conformance score: ${{ steps.lhci.outputs.ci_performance_score }}
-          * Accessibility score: ${{ steps.lhci.outputs.ci_accessibility_score }}
-          * Best practices score: ${{ steps.lhci.outputs.ci_best_practices_score }}
+            **Summary:**
+            * Score: ${{ steps.lhci.outputs.ci_overall_score }}
+            * Conformance score: ${{ steps.lhci.outputs.ci_performance_score }}
+            * Accessibility score: ${{ steps.lhci.outputs.ci_accessibility_score }}
+            * Best practices score: ${{ steps.lhci.outputs.ci_best_practices_score }}
 
-          **Detailed results:**
-          [Lighthouse CI report](${steps.lhci.outputs.lhci_report_url})
+            **Detailed results:**
+            [Lighthouse CI report](${steps.lhci.outputs.lhci_report_url})
 
-          **Please note:** This is an automated audit and may not be fully comprehensive. For more detailed analysis, please consider manual testing.
+            **Please note:** This is an automated audit and may not be fully comprehensive. For more detailed analysis, please consider manual testing.
