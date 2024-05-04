@@ -77,8 +77,9 @@ jobs:
             const obj = ${{ steps.lighthouse_audit.outputs.manifest }};
             const formatResult = (res) => Math.round((res * 100));
             const score = res => res >= 90 ? '🟢' : res >= 50 ? '🟠' : '🔴';
+            let view_text = "";
 
-            let view_text = {
+            let param = {
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -86,6 +87,7 @@ jobs:
 
             | file | Performance | Accessibility | Best practices | SEO | PWA |
             | --- | --- | --- | --- | --- | --- |
+            ${view_text}
             `};
 
             const table_body = (urlArray) => {
@@ -99,7 +101,7 @@ jobs:
             };
             Object.keys(obj).forEach(key => obj[key] = table_body(obj[key]));
 
-            await github.rest.issues.createComment(view_text);
+            await github.rest.issues.createComment(param);
 
 
       # - name: Format lighthouse score
