@@ -1,4 +1,4 @@
-name: Build
+name: Handle PR from Develop Branch & Build
 
 on:
   pull_request:
@@ -6,6 +6,17 @@ on:
       - main
 
 jobs:
+  error_handling:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+
+    name: PR from Develop Branch
+    if: ${{ github.event.sender.type != 'Bot'}}
+    steps:
+      - name: Check if PR is from develop branch
+        if: github.event_name == 'pull_request' && !startsWith(github.head_ref, 'develop')
+        run: exit 1
+
   call_workflow:
     uses: ./.github/workflows/_npm.yml
     with:
