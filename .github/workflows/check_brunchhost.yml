@@ -6,8 +6,15 @@ on:
       - main
 
 jobs:
-  CHECK_BRUNCH_HOST:
+  CHECK_BRUNCH_HOST_FALSE:
     steps:
       - name: PR from Develop Branch
-        if: ${{ github.event.sender.type != 'Bot' && github.event_name == 'pull_request' && !startsWith(github.head_ref, 'develop') }}
-        run: exit 11
+        if: ${{ github.event.sender.type != 'Bot' }}
+        if: github.event_name == 'pull_request' && !startsWith(github.head_ref, 'develop')
+        run: exit 1
+
+  CHECK_BRUNCH_HOST_TRUE:
+    steps:
+      - name: PR from Develop Branch
+        if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'develop')
+        run: exit 0
