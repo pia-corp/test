@@ -13,3 +13,5 @@ jobs:
   LIGHTHOUSE:
     needs: LINTER
     uses: ./.github/workflows/lighthouse.yml
+    with:
+      LHCI_GITHUB_APP_TOKEN: "${{ secrets.LHCI_GITHUB_APP_TOKEN }}"
