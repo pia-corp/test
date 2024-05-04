@@ -33,26 +33,52 @@ jobs:
           npm install -g @lhci/cli@0.13.x
           lhci autorun
 
-      - name: Create comments
-        run: |
-          cat << EOF > comments
-          ## Lighthouse Audit Results
+      - name: Format lighthouse score
+        id: format_lighthouse_score
+        uses: actions/github-script@v7.0.1
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const result = ${{ steps.lighthouse_audit.outputs.manifest }}[0].summary
+            const links = ${{ steps.lighthouse_audit.outputs.links }}
 
-          **Summary:**
-          * Score: ${{ steps.lhci.outputs.ci_overall_score }}
-          * Conformance score: ${{ steps.lhci.outputs.ci_performance_score }}
-          * Accessibility score: ${{ steps.lhci.outputs.ci_accessibility_score }}
-          * Best practices score: ${{ steps.lhci.outputs.ci_best_practices_score }}
+            const formatResult = (res) => Math.round((res * 100))
+            Object.keys(result).forEach(key => result[key] = formatResult(result[key]))
 
-          **Detailed results:**
-          [Lighthouse CI report](${steps.lhci.outputs.lhci_report_url})
+            const score = res => res >= 90 ? '🟢' : res >= 50 ? '🟠' : '🔴'
 
-          **Please note:** This is an automated audit and may not be fully comprehensive. For more detailed analysis, please consider manual testing.
-          EOF
+            const comment = [
+                `⚡️ [Lighthouse report](${Object.values(links)[0]}) for the changes in this PR:`,
+                '| Category | Score |',
+                '| --- | --- |',
+                `| ${score(result.performance)} Performance | ${result.performance} |`,
+                `| ${score(result.accessibility)} Accessibility | ${result.accessibility} |`,
+                `| ${score(result['best-practices'])} Best practices | ${result['best-practices']} |`,
+                `| ${score(result.seo)} SEO | ${result.seo} |`,
+                `| ${score(result.pwa)} PWA | ${result.pwa} |`,
+                ' ',
+                `*Lighthouse ran on [${Object.keys(links)[0]}](${Object.keys(links)[0]})*`
+            ].join('\n')
 
-      - name: Post comments
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          URL: ${{ github.event.pull_request.html_url }}
-        run:
-          gh pr comment -F ./comments "${URL}"
+            core.setOutput("comment", comment);
+
+          #  ${{ steps.format_lighthouse_score.outputs.comment }}
+      - name: Post Lighthouse Audit Comment
+        uses: actions/github-script@v7.0.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const comment = core.getInput('comment');
+            const github = require('@actions/github');
+            const context = github.context;
+
+            const octokit = new github.getOctokit(process.env.GITHUB_TOKEN);
+
+            const { owner, repo, number } = context.issue;
+
+            await octokit.issues.createComment({
+              owner,
+              repo,
+              issue_number: number,
+              body: comment
+            });
