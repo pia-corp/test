@@ -1,0 +1,8 @@
+name: HOOK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  BUILD:
+    uses: ./.github/workflows/build.yml

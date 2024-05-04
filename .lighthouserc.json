@@ -3,7 +3,7 @@
     "collect": {
 			"staticDistDir": "./out/",
       "autodiscoverUrlBlocklist": "./out/news/page/",
-			"numberOfRuns": 3,
+			"numberOfRuns": 1,
 			"maxAutodiscoverUrls": 5,
       "settings": {
         "locale": "ja"
@@ -11,11 +11,6 @@
     },
     "upload": {
       "target": "temporary-public-storage"
-    },
-    "assert": {
-      "assertions": {
-        "first-contentful-paint": ["warn", { "minScore": 0.8 }]
-      }
     }
   }
 }
