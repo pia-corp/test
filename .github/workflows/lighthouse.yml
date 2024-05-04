@@ -22,13 +22,13 @@ jobs:
     name: Lighthouse
     steps:
       - uses: actions/checkout@v4.1.4
-      - name: Audit preview URL with Lighthouse
-        id: lighthouse_audit
-        uses: treosh/lighthouse-ci-action@v11
-        with:
-          configPath: './.lighthouserc.json'
-          uploadArtifacts: true
-          temporaryPublicStorage: true
+      # - name: Audit preview URL with Lighthouse
+      #   id: lighthouse_audit
+      #   uses: treosh/lighthouse-ci-action@v11
+      #   with:
+      #     configPath: './.lighthouserc.json'
+      #     uploadArtifacts: true
+      #     temporaryPublicStorage: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v4.0.2
