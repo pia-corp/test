@@ -8,8 +8,8 @@ on:
     types: [edited]
 
 jobs:
-  if: github.event.action == 'synchronize'
   call_workflow:
+    if: github.event.action == 'synchronize'
     uses: ./.github/workflows/_npm.yml
     with:
       node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
