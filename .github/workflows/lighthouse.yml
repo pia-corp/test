@@ -54,10 +54,12 @@ jobs:
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
-      - name: Auto-commit changes (optional)
-        uses: stefanzweifel/git-auto-commit-action@v5.0.1
+
+      - name: Run Lighthouse against a static dist dir
+        uses: treosh/lighthouse-ci-action@v11
         with:
-          commit_message: Automatically format code with LHCI
+          configPath: './.lighthouserc.json'
+
 
       # - name: Format lighthouse score
       #   id: format_lighthouse_score
