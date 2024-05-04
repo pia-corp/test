@@ -4,14 +4,14 @@ on:
   workflow_call:
 
 jobs:
-  call_workflow:
-    uses: ./.github/workflows/_npm.yml
-    with:
-      node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+  # call_workflow:
+  #   uses: ./.github/workflows/_npm.yml
+  #   with:
+  #     node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
 
   lint-and-rewrite:
-    needs:
-      - call_workflow
+    # needs:
+    #   - call_workflow
 
     runs-on: ubuntu-latest
     timeout-minutes: 5

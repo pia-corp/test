@@ -8,15 +8,15 @@ on:
       - opened
 
 jobs:
-  PR_AGENT:
-    uses: ./.github/workflows/pr_agent.yml
+  steps:
+    - name: PR_AGENT
+      uses: ./.github/workflows/pr_agent.yml
 
-  COMMENT_OPENING_ANNOUNCE:
-    needs: PR_AGENT
-    uses: ./.github/workflows/init_comment.yml
+    - name: COMMENT_OPENING_ANNOUNCE
+      uses: ./.github/workflows/init_comment.yml
 
-  LINTER:
-    uses: ./.github/workflows/prettier.yml
+    - name: LINTER
+      uses: ./.github/workflows/prettier.yml
 
-  LIGHTHOUSE:
-    uses: ./.github/workflows/lighthouse.yml
+    - name: LIGHTHOUSE
+      uses: ./.github/workflows/lighthouse.yml

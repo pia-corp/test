@@ -4,14 +4,14 @@ on:
   workflow_call:
 
 jobs:
-  call_workflow:
-    uses: ./.github/workflows/_npm.yml
-    with:
-      node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+  # call_workflow:
+  #   uses: ./.github/workflows/_npm.yml
+  #   with:
+  #     node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
 
   lhci:
-    needs:
-      - call_workflow
+    # needs:
+    #   - call_workflow
 
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -39,10 +39,17 @@ jobs:
         if: steps.restore_node_modules.outputs.cache-hit != 'true'
         run: npm ci --no-audit --progress=false --silent
 
+      - name: Print file URLs
+        run: |
+          echo "File URLs:"
+          echo "${{ github.event.pull_request.html_url }}" | tr " " "\n"
+
       - name: Run Lighthouse against a static dist dir
         id: lighthouse_audit
         uses: treosh/lighthouse-ci-action@v11
         with:
+          urls: |
+            ${{ join(github.event.pull_request.html_url, '\n') }}
           configPath: './.lighthouserc.json'
           temporaryPublicStorage: true
 
