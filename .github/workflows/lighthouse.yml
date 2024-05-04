@@ -42,14 +42,14 @@ jobs:
       - name: Print file URLs
         run: |
           echo "File URLs:"
-          echo "${{ github.event.pull_request.html_url }}" | tr " " "\n"
+          git diff --diff-filter=d --name-only origin/master HEAD
 
       - name: Run Lighthouse against a static dist dir
         id: lighthouse_audit
         uses: treosh/lighthouse-ci-action@v11
         with:
           urls: |
-            ${{ join(github.event.pull_request.html_url, '\n') }}
+            git diff --diff-filter=d --name-only origin/master HEAD
           configPath: './.lighthouserc.json'
           temporaryPublicStorage: true
 

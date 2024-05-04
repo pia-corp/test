@@ -3,8 +3,8 @@
     "collect": {
 			"staticDistDir": "./out/",
       "autodiscoverUrlBlocklist": "./out/news/page/",
-			"numberOfRuns": 5,
-			"maxAutodiscoverUrls": 0,
+			"numberOfRuns": 3,
+			"maxAutodiscoverUrls": 5,
       "settings": {
         "locale": "ja"
       }
