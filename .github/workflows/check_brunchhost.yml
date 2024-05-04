@@ -7,13 +7,15 @@ on:
 
 jobs:
   CHECK_BRUNCH_HOST_FALSE:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.sender.type != 'Bot' }}
     steps:
       - name: PR from Develop Branch
-        if: ${{ github.event.sender.type != 'Bot' }}
         if: github.event_name == 'pull_request' && !startsWith(github.head_ref, 'develop')
         run: exit 1
 
   CHECK_BRUNCH_HOST_TRUE:
+    runs-on: ubuntu-latest
     steps:
       - name: PR from Develop Branch
         if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'develop')
