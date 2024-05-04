@@ -9,6 +9,7 @@ on:
 
 jobs:
   call_workflow:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && startsWith(github.head_ref, 'develop')
     uses: ./.github/workflows/_npm.yml
     with:
       node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
@@ -18,7 +19,6 @@ jobs:
       - call_workflow
 
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && startsWith(github.head_ref, 'develop')
 
     timeout-minutes: 5
 
