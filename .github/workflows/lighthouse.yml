@@ -52,6 +52,7 @@ jobs:
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
+
       # - name: Run Lighthouse against a static dist dir
       #   id: lighthouse_audit
       #   uses: treosh/lighthouse-ci-action@v11
