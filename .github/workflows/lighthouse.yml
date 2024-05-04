@@ -13,7 +13,7 @@ jobs:
     with:
       node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
 
-  lh:
+  lhci:
     needs:
       - call_workflow
 
@@ -42,10 +42,6 @@ jobs:
       - name: Dependency Installation (If there is no cache)
         if: steps.restore_node_modules.outputs.cache-hit != 'true'
         run: npm ci --no-audit --progress=false --silent
-      # - name: npm install, build
-      #   run: |
-      #     npm install
-      #     npm run build
 
       - name: run Lighthouse CI
         run: |
@@ -77,24 +73,3 @@ jobs:
           URL: ${{ github.event.pull_request.html_url }}
         run:
           gh pr comment -F ./comments "${URL}"
-
-      # - name: Create or Update Comment
-      #   uses: peter-evans/create-or-update-comment@v4.0.0
-      #   with:
-      #     issue-number: 1
-      #     comment-id: ${{ github.event.comment.id }}
-      #     reactions: eyes
-      #     body: |
-      #       ## Lighthouse Audit Results
-
-      #       **Summary:**
-      #       * Score: ${{ steps.lhci.outputs.ci_overall_score }}
-      #       * Conformance score: ${{ steps.lhci.outputs.ci_performance_score }}
-      #       * Accessibility score: ${{ steps.lhci.outputs.ci_accessibility_score }}
-      #       * Best practices score: ${{ steps.lhci.outputs.ci_best_practices_score }}
-
-      #       **Detailed results:**
-      #       [Lighthouse CI report](${steps.lhci.outputs.lhci_report_url})
-
-      #       **Please note:** This is an automated audit and may not be fully comprehensive. For more detailed analysis, please consider manual testing.
-      #     reactions: '+1'
