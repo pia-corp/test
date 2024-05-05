@@ -9,13 +9,12 @@ on:
         required: true
 
 jobs:
-  build next.js:
+  build_next_js:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
     steps:
       - name: Create production branch
-        # if: github.event.pull_request.merged && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'develop'
         run: |
           git checkout -b production
           git push origin production
@@ -57,21 +56,14 @@ jobs:
           git commit -m "Build Next.js"
 
       - name: Push changes to production branch
-        # if: github.event.pull_request.merged && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'develop'
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.TOKEN }}
           branch: production
 
       - name: Merge production into main
-        # if: github.event.pull_request.merged && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'develop'
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git pull origin production --ff-only
           git push origin HEAD:refs/heads/main
-
-      # - name: Auto-commit changes (optional)
-      #   uses: stefanzweifel/git-auto-commit-action@v5.0.1
-      #   with:
-      #     commit_message: Build Next.js
