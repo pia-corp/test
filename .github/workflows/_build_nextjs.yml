@@ -14,11 +14,6 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - name: Create production branch
-        run: |
-          git checkout -b production
-          git push origin production
-
       - name: Check out repository
         uses: actions/checkout@v4.1.4
 
@@ -48,18 +43,33 @@ jobs:
           MICROCMS_SERVICE_DOMAIN: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
           MICROCMS_API_KEY: ${{ secrets.APIKEY }}
 
-      - name: Commit and push changes
+      - name: Commit and push changes (Optional)
+        # Consider using a separate workflow for deployments
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
           git add .
           git commit -m "Build Next.js"
+        if: always()  # Run this step only if desired
 
-      - name: Push changes to production branch
+      - name: Push changes to production branch (Optional)
+        # Consider using a separate workflow with proper access control
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.TOKEN }}
           branch: production
+        if: always()  # Run this step only if desired
+
+  merge_to_main:
+    needs: [build_next_js]  # This job depends on the `build_next_js` job
+    runs-on: ubuntu-latest
+
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.4
 
       - name: Merge production into main
         run: |
