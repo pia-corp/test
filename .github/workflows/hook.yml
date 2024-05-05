@@ -6,3 +6,5 @@ on:
 jobs:
   BUILD:
     uses: ./.github/workflows/_build_nextjs.yml
+    secrets:
+      APIKEY: '${{ secrets.MICROCMS_API_KEY }}'
