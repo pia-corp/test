@@ -12,12 +12,20 @@ jobs:
   build_next_js:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      # githubのコンソールから入力したリリース名を環境変数へ保存
+      RELEASE_BRANCH_NAME: release/${{ github.event.inputs.version }}
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v4.1.4
         with:
           node-version: "${{ secrets.TOKEN }}"
+
+      - name: Create and push release branch
+        run: |
+          git checkout -b ${{ env.RELEASE_BRANCH_NAME }}
+          git push origin ${{ env.RELEASE_BRANCH_NAME }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4.0.2
@@ -45,37 +53,13 @@ jobs:
           MICROCMS_SERVICE_DOMAIN: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
           MICROCMS_API_KEY: ${{ secrets.APIKEY }}
 
-      - name: Commit and push changes (Optional)
-        # Consider using a separate workflow for deployments
-        run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "GitHub Actions"
-          git add .
-          git commit -m "Build Next.js"
-        if: always()  # Run this step only if desired
-
-      - name: Push changes to production branch (Optional)
-        # Consider using a separate workflow with proper access control
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.TOKEN }}
-          branch: production
-        if: always()  # Run this step only if desired
-
-  merge_to_main:
-    needs: [build_next_js]  # This job depends on the `build_next_js` job
-    runs-on: ubuntu-latest
-
-    permissions:
-      pull-requests: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4.1.4
-
-      - name: Merge production into main
-        run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          git pull origin production --ff-only
+      # releasブランチ -> mainブランチへのPull Requestを作成
+      - name: Create PR for release
+        run: git-pr-release --squash
+        env:
+          GIT_PR_RELEASE_TOKEN: ${{ secrets.TOKEN }}
+          GIT_PR_RELEASE_BRANCH_PRODUCTION: main
+          GIT_PR_RELEASE_BRANCH_STAGING: ${{ env.RELEASE_BRANCH_NAME }}
+          GIT_PR_RELEASE_LABELS: release
+          TZ: Asia/Tokyo
           git push origin HEAD:refs/heads/main
