@@ -5,17 +5,17 @@ on:
     secrets:
       TOKEN:
         required: true
-    inputs:
-      node_version:
-        type: string
-        required: true
+    # inputs:
+    #   node_version:
+    #     type: string
+    #     required: true
 
 jobs:
   call_workflow:
     if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && startsWith(github.head_ref, 'develop')
     uses: ./.github/workflows/_npm.yml
-    with:
-      node_version: '${{ inputs.node_version }}'
+    # with:
+    #   node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
 
   upload:
     needs:
@@ -32,7 +32,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4.0.2
         with:
-          node-version: '${{ inputs.node_version }}'
+          node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
 
       - name: Restore node_modules
         uses: actions/cache@v4.0.2

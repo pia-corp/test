@@ -8,9 +8,14 @@ on:
       - closed
 
 jobs:
-  PR_AGENT:
+  UPLOAD:
     uses: ./.github/workflows/_upload.yml
-    with:
-      node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+    # with:
+    #   node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
     secrets:
-      TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  CREATE TAG:
+    uses: ./.github/workflows/_upload.yml
+    secrets:
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}

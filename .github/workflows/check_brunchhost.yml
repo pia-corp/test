@@ -11,5 +11,5 @@ jobs:
     if: ${{ github.event.sender.type != 'Bot' }}
     steps:
       - name: PR from Develop Branch
-        if: github.event_name == 'pull_request' && !startsWith(github.head_ref, 'develop')
+        if: github.event_name == 'pull_request' && !startsWith(github.head_ref, 'develop') && !startsWith(github.head_ref, 'hotfix')
         run: exit 1
