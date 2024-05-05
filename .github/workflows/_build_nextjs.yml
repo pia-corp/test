@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4.1.4
+        with:
+          node-version: "${{ secrets.TOKEN }}"
 
       - name: Setup Node.js
         uses: actions/setup-node@v4.0.2
