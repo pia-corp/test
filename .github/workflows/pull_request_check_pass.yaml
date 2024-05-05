@@ -1,11 +1,11 @@
-name: CHECK PASS
+# name: CHECK PASS
 
-on:
-  check_run:
-    types: [rerequested]
+# on:
+#   check_run:
+#     types: [rerequested]
 
-jobs:
-  BUILD:
-    uses: ./.github/workflows/_build_nextjs.yml
-    secrets:
-      APIKEY: '${{ secrets.MICROCMS_API_KEY }}'
+# jobs:
+#   BUILD:
+#     uses: ./.github/workflows/_build_nextjs.yml
+#     secrets:
+#       APIKEY: '${{ secrets.MICROCMS_API_KEY }}'
