@@ -15,6 +15,8 @@ jobs:
     env:
       # githubのコンソールから入力したリリース名を環境変数へ保存
       RELEASE_BRANCH_NAME: release/${{ github.event.inputs.version }}
+      # PR_URL: ${{ github.event.pull_request.html_url }}
+      # GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
     steps:
       - name: Check out repository
@@ -24,8 +26,9 @@ jobs:
 
       - name: Create and push release branch
         run: |
-          git checkout -b ${{ env.RELEASE_BRANCH_NAME }}
-          git push origin ${{ env.RELEASE_BRANCH_NAME }}
+          RELEASE_BRANCH_NAME_WITH_SUFFIX="${{ env.RELEASE_BRANCH_NAME }}hoge"
+          git checkout -b RELEASE_BRANCH_NAME_WITH_SUFFIX
+          git push origin RELEASE_BRANCH_NAME_WITH_SUFFIX
 
       - name: Setup Node.js
         uses: actions/setup-node@v4.0.2
@@ -64,3 +67,9 @@ jobs:
         run: |
           git-pr-release --squash
           git push origin HEAD:refs/heads/main
+
+      # - name: Approve PR
+      #   run: gh pr review "$PR_URL" --approve
+
+      # - name: Enable auto-merge
+      #   run: gh pr merge --merge --auto "$PR_URL"
