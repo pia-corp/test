@@ -60,8 +60,8 @@ jobs:
           configPath: './.lighthouserc.json'
           temporaryPublicStorage: true
           urls: |
-            ./out/index.html
-            ./out/404.html
+            /home/runner/work/test/test/out/index.html
+            /home/runner/work/test/test/out/404.html
 
       - name: Comment on PR
         id: format_lighthouse_score
