@@ -24,9 +24,12 @@ jobs:
         with:
           node-version: "${{ secrets.TOKEN }}"
 
+      - name: Set release branch name
+        run: echo "RELEASE_BRANCH_NAME=release/$(date +'%Y%m%d%H%M')" >> $GITHUB_ENV
+
       - name: Create and push release branch
         run: |
-          RELEASE_BRANCH_NAME_WITH_SUFFIX="${{ env.RELEASE_BRANCH_NAME }}hoge"
+          RELEASE_BRANCH_NAME_WITH_SUFFIX="${{ env.RELEASE_BRANCH_NAME }}"
           git checkout -b RELEASE_BRANCH_NAME_WITH_SUFFIX
           git push origin RELEASE_BRANCH_NAME_WITH_SUFFIX
 
@@ -57,19 +60,16 @@ jobs:
           MICROCMS_API_KEY: ${{ secrets.APIKEY }}
 
       # releasブランチ -> mainブランチへのPull Requestを作成
-      - name: Create PR for release
+      - name: Create Pull Request dev2stage
+        id: create-pull-request
         env:
-          GIT_PR_RELEASE_TOKEN: ${{ secrets.TOKEN }}
-          GIT_PR_RELEASE_BRANCH_PRODUCTION: main
-          GIT_PR_RELEASE_BRANCH_STAGING: ${{ env.RELEASE_BRANCH_NAME }}
-          GIT_PR_RELEASE_LABELS: release
-          TZ: Asia/Tokyo
+          GH_TOKEN: ${{ secrets.TOKEN }}
         run: |
-          git-pr-release --squash
-          git push origin HEAD:refs/heads/main
+          PULL_REQUEST_URI=$(gh pr create -B stage -t ${{ env.RELEASE_BRANCH_NAME }} -l 'auto merge' -b "")
+          echo "::set-output name=PULL_REQUEST_URI::$PULL_REQUEST_URI"
 
-      # - name: Approve PR
-      #   run: gh pr review "$PR_URL" --approve
-
-      # - name: Enable auto-merge
-      #   run: gh pr merge --merge --auto "$PR_URL"
+      - name: Merge Pull Request dev2stage
+        env:
+          GH_TOKEN: ${{ secrets.TOKEN }}
+        run: |
+          gh pr merge ${{steps.create-pull-request.outputs.PULL_REQUEST_URI}} --merge
