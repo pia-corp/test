@@ -47,7 +47,7 @@ jobs:
         id: lighthouse_audit
         run: |
           npm install -g @lhci/cli@0.13.x
-          lhci autorun
+          lhci autorun --outputDir=outputs
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.TOKEN }}
           temporaryPublicStorage: true
@@ -68,6 +68,11 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            const job_logs = fs.readFileSync('job.log', 'utf8');
+            const match = /#.* report: ([\s\S]*?)$/;
+            const reportJsonString = match[1];
+            const reportJson = JSON.parse(reportJsonString);
+
             const result２ = ${{ steps.lighthouse_audit.outputs.manifest }}[0].summary;
             const result = '${{ steps.opening_announce.outputs.result }}'
             const obj = ${{ steps.lighthouse_audit.outputs.manifest }};
