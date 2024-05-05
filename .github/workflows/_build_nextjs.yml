@@ -2,6 +2,13 @@ name: Handle PR from Develop Branch & Build
 
 on:
   workflow_call:
+    secrets:
+      APIKEY:
+        required: true
+    # inputs:
+    #   node_version:
+    #     type: string
+    #     required: true
 
 jobs:
   error_handling:
@@ -57,7 +64,7 @@ jobs:
         run: npm run build
         env:
           MICROCMS_SERVICE_DOMAIN: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
-          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+          MICROCMS_API_KEY: ${{ secrets.APIKEY }}
 
       - name: Commit and push changes
         run: |
