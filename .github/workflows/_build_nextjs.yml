@@ -7,21 +7,11 @@ on:
         required: true
 
 jobs:
-  error_handling:
-    runs-on: ubuntu-latest
-
-  call_workflow:
-    uses: ./.github/workflows/_npm.yml
-    # with:
-    #   node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
-
   build:
-    needs:
-      - call_workflow
-
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
 
+    name: MarkUp Linter
     steps:
       - uses: actions/checkout@v4.1.4
         with:
