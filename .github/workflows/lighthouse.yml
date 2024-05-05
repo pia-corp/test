@@ -43,24 +43,25 @@ jobs:
         run: npm ci --no-audit --progress=false --silent
 
 
-      - name: run Lighthouse CI
-        id: lighthouse_audit
-        run: |
-          npm install -g @lhci/cli@0.13.x
-          lhci autorun --outputDir=outputs
-        env:
-          LHCI_GITHUB_APP_TOKEN: ${{ secrets.TOKEN }}
-          temporaryPublicStorage: true
-
-
-      # - name: Run Lighthouse against a static dist dir
+      # - name: run Lighthouse CI
       #   id: lighthouse_audit
-      #   uses: treosh/lighthouse-ci-action@v11
-      #   with:
-      #     # urls: |
-      #     #   git show $GITHUB_SHA --name-only
-      #     configPath: './.lighthouserc.json'
+      #   run: |
+      #     npm install -g @lhci/cli@0.13.x
+      #     lhci autorun --outputDir=outputs
+      #   env:
+      #     LHCI_GITHUB_APP_TOKEN: ${{ secrets.TOKEN }}
       #     temporaryPublicStorage: true
+
+
+      - name: Run Lighthouse against a static dist dir
+        id: lighthouse_audit
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          configPath: './.lighthouserc.json'
+          temporaryPublicStorage: true
+          urls: |
+          ./out/index.html
+          ./out/404.html
 
       - name: Comment on PR
         id: format_lighthouse_score
@@ -68,14 +69,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const job_logs = fs.readFileSync('job.log', 'utf8');
-            const match = /#.* report: ([\s\S]*?)$/;
-            const reportJsonString = match[1];
-            const reportJson = JSON.parse(reportJsonString);
-            console.log(reportJson);
-
-            const result２ = ${{ steps.lighthouse_audit.outputs.manifest }}[0].summary;
-            const result = '${{ steps.opening_announce.outputs.result }}'
+            const result = ${{ steps.lighthouse_audit.outputs.manifest }}[0].summary;
             const obj = ${{ steps.lighthouse_audit.outputs.manifest }};
             const formatResult = (res) => Math.round((res * 100));
             const file_name = (url) => { return url.replace(/^http:\/\/localhost:\d+\//, ""); };
