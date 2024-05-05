@@ -5,25 +5,30 @@ on:
     secrets:
       APIKEY:
         required: true
+      TOKEN:
+        required: true
 
 jobs:
-  build:
+  build next.js:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
-    name: MarkUp Linter
     steps:
-      - uses: actions/checkout@v4.1.4
-        with:
-          ref: ${{ github.head_ref }}
+      - name: Create production branch
+        # if: github.event.pull_request.merged && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'develop'
+        run: |
+          git checkout -b production
+          git push origin production
+
+      - name: Check out repository
+      　uses: actions/checkout@v4.1.4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4.0.2
         with:
           node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
 
-      - name: Restore node_modules
-        uses: actions/cache@v4.0.2
+      - uses: actions/cache@v4.0.2
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
@@ -50,9 +55,23 @@ jobs:
           git config --global user.name "GitHub Actions"
           git add .
           git commit -m "Build Next.js"
-          git push origin ${{ github.head_ref }}
 
-      - name: Auto-commit changes (optional)
-        uses: stefanzweifel/git-auto-commit-action@v5.0.1
+      - name: Push changes to production branch
+        # if: github.event.pull_request.merged && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'develop'
+        uses: ad-m/github-push-action@master
         with:
-          commit_message: Build Next.js
+          github_token: ${{ secrets.TOKEN }}
+          branch: production
+
+      - name: Merge production into main
+        # if: github.event.pull_request.merged && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'develop'
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git pull origin production --ff-only
+          git push origin HEAD:refs/heads/main
+
+      # - name: Auto-commit changes (optional)
+      #   uses: stefanzweifel/git-auto-commit-action@v5.0.1
+      #   with:
+      #     commit_message: Build Next.js
