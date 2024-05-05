@@ -15,7 +15,7 @@ jobs:
     secrets:
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  CREATE TAG:
+  CREATE_TAG:
     uses: ./.github/workflows/_upload.yml
     secrets:
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
