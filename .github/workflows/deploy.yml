@@ -9,6 +9,8 @@ on:
 
 jobs:
   PR_AGENT:
-    uses: ./.github/workflows/upload.yml
+    uses: ./.github/workflows/_upload.yml
     with:
       node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+    secrets:
+      TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
