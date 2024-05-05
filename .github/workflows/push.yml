@@ -8,10 +8,10 @@ on:
 
 jobs:
   LINTER:
-    uses: ./.github/workflows/prettier.yml
+    uses: ./.github/workflows/_linter.yml
 
   LIGHTHOUSE:
     needs: LINTER
-    uses: ./.github/workflows/lighthouse.yml
+    uses: ./.github/workflows/_lighthouse.yml
     secrets:
       TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}

@@ -7,4 +7,4 @@ on:
 
 jobs:
   LINTER:
-    uses: ./.github/workflows/prettier.yml
+    uses: ./.github/workflows/_linter.yml
