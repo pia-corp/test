@@ -72,6 +72,7 @@ jobs:
             const match = /#.* report: ([\s\S]*?)$/;
             const reportJsonString = match[1];
             const reportJson = JSON.parse(reportJsonString);
+            console.log(reportJson);
 
             const result２ = ${{ steps.lighthouse_audit.outputs.manifest }}[0].summary;
             const result = '${{ steps.opening_announce.outputs.result }}'
