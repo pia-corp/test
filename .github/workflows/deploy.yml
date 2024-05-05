@@ -9,14 +9,14 @@ on:
       - closed
 
 jobs:
-  BUILD:
-    uses: ./.github/workflows/_build_nextjs.yml
-    secrets:
-      APIKEY: '${{ secrets.MICROCMS_API_KEY }}'
-      TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # BUILD:
+  #   uses: ./.github/workflows/_build_nextjs.yml
+  #   secrets:
+  #     APIKEY: '${{ secrets.MICROCMS_API_KEY }}'
+  #     TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   CREATE_TAG:
-    needs: BUILD
+    # needs: BUILD
     uses: ./.github/workflows/_create_tag.yml
     secrets:
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
