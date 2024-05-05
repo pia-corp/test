@@ -10,3 +10,5 @@ on:
 jobs:
   PR_AGENT:
     uses: ./.github/workflows/upload.yml
+    with:
+      node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
