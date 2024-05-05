@@ -29,9 +29,8 @@ jobs:
 
       - name: Create and push release branch
         run: |
-          RELEASE_BRANCH_NAME_WITH_SUFFIX="${{ env.RELEASE_BRANCH_NAME }}"
-          git checkout -b $RELEASE_BRANCH_NAME_WITH_SUFFIX
-          git push origin $RELEASE_BRANCH_NAME_WITH_SUFFIX
+          git checkout -b ${{ env.RELEASE_BRANCH_NAME }}
+          git push origin ${{ env.RELEASE_BRANCH_NAME }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4.0.2
@@ -65,7 +64,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.TOKEN }}
         run: |
-          PULL_REQUEST_URI=$(gh pr create -B stage -t ${{ env.RELEASE_BRANCH_NAME }} -l 'auto merge' -b "")
+          PULL_REQUEST_URI=$(gh pr create -B stage -t ${{ env.RELEASE_BRANCH_NAME }} -b "")
           echo "::set-output name=PULL_REQUEST_URI::$PULL_REQUEST_URI"
 
       - name: Merge Pull Request dev2stage
