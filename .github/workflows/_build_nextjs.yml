@@ -7,13 +7,13 @@ on:
         required: true
 
 jobs:
-  build:
+  build next.js:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
-    name: MarkUp Linter
     steps:
-      - uses: actions/checkout@v4.1.4
+      - name: Check out repository
+      　uses: actions/checkout@v4.1.4
         with:
           ref: ${{ github.head_ref }}
 
@@ -22,8 +22,7 @@ jobs:
         with:
           node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
 
-      - name: Restore node_modules
-        uses: actions/cache@v4.0.2
+      - uses: actions/cache@v4.0.2
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}

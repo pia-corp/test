@@ -14,15 +14,16 @@ jobs:
     secrets:
       APIKEY: '${{ secrets.MICROCMS_API_KEY }}'
 
-  UPLOAD:
+  CREATE_TAG:
     needs: BUILD
-    uses: ./.github/workflows/_upload.yml
-    # with:
-    #   node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+    uses: ./.github/workflows/_create_tag.yml
     secrets:
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  CREATE_TAG:
+  UPLOAD:
+    needs: CREATE_TAG
     uses: ./.github/workflows/_upload.yml
+    # with:
+    #   node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
     secrets:
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
