@@ -5,4 +5,4 @@ on:
 
 jobs:
   BUILD:
-    uses: ./.github/workflows/build.yml
+    uses: ./.github/workflows/_build_nextjs.yml
