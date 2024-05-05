@@ -12,16 +12,16 @@ jobs:
   #   with:
   #     node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
 
-  lhci:
+  Lighthouse:
     # needs:
     #   - call_workflow
 
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
-    name: Lighthouse
     steps:
-      - uses: actions/checkout@v4.1.4
+      - name: Check out repository
+        uses: actions/checkout@v4.1.4
         with:
           ref: ${{ github.head_ref }}
 
@@ -30,8 +30,7 @@ jobs:
         with:
           node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
 
-      - name: Restore node_modules
-        uses: actions/cache@v4.0.2
+      - uses: actions/cache@v4.0.2
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
@@ -40,17 +39,17 @@ jobs:
 
       - name: Dependency Installation (If there is no cache)
         if: steps.restore_node_modules.outputs.cache-hit != 'true'
-        run: npm ci --no-audit --progress=false --silent
+        run: npm ci
+        # run: npm ci --no-audit --progress=false --silent
 
-
-      # - name: run Lighthouse CI
-      #   id: lighthouse_audit
-      #   run: |
-      #     npm install -g @lhci/cli@0.13.x
-      #     lhci autorun --outputDir=outputs
-      #   env:
-      #     LHCI_GITHUB_APP_TOKEN: ${{ secrets.TOKEN }}
-      #     temporaryPublicStorage: true
+        # - name: run Lighthouse CI
+        #   id: lighthouse_audit
+        #   run: |
+        #     npm install -g @lhci/cli@0.13.x
+        #     lhci autorun --outputDir=outputs
+        #   env:
+        #     LHCI_GITHUB_APP_TOKEN: ${{ secrets.TOKEN }}
+        #     temporaryPublicStorage: true
 
       - name: Run Lighthouse against a static dist dir
         id: lighthouse_audit
