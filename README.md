@@ -3,7 +3,6 @@
 </p>
 
 [![npm version](https://img.shields.io/npm/v/react.svg?style=flat)](https://www.npmjs.com/package/react)
-[![Linter](https://github.com/pia-corp/test/actions/workflows/prettier.yml/badge.svg)](https://github.com/pia-corp/test/actions/workflows/prettier.yml)
 [![Deploy](https://github.com/pia-corp/test/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/pia-corp/test/actions/workflows/deploy.yml)
 
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
