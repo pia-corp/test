@@ -5,6 +5,9 @@ on:
     secrets:
       TOKEN:
         required: true
+      PASSWORD:
+        required: true
+
 
 jobs:
   UPLOAD:
@@ -18,32 +21,33 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+          cache: npm
+
+      - name: Restore node_modules
+        uses: actions/cache@v4.0.2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+
+      - name: Dependency Installation (If there is no cache)
+        if: steps.restore_node_modules.outputs.cache-hit != 'true'
+        run: npm ci --no-audit --progress=false --silent
+
       - name: Deploy via SFTP
         uses: wangyucode/sftp-upload-action@v2.0.2
         with:
           host: ${{ vars.SFTP_HOST }}
+          port:  ${{ vars.SFTP_PORT }}
           username: ${{ vars.SFTP_USER_NAME }}
-          password: ${{ secrets.SFTP_PASSWORD }}
+          password: ${{ secrets.PASSWORD }}
           localDir: ${{ vars.LOCAL_PATH }}
           remoteDir: /faloom.jp/pc/test/
-          port:  ${{ vars.SFTP_PORT }}
-
-      # - name: Setup Node.js
-      #   uses: actions/setup-node@v4.0.2
-      #   with:
-      #     node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
-      #     cache: npm
-
-      # - name: Restore node_modules
-      #   uses: actions/cache@v4.0.2
-      #   with:
-      #     path: ~/.npm
-      #     key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-      #     restore-keys: ${{ runner.os }}-node-
-
-      # - name: Dependency Installation (If there is no cache)
-      #   if: steps.restore_node_modules.outputs.cache-hit != 'true'
-      #   run: npm ci --no-audit --progress=false --silent
+          # removeExtraFilesOnServer: false       # サーバ上の余分なファイルを削除します. デフォルトはfalse.
 
 
 
