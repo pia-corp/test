@@ -7,10 +7,14 @@ on:
     types: [edited, synchronize]
 
 jobs:
+  BUILD_SETUP:
+    uses: ./.github/workflows/_npm.yml
+
   LINTER:
+    needs: Build_Setup
     uses: ./.github/workflows/_linter.yml
 
-  LIGHTHOUSE:
+  CORE_WEB_VITALS:
     needs: LINTER
     uses: ./.github/workflows/_lighthouse.yml
     secrets:

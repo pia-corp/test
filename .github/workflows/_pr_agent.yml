@@ -11,12 +11,11 @@ on:
 jobs:
   pr_agent_job:
     runs-on: ubuntu-latest
-
+    timeout-minutes: 5
     permissions:
       pull-requests: write
       contents: write
 
-    timeout-minutes: 5
 
     name: Run PR Agent
     if: ${{ github.event.sender.type != 'Bot'}}
