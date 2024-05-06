@@ -11,6 +11,7 @@ jobs:
     uses: ./.github/workflows/_npm.yml
 
   LINTER:
+    needs: BUILD_SETUP
     needs: Build_Setup
     uses: ./.github/workflows/_linter.yml
 
