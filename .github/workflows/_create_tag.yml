@@ -10,6 +10,13 @@ jobs:
   create-release-tag:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      actions: write
+      contents: write
+      deployments: write
+      packages: write
+      pull-requests: write
+      statuses: write
     env:
       TZ: 'Asia/Tokyo'
 
