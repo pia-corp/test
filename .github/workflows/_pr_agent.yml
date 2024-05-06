@@ -16,7 +16,6 @@ jobs:
       pull-requests: write
       contents: write
 
-
     name: Run PR Agent
     if: ${{ github.event.sender.type != 'Bot'}}
     steps:

@@ -8,6 +8,9 @@ on:
       - opened
 
 jobs:
+  BUILD_SETUP:
+    uses: ./.github/workflows/_npm.yml
+
   PR_AGENT:
     uses: ./.github/workflows/_pr_agent.yml
     secrets:
@@ -19,9 +22,11 @@ jobs:
     uses: ./.github/workflows/_init_comment.yml
 
   LINTER:
+    needs: COMMENT_OPENING_ANNOUNCE
     uses: ./.github/workflows/_linter.yml
 
   LIGHTHOUSE:
+    needs: COMMENT_OPENING_ANNOUNCE
     uses: ./.github/workflows/_lighthouse.yml
     secrets:
       TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}

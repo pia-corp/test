@@ -13,7 +13,7 @@ jobs:
     uses: ./.github/workflows/_npm.yml
 
   UPLOAD:
-    needs: CREATE_TAG
+    needs: BUILD_SETUP
     uses: ./.github/workflows/_upload.yml
     secrets:
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
