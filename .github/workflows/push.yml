@@ -13,7 +13,6 @@ jobs:
 
   LINTER:
     needs: BUILD_SETUP
-    needs: Build_Setup
     uses: ./.github/workflows/_linter.yml
 
   CORE_WEB_VITALS:
