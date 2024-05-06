@@ -14,8 +14,7 @@
 # ファイルの取得
 
 1. リポジトリをクローンしてください。プロジェクトのローカルコピーが作成されます。作業を進める前に、必ず新しいdevelopブランチを作成してください。
-2. developブランチから別のブランチを切ることは問題ありませんが、プルリクエストはdevelopブランチからのみ許可されています。
-3. 作業が完了したら、変更内容をプッシュしてください。
+2. developブランチから別のブランチを切ることは問題ありません、mainへプルリクエストを出す場合はdevelopブランチにmergeしてください。
 
 ```bash
 git clone https://github.com/pia-corp/faloom.jp.git
@@ -24,7 +23,7 @@ git clone https://github.com/pia-corp/faloom.jp.git
 ### コードチェック
 
 ローカル環境でテストする場合は下記のコードで確認ができます。
-チェック内容は[CODECHECK.md](https://github.com/pia-corp/test/CODECHECK.md)を確認してください。
+チェック内容は[CODECHECK.md](https://github.com/pia-corp/test/doc/CODECHECK.md)を確認してください。
 
 ```bash
 npm run lint
@@ -32,29 +31,29 @@ npm run lint
 
 # ディレクトリ構造
 
+HTML、JavaScript、CSSなどはpublicフォルダに作成してください。
+
 ```sh
 └── project/
     ├── .github/
-    ├── images/
+    ├── .next/
+    ├── components/
+    ├── doc/
+    ├── interface/
+    ├── libs/
     ├── out/
     │   ├── index.html
     │   ├── sitemap.xml
     │   ├── manifest.webmanifest
     │   └── contact/
     │       └── index.html
+    ├── pages/
+    ├── public/
+    ├── styles/
     ├── .gitignore
     ├── package.json
     └── README.md
 ```
-
-1. **`.github`**: github workflow用
-
-2. **`images/`**: github上で使う画像
-
-3. **`out/`**: デプロイ用のHTML、JavaScript、CSSなどの本番環境へアップロードするソースコードを格納します。
-
-4. **`README.md`**: プロジェクトの概要や使い方を説明します。
-
 
 ## サーバ側
 
@@ -67,15 +66,8 @@ npm run lint
         └── ※※※※.html
 ```
 
-1. **`index.html`**: サイトのトップページ
-
-2. **`sitemap.xml`**: XML サイトマップ
-
-3. **`manifest.webmanifest`**: ウェブアプリのマニフェストファイルです。
-
-4. **`news/`**: マージ後に自動ビルドされます。このフォルダにはファイルを置かないでください。
-
 - 必要に応じてディレクトリやファイルを追加してください。
+- newsフォルダはマージ後に自動ビルドされます。このフォルダにはファイルを置かないでください。
 
 # Code Sample
 
@@ -197,8 +189,6 @@ https://document.microcms.io/
 - webp
 
 ベクター形式で出力できる場合は svg で書き出し。そうでなければ webp 等の形式にしてください。
-
-🏞️ svg で出力する場合、特に理由がなければ webp を使用してください。
 画像の縦横サイズは最適化し、容量圧縮してください。
 
 ## ファビコン
