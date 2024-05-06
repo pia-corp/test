@@ -24,9 +24,8 @@ jobs:
     secrets:
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-
   CREATE_NOTE:
-    needs: UPLOAD
-    uses: ./.github/workflows/_create_release-note.yml
+    needs: CREATE_TAG
+    uses: ./.github/workflows/_create-release-note.yml
     secrets:
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
