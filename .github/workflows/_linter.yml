@@ -16,6 +16,15 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
+    - name: Cache node (if not already cached)
+      id: cache_dependency
+      uses: actions/cache@v4.0.2
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
       - name: Lint and rewrite markup
         run: npm run lint:markuplint
 
@@ -28,6 +37,15 @@ jobs:
 
     name: Prettier
     steps:
+      - name: Cache node (if not already cached)
+        id: cache_dependency
+        uses: actions/cache@v4.0.2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Lint and rewrite markup
         run: npm run lint:prettier
 
