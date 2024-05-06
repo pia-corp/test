@@ -1,34 +1,30 @@
-name: npm cache
+name: Build_Setup
 
 on:
   workflow_call:
-    # inputs:
-    #   node_version:
-    #     type: string
-    #     required: true
 
 jobs:
   cache_npm:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: {}
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4.1.4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4.0.2
         with:
           node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
           cache: npm
 
-      - name: Cache node_modules (if not already cached)
+      - name: Cache node (if not already cached)
         id: cache_dependency
         uses: actions/cache@v4.0.2
         with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-node_modules-
+            ${{ runner.os }}-node-
 
       - name: Install dependencies (if cache miss)
         if: ${{ steps.cache_dependency.outputs.cache-hit != 'true' }}
