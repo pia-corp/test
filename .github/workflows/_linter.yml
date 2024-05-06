@@ -4,11 +4,7 @@ on:
   workflow_call:
 
 jobs:
-  Build_Setup:
-    uses: ./.github/workflows/_npm.yml
-
-  Linter:
-    needs: Build_Setup
+  Markup_Linter:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -28,7 +24,7 @@ jobs:
         run: npm run lint:markuplint
 
   Prettier:
-    needs: Build_Setup
+    needs: Markup_Linter
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
