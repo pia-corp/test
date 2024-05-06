@@ -1,4 +1,4 @@
-name: CREATE TAG
+name: CREATE TAG & NOTE
 
 on:
   workflow_call:
