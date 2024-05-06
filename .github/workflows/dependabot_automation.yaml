@@ -23,6 +23,14 @@ jobs:
         uses: dependabot/fetch-metadata@v1.3.5
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Change merge branch for Dependabot PR
+        run: |
+          gh pr edit "$PR_URL" --base 'dependabot-auto-merge' #マージ先の変更
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Approve & enable auto-merge for Dependabot PR
         if: |
           steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
