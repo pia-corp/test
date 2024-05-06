@@ -22,7 +22,7 @@ jobs:
 
   CREATE_TAG:
     needs: UPLOAD
-    uses: ./.github/workflows/_create_relese_note.yaml
+    uses: ./.github/workflows/_create_relese_note.yml
 
     # runs-on: ubuntu-latest
     # timeout-minutes: 5
