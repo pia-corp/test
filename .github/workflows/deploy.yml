@@ -21,8 +21,8 @@ jobs:
       PASSWORD: ${{ secrets.SFTP_PASSWORD }}
 
   CREATE_TAG:
-    needs: UPLOAD
     steps:
+      needs: UPLOAD
       - name: Get previous tag
         id: pre_tag
         run: |
