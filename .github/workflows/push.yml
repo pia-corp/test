@@ -6,9 +6,9 @@ on:
       - main
     types: [edited, synchronize]
 
-if: ${{ github.event.sender.type != 'Bot' }} && github.event_name == 'pull_request' && (!startsWith(github.head_ref, 'develop') || !startsWith(github.head_ref, 'hotfix'))
 jobs:
   BUILD_SETUP:
+    if: ${{ github.event.sender.type != 'Bot' }} && github.event_name == 'pull_request' && (!startsWith(github.head_ref, 'develop') || !startsWith(github.head_ref, 'hotfix'))
     uses: ./.github/workflows/_npm.yml
 
   LINTER:
