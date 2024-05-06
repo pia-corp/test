@@ -24,7 +24,7 @@ jobs:
           echo "File Present: ${{ file_present }}"
           exit ${{ file_present }}
         outputs:
-            file_present: ${{ steps.check_package_lock_exists.outputs.file_present }}
+          file_present: ${{ steps.check_package_lock_exists.outputs.file_present }}
 
       - name: Cache node (if package-lock.json exists)
         if: ${{ steps.check_package_lock_exists.outputs.file_present == '1' }}
