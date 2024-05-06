@@ -11,7 +11,7 @@ jobs:
       contents: read
 
     steps:
-      # - uses: actions/checkout@v4.1.4
+      - uses: actions/checkout@v4.1.4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4.0.2
@@ -23,8 +23,7 @@ jobs:
         id: cache_dependency
         uses: actions/cache@v4.0.2
         with:
-          # path: ~/.npm
-          path: '**/node'
+          path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
