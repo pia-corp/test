@@ -5,41 +5,35 @@ on:
     secrets:
       TOKEN:
         required: true
-    # inputs:
-    #   node_version:
-    #     type: string
-    #     required: true
 
 jobs:
-  call_workflow:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && startsWith(github.head_ref, 'develop')
-    uses: ./.github/workflows/_npm.yml
-    # with:
-    #   node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
-
-  upload:
-    needs:
-      - call_workflow
-
+  UPLOAD:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: write
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4.1.4
+      - uses: actions/checkout@v4.1.4
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4.0.2
         with:
           node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+          cache: npm
 
       - name: Restore node_modules
         uses: actions/cache@v4.0.2
         with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node_modules-
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+
+      - name: Dependency Installation (If there is no cache)
+        if: steps.restore_node_modules.outputs.cache-hit != 'true'
+        run: npm ci --no-audit --progress=false --silent
 
           # uses: actions/cache@v4
           # with:
