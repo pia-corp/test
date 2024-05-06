@@ -1,4 +1,4 @@
-name: Deploy to Develop Branch & Create release tag and release note.
+name: Deploy
 
 on:
   workflow_dispatch:
