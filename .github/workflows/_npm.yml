@@ -10,6 +10,10 @@ jobs:
     permissions: {}
 
     steps:
+      - uses: actions/checkout@v4.1.4
+        with:
+          ref: ${{ github.head_ref }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v4.0.2
         with:
