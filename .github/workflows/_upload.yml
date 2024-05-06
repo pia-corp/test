@@ -5,6 +5,9 @@ on:
     secrets:
       TOKEN:
         required: true
+      PASSWORD:
+        required: true
+
 
 jobs:
   UPLOAD:
@@ -39,13 +42,12 @@ jobs:
         uses: wangyucode/sftp-upload-action@v2.0.2
         with:
           host: ${{ vars.SFTP_HOST }}
+          port:  ${{ vars.SFTP_PORT }}
           username: ${{ vars.SFTP_USER_NAME }}
-          password: ${{ secrets.SFTP_PASSWORD }}
+          password: ${{ secrets.PASSWORD }}
           localDir: ${{ vars.LOCAL_PATH }}
           remoteDir: /faloom.jp/pc/test/
-          port:  ${{ vars.SFTP_PORT }}
-
-
+          # removeExtraFilesOnServer: false       # サーバ上の余分なファイルを削除します. デフォルトはfalse.
 
 
 
