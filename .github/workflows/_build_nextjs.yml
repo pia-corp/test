@@ -18,6 +18,9 @@ jobs:
       # PR_URL: ${{ github.event.pull_request.html_url }}
       # GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
+#  ファイルの更新があった場合だけプルリクでマージ
+# statusみたいなのがあった気がする
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v4.1.4
