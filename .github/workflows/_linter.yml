@@ -6,8 +6,6 @@ on:
 jobs:
   Build_Setup:
     uses: ./.github/workflows/_npm.yml
-    with:
-      node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
 
   Linter:
     needs: Build_Setup
