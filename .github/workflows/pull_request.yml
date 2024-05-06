@@ -7,12 +7,14 @@ on:
     types:
       - opened
 
+if: ${{ github.event.sender.type != 'Bot' }} && github.event_name == 'pull_request' && (!startsWith(github.head_ref, 'develop') || !startsWith(github.head_ref, 'hotfix'))
 jobs:
   BUILD_SETUP:
     if: ${{ github.actor != 'dependabot[bot]' }}
     uses: ./.github/workflows/_npm.yml
 
   PR_AGENT:
+    needs: BUILD_SETUP
     uses: ./.github/workflows/_pr_agent.yml
     secrets:
       APIKEY: '${{ secrets.OPENAI_KEY }}'
@@ -26,7 +28,7 @@ jobs:
     needs: COMMENT_OPENING_ANNOUNCE
     uses: ./.github/workflows/_linter.yml
 
-  LIGHTHOUSE:
+  CORE_WEB_VITALS:
     needs: COMMENT_OPENING_ANNOUNCE
     uses: ./.github/workflows/_lighthouse.yml
     secrets:

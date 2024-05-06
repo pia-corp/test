@@ -10,6 +10,7 @@ on:
 
 jobs:
   BUILD_SETUP:
+    if: ${{ github.actor != 'dependabot[bot]' }}
     uses: ./.github/workflows/_npm.yml
 
   UPLOAD:
@@ -21,11 +22,5 @@ jobs:
   CREATE_TAG:
     needs: UPLOAD
     uses: ./.github/workflows/_create_tag.yml
-    secrets:
-      TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  CREATE_NOTE:
-    needs: CREATE_TAG
-    uses: ./.github/workflows/_create-release-note.yml
     secrets:
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
