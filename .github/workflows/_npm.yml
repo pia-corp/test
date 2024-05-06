@@ -7,8 +7,7 @@ jobs:
   cache_npm:
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    permissions:
-      contents: {}
+    permissions: {}
 
     steps:
       - name: Setup Node.js
