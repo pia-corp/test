@@ -16,10 +16,6 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      - name: Check if npm install was run
-        if: needs._npm.outputs.file_present != '1'
-        run: exit 1
-
       - name: Lint and rewrite markup
         run: npm run lint:markuplint
 

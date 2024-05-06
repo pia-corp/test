@@ -11,7 +11,7 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v4.1.4
+      # - uses: actions/checkout@v4.1.4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4.0.2
@@ -31,7 +31,4 @@ jobs:
 
       - name: Install dependencies (if cache miss)
         if: ${{ steps.cache_dependency.outputs.cache-hit != 'true' }}
-        run: |
-          npm ci
-
-      # npm ci --no-audit --progress=false --silent
+        run: npm ci --no-audit --progress=false --silent
