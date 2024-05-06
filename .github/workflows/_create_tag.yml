@@ -10,8 +10,6 @@ jobs:
   create-release-tag:
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    permissions:
-      contents: write
 
     steps:
       - name: Get previous tag
