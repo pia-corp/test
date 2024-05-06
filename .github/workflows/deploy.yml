@@ -9,22 +9,24 @@ on:
       - closed
 
 jobs:
-  # BUILD:
-  #   uses: ./.github/workflows/_build_nextjs.yml
-  #   secrets:
-  #     APIKEY: '${{ secrets.MICROCMS_API_KEY }}'
-  #     TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  CREATE_TAG:
-    # needs: BUILD
-    uses: ./.github/workflows/_create_tag.yml
-    secrets:
-      TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  BUILD_SETUP:
+    uses: ./.github/workflows/_npm.yml
 
   UPLOAD:
     needs: CREATE_TAG
     uses: ./.github/workflows/_upload.yml
-    # with:
-    #   node_version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+    secrets:
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  CREATE_TAG:
+    needs: UPLOAD
+    uses: ./.github/workflows/_create_tag.yml
+    secrets:
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+  CREATE_NOTE:
+    needs: UPLOAD
+    uses: ./.github/workflows/_create_release-note.yml
     secrets:
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
