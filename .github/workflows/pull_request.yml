@@ -7,10 +7,9 @@ on:
     types:
       - opened
 
-if: ${{ github.event.sender.type != 'Bot' }} && github.event_name == 'pull_request' && (!startsWith(github.head_ref, 'develop') || !startsWith(github.head_ref, 'hotfix'))
 jobs:
   BUILD_SETUP:
-    if: ${{ github.actor != 'dependabot[bot]' }}
+    if: ${{ github.event.sender.type != 'Bot' }} && (!startsWith(github.head_ref, 'develop') || !startsWith(github.head_ref, 'hotfix'))
     uses: ./.github/workflows/_npm.yml
 
   PR_AGENT:
