@@ -23,8 +23,10 @@ jobs:
   CREATE_TAG:
     needs: UPLOAD
     uses: ./.github/workflows/_create_relese_note.yml
+    secrets:
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    # runs-on: ubuntu-latest
+      # runs-on: ubuntu-latest
     # timeout-minutes: 5
 
     # steps:

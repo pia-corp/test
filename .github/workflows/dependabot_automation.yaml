@@ -6,22 +6,24 @@ on:
       - opened
 
 permissions:
-  pull-requests: write # approve/merge に必要
-  contents: write # merge に必要
-  issues: write  # label 付与に必要 (この例では不要)
-  repository-projects: write # PRタイトル変更等に必要(公式ドキュメントをご参照ください)
+  pull-requests: write
+  contents: write
+  issues: write
+  repository-projects: write
 
 jobs:
   dependabot-automation:
     runs-on: ubuntu-latest
-    if: ${{ github.actor == 'dependabot[bot]' }}
     timeout-minutes: 13
+
+    if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
       - name: Dependabot metadata
         id: metadata
         uses: dependabot/fetch-metadata@v1.3.5
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Approve & enable auto-merge for Dependabot PR
         if: |
           steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
