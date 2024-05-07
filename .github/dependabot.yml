@@ -9,8 +9,3 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-    groups:
-      dependencies:
-        patterns:
-          - "*"
-    target-branch: "main"
