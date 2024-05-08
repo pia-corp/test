@@ -7,20 +7,36 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    env:
-      # githubのコンソールから入力したリリース名を環境変数へ保存
-      RELEASE_BRANCH_NAME: release/${{ github.event.inputs.version }}
-      PR_URL: ${{ github.event.pull_request.html_url }}
-      GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4.1.4
-        with:
-          ref: ${{ github.head_ref }}
-
-      - name: Generate release tag
-        id: release_tag
+      # releasブランチを作成
+      - name: Create and push release branch
+        id: release_branch
         run: |
-          echo "${{ env.RELEASE_BRANCH_NAME }}"
-          echo "${{ env.PR_URL }}"
+          today=$(date +'%Y.%m.%d')
+          git checkout -b release/$today
+          git push origin release/$today
+          echo "RELEASE_BRANCH_NAME=release/$today" >> $GITHUB_ENV
+
+      # - name: Check out repository
+      #   uses: actions/checkout@v4.1.4
+      #   with:
+      #     ref: ${{ github.head_ref }}
+
+      # - name: Generate release tag
+      #   id: release_tag
+      #   run: |
+      #     echo "${{ env.RELEASE_BRANCH_NAME }}"
+      #     echo "${{ env.PR_URL }}"
+
+
+      # releasブランチ -> mainブランチへのPull Requestを作成
+      - name: Create PR for release
+        run: git-pr-release --squash
+        env:
+          GIT_PR_RELEASE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_PR_RELEASE_BRANCH_PRODUCTION: main
+          GIT_PR_RELEASE_BRANCH_STAGING: ${{ env.RELEASE_BRANCH_NAME }}
+          GIT_PR_RELEASE_LABELS: release
+          # GIT_PR_RELEASE_TEMPLATE: pr-release.template.erb
+          TZ: Asia/Tokyo
