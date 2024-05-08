@@ -20,7 +20,7 @@ jobs:
           ref: ${{ github.head_ref }}
 
       - name: Generate release tag
-      id: release_tag
-      run: |
-        echo "${{ env.RELEASE_BRANCH_NAME }}"
-        echo "${{ env.PR_URL }}"
+        id: release_tag
+        run: |
+          echo "${{ env.RELEASE_BRANCH_NAME }}"
+          echo "${{ env.PR_URL }}"
