@@ -23,8 +23,8 @@ jobs:
         id: release_tag
         run: |
           today=$(date +'%Y.%m.%d')
-          pre_release_date=$(echo "${{ steps.pre_tag.outputs.pre_tag }}" | awk -F'-' '{print $1}')
-          pre_release_count=$(echo "${{ steps.pre_tag.outputs.pre_tag }}" | awk -F'-' '{print $2}')
+          pre_release_date=$(echo "${{ env.pre_tag }}" | awk -F'-' '{print $1}')
+          pre_release_count=$(echo "${{ env.pre_tag }}" | awk -F'-' '{print $2}')
           if [[ ! $pre_release_date = $today ]]; then
             echo "init count"
             pre_release_count=0
@@ -34,8 +34,8 @@ jobs:
       - name: Generate release note
         id: release_note
         run: |
-          release_tag="${{ steps.release_tag.outputs.release_tag }}"
-          pre_tag="${{ steps.pre_tag.outputs.pre_tag }}"
+          release_tag="${{ env.release_tag }}"
+          pre_tag="${{ env.pre_tag }}"
           note=$(curl -X POST \
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: token ${{ secrets.PTOKEN }}" \
