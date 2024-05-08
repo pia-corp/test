@@ -25,6 +25,7 @@ jobs:
     uses: ./.github/workflows/_create_relese_note.yml
     secrets:
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PTOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       # runs-on: ubuntu-latest
     # timeout-minutes: 5
