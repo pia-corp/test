@@ -13,16 +13,26 @@ jobs:
     if: ${{ github.actor != 'dependabot[bot]' }}
     uses: ./.github/workflows/_npm.yml
 
-  UPLOAD:
+  BUILD:
     needs: BUILD_SETUP
-    uses: ./.github/workflows/_upload.yml
+    uses: ./.github/workflows/_build_nextjs.yml
     secrets:
+      APIKEY: '${{ secrets.MICROCMS_API_KEY }}'
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      PASSWORD: ${{ secrets.SFTP_PASSWORD }}
 
-  CREATE_TAG:
-    needs: UPLOAD
-    uses: ./.github/workflows/_create_relese_note.yml
-    secrets:
-      TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      PTOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+  FORMATTER:
+    needs: BUILD
+    uses: ./.github/workflows/_formatter.yml
+
+  # UPLOAD:
+  #   needs: BUILD_SETUP
+  #   uses: ./.github/workflows/_upload.yml
+  #   secrets:
+  #     TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     PASSWORD: ${{ secrets.SFTP_PASSWORD }}
+
+  # CREATE_TAG:
+  #   # needs: UPLOAD
+  #   uses: ./.github/workflows/_create_relese_note.yml
+  #   secrets:
+  #     TOKEN: ${{ secrets.GITHUB_TOKEN }}
