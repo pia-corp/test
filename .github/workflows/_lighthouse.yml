@@ -51,10 +51,11 @@ jobs:
         run: |
           merge_sha="${{ steps.merge_commit.outputs.sha }}"
           base_sha=$(git merge-base $merge_sha^1 $merge_sha)
-          git diff --name-only $base_sha $merge_sha > diff.txt
+          git diff --name-only -- '*.html' $base_sha $merge_sha > diff.txt
+          echo "::set-output name=diff_content::$(cat diff.txt)"
 
-          # Output the diff
-          cat diff.txt
+      - name: Print diff
+        run: echo "${{ steps.diff.outputs.diff_content }}"
 
 
       # - name: Get merge commit
@@ -78,7 +79,7 @@ jobs:
         uses: treosh/lighthouse-ci-action@v11
         with:
           urls: |
-            "${{ steps.diff.outputs.diff }}"
+            "${{ steps.diff.outputs.diff_content }}"
           configPath: './.lighthouserc.json'
           temporaryPublicStorage: true
 
