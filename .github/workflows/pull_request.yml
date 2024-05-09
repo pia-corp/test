@@ -23,12 +23,16 @@ jobs:
   #   needs: PR_AGENT
   #   uses: ./.github/workflows/_init_comment.yml
 
+  # DIFF:
+  #   needs: BUILD_SETUP
+  #   uses: ./.github/workflows/_diff_template.yml
+
   LINTER:
-    # needs: COMMENT_OPENING_ANNOUNCE
+    # needs: DIFF
     uses: ./.github/workflows/_linter.yml
 
   CORE_WEB_VITALS:
-    # needs: COMMENT_OPENING_ANNOUNCE
+    # needs: DIFF
     uses: ./.github/workflows/_lighthouse.yml
     secrets:
       TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
