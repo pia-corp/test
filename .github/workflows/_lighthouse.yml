@@ -54,7 +54,7 @@ jobs:
           git diff --name-only $base_sha $merge_sha > diff.txt
 
           # Output the diff
-          echo "cat diff.txt"
+          echo cat diff.txt
 
 
       # - name: Get merge commit
