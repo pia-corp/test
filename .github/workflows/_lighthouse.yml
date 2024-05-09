@@ -64,7 +64,7 @@ jobs:
         uses: treosh/lighthouse-ci-action@v11
         with:
           urls: |
-            $(cat html_diff.txt)
+            ${{ steps.read_html_diff.outputs.content }}
           configPath: './.lighthouserc.json'
           temporaryPublicStorage: true
 
