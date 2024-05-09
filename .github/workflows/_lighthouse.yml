@@ -47,20 +47,12 @@ jobs:
           echo "::set-output name=sha::$(git rev-parse FETCH_HEAD)"
 
       - name: Get diff
-        id: diff
         run: |
           merge_sha="${{ steps.merge_commit.outputs.sha }}"
           base_sha=$(git merge-base $merge_sha^1 $merge_sha)
           git diff --name-only $base_sha $merge_sha > diff.txt
-          echo "::set-output name=diff_content::$(cat diff.txt)"
 
         # git diff --name-only -- '*.html' $base_sha $merge_sha > diff.txt
-
-
-      - name: Print diff
-        run: |
-          echo "${{ steps.diff.outputs.diff_content }}"
-
 
       # - name: Get merge commit
       #   id: merge_commit
@@ -76,14 +68,12 @@ jobs:
       #     git diff --name-only $base_sha $merge_sha > diff.txt
       #     cat diff.txt
 
-
-
       - name: Run Lighthouse against a static dist dir
         id: lighthouse_audit
         uses: treosh/lighthouse-ci-action@v11
         with:
           urls: |
-            "${{ steps.diff.outputs.diff_content }}"
+            $(cat diff.txt)
           configPath: './.lighthouserc.json'
           temporaryPublicStorage: true
 
