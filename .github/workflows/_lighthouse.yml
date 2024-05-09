@@ -54,11 +54,12 @@ jobs:
           git diff --name-only $base_sha $merge_sha > diff.txt
           echo "::set-output name=diff_content::$(cat diff.txt)"
 
-          # git diff --name-only -- '*.html' $base_sha $merge_sha > diff.txt
+        # git diff --name-only -- '*.html' $base_sha $merge_sha > diff.txt
 
 
       - name: Print diff
-        run: echo "${{ steps.diff.outputs.diff_content }}"
+        run: |
+          echo "${{ steps.diff.outputs.diff_content }}"
 
 
       # - name: Get merge commit
