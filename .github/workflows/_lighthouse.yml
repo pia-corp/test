@@ -37,6 +37,15 @@ jobs:
         if: steps.restore_node_modules.outputs.cache-hit != 'true'
         run: npm ci --no-audit --progress=false --silent
 
+      - name: Get changed files
+        id: changed_files
+        run: |
+          echo "git diff ${{ github.event.before }} ${{ github.sha }}" >> $GITHUB_ENV
+
+      - name: echo
+        run: |
+          echo changed_files
+
       - name: Run Lighthouse against a static dist dir
         id: lighthouse_audit
         uses: treosh/lighthouse-ci-action@v11
@@ -73,7 +82,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `⚡️ [Lighthouse monile report]:
+              body: `⚡️ [Lighthouse Mobile Report]:
 
             | File name | Performance | Accessibility | Best practices | SEO |
             | --- | --- | --- | --- | --- |
