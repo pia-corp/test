@@ -37,19 +37,25 @@ jobs:
         if: steps.restore_node_modules.outputs.cache-hit != 'true'
         run: npm ci --no-audit --progress=false --silent
 
-      - name: Get changed files
-        id: changed_files
+      - name: Get merge commit
+        id: merge_commit
         run: |
-          echo "git diff ${{ github.event.before }} ${{ github.sha }}" >> $GITHUB_ENV
+          git fetch origin pull/${{ github.event.pull_request.number }}/merge
+          echo "::set-output name=sha::$(git rev-parse FETCH_HEAD)"
 
-      - name: echo
+      - name: Get diff
+        id: diff
         run: |
-          echo changed_files
+          merge_sha="${{ steps.merge_commit.outputs.sha }}"
+          base_sha=$(git merge-base $merge_sha^1 $merge_sha)
+          git diff --name-only $base_sha $merge_sha > diff.txt
 
       - name: Run Lighthouse against a static dist dir
         id: lighthouse_audit
         uses: treosh/lighthouse-ci-action@v11
         with:
+          urls: |
+            cat diff.txt
           configPath: './.lighthouserc.json'
           temporaryPublicStorage: true
 
