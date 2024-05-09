@@ -38,39 +38,43 @@ jobs:
         run: npm ci --no-audit --progress=false --silent
 
 
+        http://localhost:9001/
+
+      - name: Get merge commit
+        id: merge_commit
+        run: |
+          git fetch origin pull/${{ github.event.pull_request.number }}/merge
+          echo "::set-output name=sha::$(git rev-parse FETCH_HEAD)"
+
+      - name: Get diff
+        run: |
+          merge_sha="${{ steps.merge_commit.outputs.sha }}"
+          base_sha=$(git merge-base $merge_sha^1 $merge_sha)
+          git diff --unified=0 --no-color '*.html' $base_sha $merge_sha | sed 's/^/http:\/\/localhost:9001\//g' > diff.txt
+
+        # git diff --name-only -- '*.html' $base_sha $merge_sha > diff.txt
+
+      - name: Get HTML file diff
+        id: html_diff
+        run: |
+          cat diff.txt | grep '\.html$' > html_diff.txt
+
+      - name: Read HTML diff
+        id: read_html_diff
+        run: |
+          cat html_diff.txt
+          echo "::set-output name=content::$(cat html_diff.txt)"
 
 
-      # - name: Get merge commit
-      #   id: merge_commit
-      #   run: |
-      #     git fetch origin pull/${{ github.event.pull_request.number }}/merge
-      #     echo "::set-output name=sha::$(git rev-parse FETCH_HEAD)"
 
-      # - name: Get diff
-      #   run: |
-      #     merge_sha="${{ steps.merge_commit.outputs.sha }}"
-      #     base_sha=$(git merge-base $merge_sha^1 $merge_sha)
-      #     git diff --name-only $base_sha $merge_sha > diff.txt
 
-      #   # git diff --name-only -- '*.html' $base_sha $merge_sha > diff.txt
-
-      # - name: Get HTML file diff
-      #   id: html_diff
-      #   run: |
-      #     cat diff.txt | grep '\.html$' > html_diff.txt
-
-      # - name: Read HTML diff
-      #   id: read_html_diff
-      #   run: |
-      #     cat html_diff.txt
-      #     echo "::set-output name=content::$(cat html_diff.txt)"
 
       - name: Run Lighthouse against a static dist dir
         id: lighthouse_audit
         uses: treosh/lighthouse-ci-action@v11
         with:
-          # urls: |
-          #   ${{ steps.read_html_diff.outputs.content }}
+          urls: |
+            ${{ steps.read_html_diff.outputs.content }}
           configPath: './.lighthouserc.json'
           temporaryPublicStorage: true
 
