@@ -56,7 +56,7 @@ jobs:
             const formatResult = (res) => Math.round((res * 100));
             const file_name = (url) => { return url.replace(/^http:\/\/localhost:\d+\//, ""); };
             const score = res => res >= 90 ? '🟢' : res >= 50 ? '🟠' : '🔴';
-            const get_link = (key) => { return urls[key] || null };
+            const getValueByKey = (key) => { return urls[key] || null };
 
             let view_text = "";
               const table_body = (urlArray) => {
