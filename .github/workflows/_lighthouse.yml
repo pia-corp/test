@@ -37,25 +37,36 @@ jobs:
         if: steps.restore_node_modules.outputs.cache-hit != 'true'
         run: npm ci --no-audit --progress=false --silent
 
-      - name: Get merge commit
-        id: merge_commit
-        run: |
-          git fetch origin pull/${{ github.event.pull_request.number }}/merge
-          echo "::set-output name=sha::$(git rev-parse FETCH_HEAD)"
 
-      - name: Get diff
-        id: diff
-        run: |
-          merge_sha="${{ steps.merge_commit.outputs.sha }}"
-          base_sha=$(git merge-base $merge_sha^1 $merge_sha)
-          git diff --name-only $base_sha $merge_sha > diff.txt
+
+
+      - name: Call get_diff workflow
+        id: call_diff
+        uses: ./.github/workflows/_diff_template.yml
+
+
+      # - name: Get merge commit
+      #   id: merge_commit
+      #   run: |
+      #     git fetch origin pull/${{ github.event.pull_request.number }}/merge
+      #     echo "::set-output name=sha::$(git rev-parse FETCH_HEAD)"
+
+      # - name: Get diff
+      #   id: diff
+      #   run: |
+      #     merge_sha="${{ steps.merge_commit.outputs.sha }}"
+      #     base_sha=$(git merge-base $merge_sha^1 $merge_sha)
+      #     git diff --name-only $base_sha $merge_sha > diff.txt
+      #     cat diff.txt
+
+
 
       - name: Run Lighthouse against a static dist dir
         id: lighthouse_audit
         uses: treosh/lighthouse-ci-action@v11
         with:
           urls: |
-            cat diff.txt
+            "${{ needs.call_diff.outputs.diff }}"
           configPath: './.lighthouserc.json'
           temporaryPublicStorage: true
 
