@@ -48,7 +48,7 @@ jobs:
         run: |
           merge_sha="${{ steps.merge_commit.outputs.sha }}"
           base_sha=$(git merge-base $merge_sha^1 $merge_sha)
-          git diff --unified=0 --no-color $base_sha $merge_sha | sed 's/^/http:\/\/localhost:9001\//g' > diff.txt
+          git diff --unified=0 --no-color $base_sha $merge_sha | sed 's/^/https:\/\/localhost:9001\//g' > diff.txt
 
         # git diff --name-only -- '*.html' $base_sha $merge_sha > diff.txt
 
