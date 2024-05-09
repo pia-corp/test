@@ -52,6 +52,12 @@ jobs:
           base_sha=$(git merge-base $merge_sha^1 $merge_sha)
           git diff --name-only $base_sha $merge_sha > diff.txt
 
+      - name: Read HTML diff
+        id: read_html_diff
+        run: |
+          cat html_diff.txt
+          echo "::set-output name=content::$(cat html_diff.txt)"
+
         # git diff --name-only -- '*.html' $base_sha $merge_sha > diff.txt
 
       - name: Get HTML file diff
