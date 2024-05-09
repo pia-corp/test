@@ -50,7 +50,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const link = ${{steps.lighthouse_audit.outputs.links}};
+            const urls = ${{steps.lighthouse_audit.outputs.links}};
             const result = ${{ steps.lighthouse_audit.outputs.manifest }}[0].summary;
             const obj = ${{ steps.lighthouse_audit.outputs.manifest }};
             const formatResult = (res) => Math.round((res * 100));
