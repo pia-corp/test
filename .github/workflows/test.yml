@@ -9,6 +9,8 @@ jobs:
     timeout-minutes: 10
 
     steps:
+      - uses: actions/checkout@v4.1.4
+
       # releasブランチを作成
       - name: Create and push release branch
         id: release_branch

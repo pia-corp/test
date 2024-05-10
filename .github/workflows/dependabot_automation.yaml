@@ -4,6 +4,7 @@ on:
   pull_request:
     types:
       - opened
+      - synchronize
 
 permissions:
   pull-requests: write
@@ -15,10 +16,13 @@ jobs:
   dependabot-automation:
     runs-on: ubuntu-latest
     timeout-minutes: 13
+    env:
+      PR_URL: ${{github.event.pull_request.html_url}}
+      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-    if: ${{ github.actor == 'dependabot[bot]' }}
+    if: github.actor == 'dependabot[bot]'
     steps:
-      - name: Dependabot metadata
+      - name: Fetch Dependabot metadata
         id: metadata
         uses: dependabot/fetch-metadata@v1.3.5
         with:
@@ -36,3 +40,9 @@ jobs:
           PR_URL: ${{ github.event.pull_request.html_url }}
           PR_TITLE: ${{ github.event.pull_request.title }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+
+      # # This doesn't trigger an automated merge because we require at approvals
+      # - name: Enable auto-merge
+      #   run: gh pr merge --auto --squash --delete-branch "${PR_URL}"
