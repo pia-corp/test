@@ -8,13 +8,14 @@ on:
       - opened
 
 jobs:
-  cache_npm:
+  SET_INIT:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
-  BUILD_SETUP:
-    if: ${{ github.event.sender.type != 'Bot' }} && (!startsWith(github.head_ref, 'develop') || !startsWith(github.head_ref, 'hotfix'))
-    uses: ./.github/workflows/_npm.yml
+    steps:
+      - name: build
+        if: ${{ github.event.sender.type != 'Bot' }} && (!startsWith(github.head_ref, 'develop') || !startsWith(github.head_ref, 'hotfix'))
+        uses: ./.github/workflows/_npm.yml
 
   # PR_AGENT:
     # needs: BUILD_SETUP
@@ -31,14 +32,15 @@ jobs:
   #   needs: BUILD_SETUP
   #   uses: ./.github/workflows/_diff_template.yml
 
-  LINTER:
-    # needs: DIFF
-    uses: ./.github/workflows/_linter.yml
-    with:
-      head_ref: ${{ github.head_ref }}
 
-  CORE_WEB_VITALS:
-    # needs: DIFF
-    uses: ./.github/workflows/_lighthouse.yml
-    secrets:
-      TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+      - name: linter:
+        needs: build
+        uses: ./.github/workflows/_linter.yml
+        with:
+          head_ref: ${{ github.head_ref }}
+
+      - name: core_web_vitals:
+        needs: linter
+        uses: ./.github/workflows/_lighthouse.yml
+        secrets:
+          TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
