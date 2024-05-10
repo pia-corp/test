@@ -22,7 +22,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.4
         with:
-          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          # ref: ${{ github.head_ref }}
 
       - name: "Deploy"
         uses: milanmk/actions-file-deployer@1.14
