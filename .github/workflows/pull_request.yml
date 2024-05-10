@@ -8,6 +8,10 @@ on:
       - opened
 
 jobs:
+  cache_npm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
   BUILD_SETUP:
     if: ${{ github.event.sender.type != 'Bot' }} && (!startsWith(github.head_ref, 'develop') || !startsWith(github.head_ref, 'hotfix'))
     uses: ./.github/workflows/_npm.yml
@@ -30,6 +34,8 @@ jobs:
   LINTER:
     # needs: DIFF
     uses: ./.github/workflows/_linter.yml
+    with:
+      head_ref: ${{ github.head_ref }}
 
   CORE_WEB_VITALS:
     # needs: DIFF
