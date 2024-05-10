@@ -2,15 +2,15 @@ name: FILE UPLOAD
 
 on:
   workflow_dispatch:
-    inputs:
-      sync_type:
-        type: choice
-        description: '同期タイプ'
-        required: true
-        default: 'delta'
-        options:
-          - 'delta'
-          - 'full'
+    # inputs:
+    #   sync_type:
+    #     type: choice
+    #     description: '同期タイプ'
+    #     required: true
+    #     default: 'SFTP'
+    #     options:
+    #       - 'SFTP'
+    #       - 'FTP'
 
 jobs:
   UPLOAD:
@@ -22,20 +22,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.4
         with:
-          fetch-depth: 0
-          # ref: ${{ github.head_ref }}
+          ref: ${{ github.head_ref }}
 
-      - name: "Deploy"
-        uses: milanmk/actions-file-deployer@1.14
+
+      - name: Deploy via SFTP
+        uses: wangyucode/sftp-upload-action@v2.0.2
+        if: ${{ vars.PROTOCOL }} == 'SFTP'
         with:
-          remote-protocol: "sftp"
-          # remote-protocol: '${{ vars.PROTOCOL }}'
-          remote-port:  '${{ vars.PORT }}'
-          remote-host: '${{ vars.HOST }}'
-          remote-user: '${{ vars.USER_NAME }}'
-          remote-password: '${{ secrets.PASSWORD }}'
-          ssh-private-key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
-          local-path: '${{ vars.LOCAL_PATH }}'
-          sync: "full"
-          # sync: '${{ inputs.sync_type }}'
-          remote-path: '${{ vars.REMOTE_PATH }}'
+          host: ${{ vars.HOST }}
+          port:  ${{ vars.PORT }}
+          username: ${{ vars.USER_NAME }}
+          password: ${{ secrets.PASSWORD }}
+          privateKey: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+          localDir: ${{ vars.LOCAL_PATH }}
+          remoteDir: ${{ vars.REMOTE_PATH }}
+          # removeExtraFilesOnServer: false
