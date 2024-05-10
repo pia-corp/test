@@ -53,11 +53,8 @@ jobs:
   #   needs: BUILD_SETUP
   #   uses: ./.github/workflows/_diff_template.yml
 
-
-      - name: linter
-        uses: ./.github/workflows/_linter.yml
-        # with:
-        #   head_ref: ${{ github.head_ref }}
+      - name: Lint and rewrite markup
+        run: npm run lint:markuplint
 
       - name: core_web_vitals
         uses: ./.github/workflows/_lighthouse.yml

@@ -19,7 +19,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.4
         with:
-          # ref: ${{ inputs.head_ref }}
           ref: ${{ github.head_ref }}
 
       # - name: Setup Node.js
