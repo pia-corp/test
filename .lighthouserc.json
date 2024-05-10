@@ -1,9 +1,10 @@
 {
   "ci": {
-    "server": {
-      "port": 9001
-    },
     "collect": {
+			"staticDistDir": "./out/",
+      "autodiscoverUrlBlocklist": [
+        "/news/.+"
+      ],
 			"numberOfRuns": 1,
 			"maxAutodiscoverUrls": 5,
       "settings": {
