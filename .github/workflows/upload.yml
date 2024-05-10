@@ -2,6 +2,15 @@ name: FILE UPLOAD
 
 on:
   workflow_dispatch:
+    inputs:
+      sync_type:
+        type: choice
+        description: '同期タイプ'
+        required: true
+        default: 'delta'
+        options:
+          - 'delta'
+          - 'full'
 
 jobs:
   UPLOAD:
@@ -15,42 +24,14 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      # - name: Setup Node.js
-      #   uses: actions/setup-node@v4.0.2
-      #   with:
-      #     node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
-      #     cache: npm
-
-      # - name: Restore node_modules
-      #   uses: actions/cache@v4.0.2
-      #   with:
-      #     path: ~/.npm
-      #     key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-      #     restore-keys: ${{ runner.os }}-node-
-
-      # - name: Dependency Installation (If there is no cache)
-      #   if: steps.restore_node_modules.outputs.cache-hit != 'true'
-      #   run: npm ci --no-audit --progress=false --silent
-
-      - name: Deploy via SFTP
-        uses: wangyucode/sftp-upload-action@v2.0.2
-        if: ${{ vars.PROTOCOL }} == 'SFTP'
+      - name: "Deploy"
+        uses: milanmk/actions-file-deployer@1.14
         with:
-          host: ${{ vars.SFTP_HOST }}
-          port:  ${{ vars.SFTP_PORT }}
-      #     username: ${{ vars.SFTP_USER_NAME }}
-      #     password: ${{ secrets.PASSWORD }}
-      #     localDir: ${{ vars.LOCAL_PATH }}
-      #     remoteDir: /faloom.jp/pc/test/
-          # removeExtraFilesOnServer: false       # サーバ上の余分なファイルを削除します. デフォルトはfalse.
-
-      - name: Deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@4.2.0
-        if: ${{ vars.PROTOCOL }} == 'FTP'
-        with:
-          protocol: ftp
-          server: ${{ vars.HOST }}       # FTPのサーバーアドレス
-      #     username: ${{ vars.USER_NAME }}   # FTPのユーザー名
-      #     password: ${{ secrets.FTP_PASSWORD }}   # FTPのパスワード
-      #     local-dir: ${{ vars.LOCAL_PATH }}      # アップロードしたいファイルのパス、この場合srcディレクトリ内をアップロード対象としている
-      #     server-dir: ${{ vars.REMOTE_PATH }}     # アップロード先のリモートパス
+          remote-protocol: ${{ vars.PROTOCOL }}
+          remote-port:  ${{ vars.PORT }}
+          remote-host: ${{ vars.HOST }}
+          remote-user: ${{ vars.USER_NAME }}
+          remote-password: ${{ secrets.PASSWORD }}
+          ssh-private-key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+          local-path: ${{ vars.LOCAL_PATH }}
+          remote-path: ${{ vars.REMOTE_PATH }}
