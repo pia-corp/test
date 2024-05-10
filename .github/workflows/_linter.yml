@@ -2,11 +2,11 @@ name: Markup Lint
 
 on:
   workflow_call:
-    inputs:
-      head_ref:
-        description: 'check out point'
-        required: true
-        type: string
+    # inputs:
+    #   head_ref:
+    #     description: 'check out point'
+    #     required: true
+    #     type: string
 
 jobs:
   Markup_Linter:
@@ -19,7 +19,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.4
         with:
-          ref: ${{ inputs.head_ref }}
+          # ref: ${{ inputs.head_ref }}
+          ref: ${{ github.head_ref }}
 
       # - name: Setup Node.js
       #   uses: actions/setup-node@v4.0.2

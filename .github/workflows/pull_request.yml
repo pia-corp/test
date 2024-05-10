@@ -56,8 +56,8 @@ jobs:
 
       - name: linter
         uses: ./.github/workflows/_linter.yml
-        with:
-          head_ref: ${{ github.head_ref }}
+        # with:
+        #   head_ref: ${{ github.head_ref }}
 
       - name: core_web_vitals
         uses: ./.github/workflows/_lighthouse.yml
