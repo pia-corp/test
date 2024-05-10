@@ -27,12 +27,12 @@ jobs:
       - name: "Deploy"
         uses: milanmk/actions-file-deployer@1.14
         with:
-          remote-protocol: "${{ vars.PROTOCOL }}"
-          remote-port:  "${{ vars.PORT }}"
-          remote-host: "${{ vars.HOST }}"
-          remote-user: "${{ vars.USER_NAME }}"
-          remote-password: "${{ secrets.PASSWORD }}"
-          ssh-private-key: "${{ secrets.DEPLOY_PRIVATE_KEY }}"
-          local-path: "${{ vars.LOCAL_PATH }}"
-          sync: "${{ inputs.sync_type }}"
-          remote-path: "${{ vars.REMOTE_PATH }}"
+          remote-protocol: '${{ vars.PROTOCOL }}'
+          remote-port:  '${{ vars.PORT }}'
+          remote-host: '${{ vars.HOST }}'
+          remote-user: '${{ vars.USER_NAME }}'
+          remote-password: '${{ secrets.PASSWORD }}'
+          ssh-private-key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+          local-path: '${{ vars.LOCAL_PATH }}'
+          sync: '${{ inputs.sync_type }}'
+          remote-path: '${{ vars.REMOTE_PATH }}'
