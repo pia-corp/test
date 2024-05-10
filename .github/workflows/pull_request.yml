@@ -53,13 +53,11 @@ jobs:
 
 
       - name: linter
-        if: ${{ needs.SET_INIT.result == 'success' }}
         uses: ./.github/workflows/_linter.yml
         with:
           head_ref: ${{ github.head_ref }}
 
       - name: core_web_vitals
-        if: ${{ needs.Linter.result == 'success' }}
         uses: ./.github/workflows/_lighthouse.yml
         with:
           TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
