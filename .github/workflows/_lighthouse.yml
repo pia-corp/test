@@ -2,9 +2,11 @@ name: Preview URL Lighthouse Audit
 
 on:
   workflow_call:
-    secrets:
+    inputs:
       TOKEN:
+        description: 'app token'
         required: true
+        type: string
 
 jobs:
   Lighthouse:
