@@ -72,8 +72,6 @@ jobs:
         id: lighthouse_audit
         uses: treosh/lighthouse-ci-action@v11
         with:
-        # urls: |
-        # ${{ steps.read_html_diff.outputs.content }}
           configPath: './.lighthouserc.json'
           temporaryPublicStorage: true
 
