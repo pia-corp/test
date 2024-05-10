@@ -33,7 +33,7 @@ jobs:
         run: npm ci --no-audit --progress=false --silent
 
       - name: Deploy via SFTP
-        if: ${{ vars.PROTOCOL }} == "SFTP"
+        if: ${{ vars.PROTOCOL }} == 'SFTP'
         uses: wangyucode/sftp-upload-action@v2.0.2
         with:
           # host: ${{ vars.SFTP_HOST }}
@@ -45,7 +45,7 @@ jobs:
           # removeExtraFilesOnServer: false       # サーバ上の余分なファイルを削除します. デフォルトはfalse.
 
       - name: Deploy via FTP
-        if: ${{ vars.PROTOCOL }} == "FTP"
+        if: ${{ vars.PROTOCOL }} == 'FTP'
         uses: SamKirkland/FTP-Deploy-Action@4.2.0
         with:
           protocol: ftp
