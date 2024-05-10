@@ -34,4 +34,5 @@ jobs:
           remote-password: ${{ secrets.PASSWORD }}
           ssh-private-key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
           local-path: ${{ vars.LOCAL_PATH }}
+          sync: ${{ inputs.sync_type }}
           remote-path: ${{ vars.REMOTE_PATH }}
