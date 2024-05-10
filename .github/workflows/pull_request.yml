@@ -33,13 +33,13 @@ jobs:
   #   uses: ./.github/workflows/_diff_template.yml
 
 
-      - name: linter:
+      - name: linter
         needs: build
         uses: ./.github/workflows/_linter.yml
         with:
           head_ref: ${{ github.head_ref }}
 
-      - name: core_web_vitals:
+      - name: core_web_vitals
         needs: linter
         uses: ./.github/workflows/_lighthouse.yml
         secrets:

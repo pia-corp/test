@@ -7,16 +7,23 @@ on:
     types: [edited, synchronize]
 
 jobs:
-  BUILD_SETUP:
-    if: ${{ github.event.sender.type != 'Bot' }} && (!startsWith(github.head_ref, 'develop') || !startsWith(github.head_ref, 'hotfix'))
-    uses: ./.github/workflows/_npm.yml
+  SET_INIT:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
 
-  LINTER:
-    needs: BUILD_SETUP
-    uses: ./.github/workflows/_linter.yml
+    steps:
+      - name: build
+        if: ${{ github.event.sender.type != 'Bot' }} && (!startsWith(github.head_ref, 'develop') || !startsWith(github.head_ref, 'hotfix'))
+        uses: ./.github/workflows/_npm.yml
 
-  CORE_WEB_VITALS:
-    needs: LINTER
-    uses: ./.github/workflows/_lighthouse.yml
-    secrets:
-      TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+      - name: linter
+        needs: build
+        uses: ./.github/workflows/_linter.yml
+        with:
+          head_ref: ${{ github.head_ref }}
+
+      - name: core_web_vitals
+        needs: linter
+        uses: ./.github/workflows/_lighthouse.yml
+        secrets:
+          TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
