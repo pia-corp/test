@@ -24,6 +24,7 @@ jobs:
     needs: BUILD
     uses: ./.github/workflows/_formatter.yml
 
+  # 手動でアップロードするようにする
   # UPLOAD:
   #   needs: BUILD_SETUP
   #   uses: ./.github/workflows/_upload.yml
