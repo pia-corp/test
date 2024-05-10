@@ -2,15 +2,6 @@ name: FILE UPLOAD
 
 on:
   workflow_dispatch:
-    # inputs:
-    #   sync_type:
-    #     type: choice
-    #     description: '同期タイプ'
-    #     required: true
-    #     default: 'SFTP'
-    #     options:
-    #       - 'SFTP'
-    #       - 'FTP'
 
 jobs:
   UPLOAD:
@@ -24,10 +15,9 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-
       - name: Deploy via SFTP
+        if: ${{ vars.PROTOCOL  == 'SFTP' }}
         uses: wangyucode/sftp-upload-action@v2.0.2
-        if: ${{ vars.PROTOCOL }} == 'SFTP'
         with:
           host: ${{ vars.HOST }}
           port:  ${{ vars.PORT }}
@@ -37,3 +27,14 @@ jobs:
           localDir: ${{ vars.LOCAL_PATH }}
           remoteDir: ${{ vars.REMOTE_PATH }}
           # removeExtraFilesOnServer: false
+
+      - name: Deploy via FTP
+        if: ${{ vars.PROTOCOL  == 'FTP' }}
+        uses: SamKirkland/FTP-Deploy-Action@4.2.0
+        with:
+          server: ${{ vars.HOST }}
+          username: ${{ vars.USER_NAME }}
+          password: ${{ secrets.PASSWORD }}
+          port:  ${{ vars.PORT }}
+          local-dir: ${{ vars.LOCAL_PATH }}
+          server-dir: ${{ vars.REMOTE_PATH }}
