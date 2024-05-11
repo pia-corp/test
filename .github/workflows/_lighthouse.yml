@@ -40,6 +40,7 @@ jobs:
         uses: treosh/lighthouse-ci-action@v11
         with:
           configPath: './.github/config/.lighthouserc.json'
+          budgetPath: './.github/config/budget.json'
           temporaryPublicStorage: true
 
       - name: Comment on PR
