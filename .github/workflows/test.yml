@@ -15,10 +15,42 @@ jobs:
       - name: Create and push release branch
         id: release_branch
         run: |
-          today=$(date +'%Y.%m.%d')
+          today=$(date +'%Y%m%d')
           git checkout -b release/$today
           git push origin release/$today
           echo "RELEASE_BRANCH_NAME=release/$today" >> $GITHUB_ENV
+
+
+
+      - uses: actions/checkout@v4.1.4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+          cache: npm
+
+      - name: Restore node_modules
+        uses: actions/cache@v4.0.2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+
+      - name: Dependency Installation (If there is no cache)
+        if: steps.restore_node_modules.outputs.cache-hit != 'true'
+        run: npm ci --no-audit --progress=false --silent
+
+      - name: Lint and rewrite markup
+        run: npm run lint:prettier
+
+      - name: Auto-commit changes (optional)
+        uses: stefanzweifel/git-auto-commit-action@v5.0.1
+        with:
+          commit_message: Automatically format code with Prettier
+
 
       # - name: Check out repository
       #   uses: actions/checkout@v4.1.4
