@@ -5,8 +5,6 @@ on:
     secrets:
       TOKEN:
         required: true
-      PTOKEN:
-        required: true
 
 jobs:
   create-release-tag:
