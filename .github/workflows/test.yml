@@ -10,6 +10,7 @@ jobs:
     env:
       PR_URL: ${{github.event.pull_request.html_url}}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      RELEASE_BRANCH_NAME: ${{ github.run_id }}
 
     steps:
       - uses: actions/checkout@v4.1.4
@@ -36,42 +37,71 @@ jobs:
       - name: Lint and rewrite markup
         run: npm run lint:prettier
 
-        # releasブランチ名を作成
+      # releasブランチ名を作成
       - name: Create and push release branch
         id: release_branch
         run: |
-          today=$(date +'%Y%m%d')
-          echo "RELEASE_BRANCH_NAME=$today" >> $GITHUB_ENV
-
-      - name: Auto-commit changes (optional)
-        uses: stefanzweifel/git-auto-commit-action@v5.0.1
-        with:
-          commit_message: Automatically format code with Prettier
-          create_branch: true
-          branch: feature/${{ env.RELEASE_BRANCH_NAME }}
+          git checkout -b feature/${RELEASE_BRANCH_NAME}
+          git push origin feature/${RELEASE_BRANCH_NAME}
+          echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME}" >> $GITHUB_ENV
 
       - name: Check PullRequest Exists
         id: check_pr
-        env:
-          HEAD_MESSAGE: ${{ github.event.head_commit.message }}
         run: |
-          COMMIT_MESSAGE=$(echo "${HEAD_MESSAGE}" | sed -n -e 1p)
-          echo "message=${COMMIT_MESSAGE}" >> "$GITHUB_OUTPUT"
-          echo "count=$(gh pr list -S 'コード整形'in:title | wc -l)" >> "$GITHUB_OUTPUT"
+          echo "message=$(gh pr list -S 'コード整形'in:title --json | jq -r '.[] | .title')" >> "$GITHUB_ENV"
 
       - name: Create Release Pull Request
-        if: ${{ steps.check_pr.outputs.count == 0 }}
+        if: steps.check_pr.outputs.message == 'null'
         run: |
           gh pr create \
-            -B feature/${{ env.RELEASE_BRANCH_NAME }} \
-            -t '【コード整形】${{ steps.check_pr.outputs.message }}' \
+            -B feature/${RELEASE_BRANCH_NAME} \
+            -t '【コード整形】' \
             -a ${{ github.actor }}  \
-            -b 'auto rewrite' \
+            -b 'auto rewrite'
 
       - name: Approve PR
+        if: steps.check_pr.outputs.message == 'null'
         run: gh pr review "$PR_URL" --approve
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: Enable auto-merge for Steward PRs
+        if: steps.check_pr.outputs.message == 'null'
         run: gh pr merge --merge --auto "$PR_URL"
+
+
+
+
+
+      # - name: Auto-commit changes (optional)
+      #   uses: stefanzweifel/git-auto-commit-action@v5.0.1
+      #   with:
+      #     commit_message: Automatically format code with Prettier
+      #     create_branch: true
+      #     branch: feature/${{ env.RELEASE_BRANCH_NAME }}
+
+      # - name: Check PullRequest Exists
+      #   id: check_pr
+      #   env:
+      #     HEAD_MESSAGE: ${{ github.event.head_commit.message }}
+      #   run: |
+      #     COMMIT_MESSAGE=$(echo "${HEAD_MESSAGE}" | sed -n -e 1p)
+      #     echo "message=${COMMIT_MESSAGE}" >> "$GITHUB_OUTPUT"
+      #     echo "count=$(gh pr list -S 'コード整形'in:title | wc -l)" >> "$GITHUB_OUTPUT"
+
+      # - name: Create Release Pull Request
+      #   if: ${{ steps.check_pr.outputs.count == 0 }}
+      #   run: |
+      #     gh pr create \
+      #       -B feature/${{ env.RELEASE_BRANCH_NAME }} \
+      #       -t '【コード整形】${{ steps.check_pr.outputs.message }}' \
+      #       -a ${{ github.actor }}  \
+      #       -b 'auto rewrite' \
+
+      # - name: Approve PR
+      #   run: gh pr review "$PR_URL" --approve
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+      # - name: Enable auto-merge for Steward PRs
+      #   run: gh pr merge --merge --auto "$PR_URL"
