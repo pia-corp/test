@@ -2,7 +2,9 @@ name: CI
 
 on:
   push:
-
+    branches:
+      - develop
+      - feature
 jobs:
   BUILD_SETUP:
     if: ${{ github.event.sender.type != 'Bot' }} || ${{ github.event.sender.type != 'github-actions' }}
