@@ -7,6 +7,9 @@
         "locale": "ja"
       }
     },
+    "budgetsFile": {
+      "budgetsFile": "./.github/config/budget.json"
+    },
     "upload": {
       "target": "temporary-public-storage"
     }

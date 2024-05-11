@@ -40,16 +40,14 @@ jobs:
         uses: treosh/lighthouse-ci-action@v11
         with:
           configPath: './.github/config/.lighthouserc.json'
-          budgetPath: './.github/config/budget.json'
           temporaryPublicStorage: true
         continue-on-error: true
 
 
       - name: Extract Budget Error
         run: |
-          budgetError=$(echo "${{ steps.lighthouse_audit.outputs.stdout }}" | grep -o "Error:.*")
-          echo "::set-output name=budgetError::$budgetError"
-        id: extract_budget_error
+          budgetError=$(echo "${{ steps.lighthouse_audit.outputs }}"
+          echo "${$budgetError}"
 
 
       - name: Comment on PR
