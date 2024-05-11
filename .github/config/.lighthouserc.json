@@ -12,6 +12,11 @@
     },
     "upload": {
       "target": "temporary-public-storage"
+    },
+    "assert": {
+      "assertions": {
+        "performance-budget": "error"
+      }
     }
   }
 }
