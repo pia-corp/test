@@ -1,0 +1,30 @@
+{
+  "ci": {
+    "collect": {
+			"staticDistDir": "./public/",
+			"numberOfRuns": 1,
+      "settings": {
+        "locale": "ja",
+        "formFactor": "desktop",
+        "screenEmulation": {
+          "width": 2480,
+          "height": 1600,
+          "deviceScaleRatio": 2,
+          "mobile": false,
+          "disabled": false
+        }
+      }
+    },
+    "budgetsFile": {
+      "budgetsFile": "./.github/config/budget.json"
+    },
+    "upload": {
+      "target": "temporary-public-storage"
+    },
+    "assert": {
+      "assertions": {
+        "preset": "lighthouse:no-pwa"
+      }
+    }
+  }
+}
