@@ -9,14 +9,10 @@ on:
       - feature
 
 jobs:
-  BUILD_SETUP:
-    if: ${{ github.event.sender.type != 'Bot' }} || ${{ github.event.sender.type != 'github-actions' }}
-    uses: ./.github/workflows/_npm.yml
-
   LINTER:
-    needs: BUILD_SETUP
+    if: ${{ github.event.sender.type != 'Bot' }} && (!startsWith(github.head_ref, 'develop') || !startsWith(github.head_ref, 'hotfix'))
     uses: ./.github/workflows/_linter.yml
 
   CORE_WEB_VITALS:
-    needs: BUILD_SETUP
+    needs: LINTER
     uses: ./.github/workflows/_lighthouse.yml

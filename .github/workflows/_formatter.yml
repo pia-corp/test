@@ -36,7 +36,7 @@ jobs:
       - name: Lint and rewrite markup
         run: npm run formatting
 
-      - name: Auto-commit changes (optional)
-        uses: stefanzweifel/git-auto-commit-action@v5.0.1
-        with:
-          commit_message: Automatically format code with Prettier
+      # - name: Auto-commit changes (optional)
+      #   uses: stefanzweifel/git-auto-commit-action@v5.0.1
+      #   with:
+      #     commit_message: Automatically format code with Prettier
