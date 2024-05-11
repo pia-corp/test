@@ -4,8 +4,6 @@ on:
   workflow_dispatch:
   push:
 
-permissions: {}
-
 jobs:
   BUILD_SETUP:
     if: ${{ github.actor != 'dependabot[bot]' }}
