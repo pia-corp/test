@@ -66,6 +66,7 @@ jobs:
             -B main \
             -t '【コード整形】${{ steps.check_pr.outputs.message }}' \
             -a ${{ github.actor }}  \
+            -b 'auto rewrite' \
 
       - name: Approve PR
         if: startsWith(github.head_ref, 'feature/')
