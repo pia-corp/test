@@ -21,7 +21,7 @@ jobs:
           message+="${lf}1. リリース予定の\`develop\`ブランチを\`main\`ブランチにマージします。"
           message+="${lf}2. コードオーナーの承認を受ける前にチェックを通過していることを確認してください。"
           message+="${lf}    - \`linter\`に合格しなかった場合は、原因を特定して手順2からやり直してください。"
-          message+="${lf}    - HTMLのMarkupルールは[ドキュメント](https://github.com/pia-corp/test/blob/main/doc/markup_rule.md)を確認してください。"
+          message+="${lf}    - HTMLのMarkupルールは[ドキュメント](../../blob/main/doc/markup_rule.md)を確認してください。"
           message+="${lf}    - \`approve\`された場合、\`main\`ブランチにマージします。"
           echo "message=${message}" >> $GITHUB_OUTPUT
 
