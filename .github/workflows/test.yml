@@ -41,7 +41,7 @@ jobs:
         id: release_branch
         run: |
           git checkout -b feature/${RELEASE_BRANCH_NAME}
-          git commit -m “Automatically format code with Prettier”
+          git commit -m \"Automatically format code with Prettier\"
           git push origin HEAD
           gh pr create \
             -B main\
