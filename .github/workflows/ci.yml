@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
 
-# permissions: {}
+permissions: {}
 
 jobs:
   build_and_test:
@@ -12,14 +12,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
-    # permissions:
-    #   contents: read
-    #   pull-requests: write
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4.1.4
         if: ${{ github.actor != 'dependabot[bot]' }}
+        uses: actions/checkout@v4.1.4
         with:
           ref: ${{ github.head_ref }}
 
@@ -49,7 +50,7 @@ jobs:
         id: lighthouse_audit
         uses: treosh/lighthouse-ci-action@v11
         with:
-          configPath: './.lighthouserc.json'
+          configPath: './.github/config/.lighthouserc.json'
           temporaryPublicStorage: true
 
       - name: Comment on PR
@@ -60,7 +61,6 @@ jobs:
           script: |
             const urls = ${{steps.lighthouse_audit.outputs.links}};
             const result = ${{ steps.lighthouse_audit.outputs.manifest }}[0].summary;
-            const obj = ${{ steps.lighthouse_audit.outputs.manifest }};
             const formatResult = (res) => Math.round((res * 100));
             const file_name = (url) => { return url.replace(/^http:\/\/localhost:\d+\//, ""); };
             const score = res => res >= 90 ? '🟢' : res >= 50 ? '🟠' : '🔴';
@@ -75,7 +75,7 @@ jobs:
               view_text += `[${file_name(urlArray.url)}](${getValueByKey(urlArray.url)}) | ${score(performance)} ${performance} | ${score(accessibility)} ${accessibility} | ${score(practices)} ${practices} | ${score(seo)} ${seo} |
             `;
             };
-            Object.keys(obj).forEach(key => obj[key] = table_body(obj[key]));
+            Object.keys(result).forEach(key => result[key] = table_body(result[key]));
 
             let param = {
               issue_number: context.issue.number,
