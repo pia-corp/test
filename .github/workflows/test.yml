@@ -63,7 +63,7 @@ jobs:
         if: ${{ steps.check_pr.outputs.count == 0 }}
         run: |
           gh pr create \
-            -B main \
+            -B feature/${{ env.RELEASE_BRANCH_NAME }} \
             -t '【コード整形】${{ steps.check_pr.outputs.message }}' \
             -a ${{ github.actor }}  \
             -b 'auto rewrite' \
