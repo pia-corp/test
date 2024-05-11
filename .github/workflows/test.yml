@@ -48,7 +48,7 @@ jobs:
         with:
           commit_message: Automatically format code with Prettier
           create_branch: true
-          branch: feature/${{ env.release_branch }}
+          branch: feature/${{ env.RELEASE_BRANCH_NAME }}
 
 
       # - name: Check out repository
