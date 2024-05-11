@@ -14,5 +14,3 @@ jobs:
   CORE_WEB_VITALS:
     needs: BUILD_SETUP
     uses: ./.github/workflows/_lighthouse.yml
-    secrets:
-      TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}

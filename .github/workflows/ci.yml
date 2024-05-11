@@ -30,5 +30,3 @@ jobs:
   CORE_WEB_VITALS:
     needs: COMMENT_OPENING_ANNOUNCE
     uses: ./.github/workflows/_lighthouse.yml
-    secrets:
-      TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
