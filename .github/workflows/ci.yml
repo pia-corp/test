@@ -7,10 +7,6 @@ on:
       - main
     types: [reopened]
   push:
-    branches:
-      - main
-      - develop
-      - feature
 
 jobs:
   LINTER:
