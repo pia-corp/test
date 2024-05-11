@@ -1,0 +1,32 @@
+name: Pull Request
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+
+jobs:
+  BUILD_SETUP:
+    if: ${{ github.event.sender.type != 'Bot' }} && (!startsWith(github.head_ref, 'develop') || !startsWith(github.head_ref, 'hotfix'))
+    uses: ./.github/workflows/_npm.yml
+
+  PR_AGENT:
+    needs: BUILD_SETUP
+    uses: ./.github/workflows/_pr_agent.yml
+    secrets:
+      APIKEY: '${{ secrets.OPENAI_KEY }}'
+      TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+
+  COMMENT_OPENING_ANNOUNCE:
+    needs: PR_AGENT
+    uses: ./.github/workflows/_init_comment.yml
+
+  # LINTER:
+  #   needs: COMMENT_OPENING_ANNOUNCE
+  #   uses: ./.github/workflows/_linter.yml
+
+  # CORE_WEB_VITALS:
+  #   needs: COMMENT_OPENING_ANNOUNCE
+  #   uses: ./.github/workflows/_lighthouse.yml
