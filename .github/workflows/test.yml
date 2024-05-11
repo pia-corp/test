@@ -45,6 +45,13 @@ jobs:
           git push origin feature/${RELEASE_BRANCH_NAME}
           echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME}" >> $GITHUB_ENV
 
+      - name: Auto-commit changes (optional)
+        uses: stefanzweifel/git-auto-commit-action@v5.0.1
+        with:
+          commit_message: Automatically format code with Prettier
+          create_branch: true
+          branch: feature/${{ env.RELEASE_BRANCH_NAME }}
+
       - name: Check PullRequest Exists
         id: check_pr
         run: |
