@@ -7,8 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "run-s lint:*",
-    "lint:prettier": "prettier --write ./out",
-    "lint:markuplint": "markuplint out{/**/,/}*.html"
+    "lint:prettier": "prettier --write ./public",
+    "lint:markuplint": "markuplint public{/**/,/}*.html"
   },
   "dependencies": {
     "highlight.js": "^11.7.0",

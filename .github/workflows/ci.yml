@@ -26,7 +26,7 @@ jobs:
         uses: actions/setup-node@v4.0.2
         with:
           node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
-          cache: npm
+          cache: 'npm'
 
       - name: Cache node (if not already cached)
         id: cache_dependency
@@ -41,7 +41,7 @@ jobs:
         if: ${{ steps.cache_dependency.outputs.cache-hit != 'true' }}
         run: npm ci --no-audit --progress=false --silent
 
-      - name: Lint and rewrite markup
+      - name: MarkUpLint
         run: npm run lint:markuplint
 
       - name: Run Lighthouse against a static dist dir

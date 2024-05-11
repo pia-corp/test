@@ -52,5 +52,5 @@
       }
     }
   ],
-  "excludeFiles": ["./out/contact/index.html"],
+  "excludeFiles": ["./out/contact/index.html"]
 }
