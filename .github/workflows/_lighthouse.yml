@@ -44,7 +44,6 @@ jobs:
         with:
           configPath: './.github/config/.lighthouserc.json'
           temporaryPublicStorage: true
-          preset: ${{ matrix.node-version }}
         continue-on-error: true
 
       # - name: Run Lighthouse against a static dist dir
@@ -61,8 +60,8 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const assertionResults = ${{steps.lighthouse_audit.outputs.assertionResults.passed}};
-            const assertionResults2 = ${{steps.lighthouse_audit.outputs.assertionResults.message}};
+            const assertionResults = "hoge: ${{steps.lighthouse_audit.outputs.assertionResults.passed}}";
+            const assertionResults2 = "hogehoge: ${{steps.lighthouse_audit.outputs.assertionResults.message}}";
             const urls = ${{steps.lighthouse_audit.outputs.links}};
             const result = ${{ steps.lighthouse_audit.outputs.manifest }}[0].summary;
             const obj = ${{ steps.lighthouse_audit.outputs.manifest }};
