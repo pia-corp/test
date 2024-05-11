@@ -42,6 +42,7 @@ jobs:
           configPath: './.github/config/.lighthouserc.json'
           budgetPath: './.github/config/budget.json'
           temporaryPublicStorage: true
+          uploadArtifacts: true
         continue-on-error: true
 
       - name: Comment on PR
@@ -80,7 +81,7 @@ jobs:
             | --- | --- | --- | --- | --- |
             ${view_text}
 
-            $(budgetError)
+            ${budgetError}
             `};
 
             await github.rest.issues.createComment(param);
