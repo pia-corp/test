@@ -4,13 +4,12 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
       - develop
       - feature
 
 jobs:
   LINTER:
-    if: ${{ github.event.sender.type != 'Bot' }} && (!startsWith(github.head_ref, 'develop') || !startsWith(github.head_ref, 'hotfix'))
+    if: ${{ github.event.sender.type != 'Bot' }}
     uses: ./.github/workflows/_linter.yml
 
   CORE_WEB_VITALS:
