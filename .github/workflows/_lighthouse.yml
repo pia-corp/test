@@ -41,7 +41,7 @@ jobs:
         id: lighthouse_audit
         uses: treosh/lighthouse-ci-action@v11
         with:
-          configPath: './.lighthouserc.json'
+          configPath: './.github/config/.lighthouserc.json'
           temporaryPublicStorage: true
 
       - name: Comment on PR

@@ -34,4 +34,4 @@ jobs:
         run: npm ci --no-audit --progress=false --silent
 
       - name: Lint and rewrite markup
-        run: npm run lint:markuplint
+        run: npm run linter
