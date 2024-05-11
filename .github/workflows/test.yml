@@ -10,21 +10,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4.1.4
-
-      # releasブランチを作成
-      - name: Create and push release branch
-        id: release_branch
-        run: |
-          today=$(date +'%Y%m%d')
-          git checkout -b release/$today
-          git push origin release/$today
-          echo "RELEASE_BRANCH_NAME=release/$today" >> $GITHUB_ENV
-
-
-
-      - uses: actions/checkout@v4.1.4
         with:
           ref: ${{ github.head_ref }}
+
+        # # releasブランチを作成
+      # - name: Create and push release branch
+      #   id: release_branch
+      #   run: |
+      #     today=$(date +'%Y%m%d')
+      #     git checkout -b release/$today
+      #     git push origin release/$today
+      #     echo "RELEASE_BRANCH_NAME=release/$today" >> $GITHUB_ENV
+
 
       - name: Setup Node.js
         uses: actions/setup-node@v4.0.2
@@ -50,6 +47,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5.0.1
         with:
           commit_message: Automatically format code with Prettier
+          create_branch: true
 
 
       # - name: Check out repository
