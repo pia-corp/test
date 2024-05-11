@@ -11,6 +11,9 @@ jobs:
       contents: read
       issues: write
       pull-requests: write
+    strategy:
+      matrix:
+        platform: ["desktop","mobile"]
 
     steps:
       - name: Check out repository
@@ -41,7 +44,16 @@ jobs:
         with:
           configPath: './.github/config/.lighthouserc.json'
           temporaryPublicStorage: true
+          preset: ${{ matrix.node-version }}
         continue-on-error: true
+
+      # - name: Run Lighthouse against a static dist dir
+      #   id: lighthouse_audit_pc
+      #   uses: treosh/lighthouse-ci-action@v11
+      #   with:
+      #     configPath: './.github/config/.lighthouserc.json'
+      #     temporaryPublicStorage: true
+      #   continue-on-error: true
 
       - name: Comment on PR
         id: format_lighthouse_score

@@ -4,7 +4,15 @@
 			"staticDistDir": "./public/",
 			"numberOfRuns": 1,
       "settings": {
-        "locale": "ja"
+        "locale": "ja",
+        "formFactor": "desktop",
+        "screenEmulation": {
+          "width": 2480,
+          "height": 1600,
+          "deviceScaleRatio": 2,
+          "mobile": false,
+          "disabled": false
+        }
       }
     },
     "budgetsFile": {
@@ -15,7 +23,7 @@
     },
     "assert": {
       "assertions": {
-        "performance-budget": "error"
+        "preset": "lighthouse:no-pwa"
       }
     }
   }
