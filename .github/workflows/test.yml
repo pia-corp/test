@@ -71,6 +71,8 @@ jobs:
       - name: Approve PR
         if: startsWith(github.head_ref, 'feature/')
         run: gh pr review "$PR_URL" --approve
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: Enable auto-merge for Steward PRs
         run: gh pr merge --merge --auto "$PR_URL"
