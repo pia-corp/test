@@ -42,8 +42,15 @@ jobs:
           configPath: './.github/config/.lighthouserc.json'
           budgetPath: './.github/config/budget.json'
           temporaryPublicStorage: true
-          uploadArtifacts: true
         continue-on-error: true
+
+
+      - name: Extract Budget Error
+        run: |
+          budgetError=$(echo "${{ steps.lighthouse_audit.outputs.stdout }}" | grep -o "Error:.*")
+          echo "::set-output name=budgetError::$budgetError"
+        id: extract_budget_error
+
 
       - name: Comment on PR
         id: format_lighthouse_score
@@ -54,7 +61,6 @@ jobs:
             const urls = ${{steps.lighthouse_audit.outputs.links}};
             const result = ${{ steps.lighthouse_audit.outputs.manifest }}[0].summary;
             const obj = ${{ steps.lighthouse_audit.outputs.manifest }};
-            const budgetError = 'Budget Error: ' + ${{ steps.lighthouse_audit.outputs.budgetError }};
             const formatResult = (res) => Math.round((res * 100));
             const file_name = (url) => { return url.replace(/^http:\/\/localhost:\d+\//, ""); };
             const score = res => res >= 90 ? '🟢' : res >= 50 ? '🟠' : '🔴';
