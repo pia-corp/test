@@ -13,14 +13,14 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-        # # releasブランチを作成
-      # - name: Create and push release branch
-      #   id: release_branch
-      #   run: |
-      #     today=$(date +'%Y%m%d')
-      #     git checkout -b release/$today
-      #     git push origin release/$today
-      #     echo "RELEASE_BRANCH_NAME=release/$today" >> $GITHUB_ENV
+        # releasブランチ名を作成
+      - name: Create and push release branch
+        id: release_branch
+        run: |
+          today=$(date +'%Y%m%d')
+          git checkout -b release/$today
+          git push origin release/$today
+          echo "RELEASE_BRANCH_NAME=$today" >> $GITHUB_ENV
 
 
       - name: Setup Node.js
@@ -48,6 +48,7 @@ jobs:
         with:
           commit_message: Automatically format code with Prettier
           create_branch: true
+          branch: feature/${{ env.release_branch }}
 
 
       # - name: Check out repository
@@ -62,13 +63,13 @@ jobs:
       #     echo "${{ env.PR_URL }}"
 
 
-      # releasブランチ -> mainブランチへのPull Requestを作成
-      - name: Create PR for release
-        run: git-pr-release --squash
-        env:
-          GIT_PR_RELEASE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GIT_PR_RELEASE_BRANCH_PRODUCTION: main
-          GIT_PR_RELEASE_BRANCH_STAGING: ${{ env.RELEASE_BRANCH_NAME }}
-          GIT_PR_RELEASE_LABELS: release
-          # GIT_PR_RELEASE_TEMPLATE: pr-release.template.erb
-          TZ: Asia/Tokyo
+      # # releasブランチ -> mainブランチへのPull Requestを作成
+      # - name: Create PR for release
+      #   run: git-pr-release --squash
+      #   env:
+      #     GIT_PR_RELEASE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     GIT_PR_RELEASE_BRANCH_PRODUCTION: main
+      #     GIT_PR_RELEASE_BRANCH_STAGING: ${{ env.RELEASE_BRANCH_NAME }}
+      #     GIT_PR_RELEASE_LABELS: release
+      #     # GIT_PR_RELEASE_TEMPLATE: pr-release.template.erb
+      #     TZ: Asia/Tokyo
