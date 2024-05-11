@@ -53,6 +53,7 @@ jobs:
             const urls = ${{steps.lighthouse_audit.outputs.links}};
             const result = ${{ steps.lighthouse_audit.outputs.manifest }}[0].summary;
             const obj = ${{ steps.lighthouse_audit.outputs.manifest }};
+            const budgetError = 'Budget Error: ' + ${{ steps.lighthouse_audit.outputs.budgetError }};
             const formatResult = (res) => Math.round((res * 100));
             const file_name = (url) => { return url.replace(/^http:\/\/localhost:\d+\//, ""); };
             const score = res => res >= 90 ? '🟢' : res >= 50 ? '🟠' : '🔴';
@@ -78,6 +79,8 @@ jobs:
             | File name | Performance | Accessibility | Best practices | SEO |
             | --- | --- | --- | --- | --- |
             ${view_text}
+
+            $(budgetError)
             `};
 
             await github.rest.issues.createComment(param);
