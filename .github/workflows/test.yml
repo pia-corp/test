@@ -46,19 +46,20 @@ jobs:
           echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME}" >> $GITHUB_ENV
 
       - name: Auto-commit changes (optional)
+        id: check_pr
         uses: stefanzweifel/git-auto-commit-action@v5.0.1
         with:
           commit_message: Automatically format code with Prettier
           create_branch: true
           branch: feature/${{ env.RELEASE_BRANCH_NAME }}
 
-      - name: Check PullRequest Exists
-        id: check_pr
-        run: |
-          echo "message=$(gh pr list -S 'コード整形'in:title --json | jq -r '.[] | .title')" >> "$GITHUB_ENV"
+      # - name: Check PullRequest Exists
+      #   id: check_pr
+      #   run: |
+      #     echo "message=$(gh pr list -S 'コード整形'in:title --json | jq -r '.[] | .title')" >> "$GITHUB_ENV"
 
       - name: Create Release Pull Request
-        if: steps.check_pr.outputs.message == 'null'
+        if: steps.check_pr.outputs.commit_message == 'null'
         run: |
           gh pr create \
             -B feature/${RELEASE_BRANCH_NAME} \
@@ -67,7 +68,7 @@ jobs:
             -b 'auto rewrite'
 
       - name: Approve PR
-        if: steps.check_pr.outputs.message == 'null'
+        if: steps.check_pr.outputs.commit_message == 'null'
         run: gh pr review "$PR_URL" --approve
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
