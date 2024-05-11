@@ -10,7 +10,7 @@ on:
 
 jobs:
   LINTER:
-    if: ${{ github.event.sender.type != 'Bot' }} || ${{ github.event.sender.type != 'github-actions' }}
+    if: ${{ github.event.sender.type != 'Bot' }} && (!startsWith(github.head_ref, 'develop') || !startsWith(github.head_ref, 'hotfix'))
     uses: ./.github/workflows/_linter.yml
 
   CORE_WEB_VITALS:
