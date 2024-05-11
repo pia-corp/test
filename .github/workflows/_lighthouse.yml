@@ -48,19 +48,21 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            const urls = ${{steps.lighthouse_audit.outputs.links}};
             const result = ${{ steps.lighthouse_audit.outputs.manifest }}[0].summary;
             const obj = ${{ steps.lighthouse_audit.outputs.manifest }};
             const formatResult = (res) => Math.round((res * 100));
             const file_name = (url) => { return url.replace(/^http:\/\/localhost:\d+\//, ""); };
             const score = res => res >= 90 ? '🟢' : res >= 50 ? '🟠' : '🔴';
-            let view_text = "";
+            const getValueByKey = (key) => { return urls[key] || null };
 
-            const table_body = (urlArray) => {
+            let view_text = "";
+              const table_body = (urlArray) => {
               const accessibility = formatResult(urlArray.summary["accessibility"]);
               const practices = formatResult(urlArray.summary["best-practices"]);
               const performance = formatResult(urlArray.summary["performance"]);
               const seo = formatResult(urlArray.summary["seo"]);
-              view_text += `${file_name(urlArray.url)} | ${score(performance)} ${performance} | ${score(accessibility)} ${accessibility} | ${score(practices)} ${practices} | ${score(seo)} ${seo} |
+              view_text += `[${file_name(urlArray.url)}](${getValueByKey(urlArray.url)}) | ${score(performance)} ${performance} | ${score(accessibility)} ${accessibility} | ${score(practices)} ${practices} | ${score(seo)} ${seo} |
             `;
             };
             Object.keys(obj).forEach(key => obj[key] = table_body(obj[key]));
@@ -69,7 +71,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `⚡️ [Lighthouse monile report]:
+              body: `⚡️ [Lighthouse Mobile Report]:
 
             | File name | Performance | Accessibility | Best practices | SEO |
             | --- | --- | --- | --- | --- |
