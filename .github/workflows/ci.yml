@@ -1,23 +1,23 @@
-name: Preview URL Lighthouse Audit
+name: Build and Test
 
 on:
-  workflow_call:
-    inputs:
-      TOKEN:
-        description: 'app token'
-        required: true
-        type: string
+  workflow_dispatch:
+  pull_request:
+  push:
+
+permissions: {}
 
 jobs:
-  Lighthouse:
+  test:
+    name: Build and Test
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 10
     permissions:
       contents: read
       pull-requests: write
 
     steps:
-      - name: Check out repository
+      - name: Checkout Code
         uses: actions/checkout@v4.1.4
         with:
           ref: ${{ github.head_ref }}
@@ -26,49 +26,23 @@ jobs:
         uses: actions/setup-node@v4.0.2
         with:
           node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
-          cache: npm
+          cache: 'npm'
 
-      - name: Restore node_modules
+      - name: Cache node (if not already cached)
+        id: cache_dependency
         uses: actions/cache@v4.0.2
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-          restore-keys: ${{ runner.os }}-node-
+          restore-keys: |
+            ${{ runner.os }}-node-
 
-      - name: Dependency Installation (If there is no cache)
-        if: steps.restore_node_modules.outputs.cache-hit != 'true'
+      - name: Install dependencies (if cache miss)
+        if: ${{ steps.cache_dependency.outputs.cache-hit != 'true' }}
         run: npm ci --no-audit --progress=false --silent
 
-
-      # - name: Get merge commit
-      #   id: merge_commit
-      #   run: |
-      #     git fetch origin pull/${{ github.event.pull_request.number }}/merge
-      #     echo "::set-output name=sha::$(git rev-parse FETCH_HEAD)"
-
-      # - name: Get diff
-      #   run: |
-      #     merge_sha="${{ steps.merge_commit.outputs.sha }}"
-      #     base_sha=$(git merge-base $merge_sha^1 $merge_sha)
-      #     git diff --name-only $base_sha  $merge_sha | sed 's/^/https:\/\/localhost:9001\//g' > diff.txt
-
-      #   # git diff --name-only $base_sha $merge_sha > diff.txt
-      #   # git diff --name-only -- '*.html' $base_sha $merge_sha > diff.txt
-
-      # - name: Get HTML file diff
-      #   id: html_diff
-      #   run: |
-      #     cat diff.txt | grep '\.html$' > html_diff.txt
-
-      # - name: Read HTML diff
-      #   id: read_html_diff
-      #   run: |
-      #     cat html_diff.txt
-      #     echo "::set-output name=content::$(cat html_diff.txt)"
-
-
-
-
+      - name: MarkUpLint
+        run: npm run lint:markuplint
 
       - name: Run Lighthouse against a static dist dir
         id: lighthouse_audit

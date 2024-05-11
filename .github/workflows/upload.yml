@@ -15,6 +15,13 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
+      - name: Error handling
+        if: ${{ vars.PROTOCOL  == 'FTP' || vars.PROTOCOL  == 'SFTP' }}
+        run: |
+          echo "Error handling"
+          echo "プロトコルの指定が不正です。protocol = ${{ vars.PROTOCOL }}"
+          exit 1
+
       - name: Deploy via SFTP
         if: ${{ vars.PROTOCOL  == 'SFTP' }}
         uses: wangyucode/sftp-upload-action@v2.0.2

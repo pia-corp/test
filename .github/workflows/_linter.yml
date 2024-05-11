@@ -2,6 +2,11 @@ name: Markup Lint
 
 on:
   workflow_call:
+    # inputs:
+    #   head_ref:
+    #     description: 'check out point'
+    #     required: true
+    #     type: string
 
 jobs:
   Markup_Linter:
