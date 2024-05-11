@@ -5,8 +5,9 @@ on:
   pull_request:
     branches:
       - main
-    types: [reopened]
-  push:
+    types: [edited, reopened, synchronize]
+    paths:
+      - '**'
 
 jobs:
   LINTER:
