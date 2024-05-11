@@ -2,11 +2,6 @@ name: Preview URL Lighthouse Audit
 
 on:
   workflow_call:
-    inputs:
-      TOKEN:
-        description: 'app token'
-        required: true
-        type: string
 
 jobs:
   Lighthouse:
@@ -22,59 +17,28 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4.0.2
-        with:
-          node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
-          cache: npm
+      # - name: Setup Node.js
+      #   uses: actions/setup-node@v4.0.2
+      #   with:
+      #     node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+      #     cache: npm
 
-      - name: Restore node_modules
-        uses: actions/cache@v4.0.2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-          restore-keys: ${{ runner.os }}-node-
+      # - name: Restore node_modules
+      #   uses: actions/cache@v4.0.2
+      #   with:
+      #     path: ~/.npm
+      #     key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+      #     restore-keys: ${{ runner.os }}-node-
 
-      - name: Dependency Installation (If there is no cache)
-        if: steps.restore_node_modules.outputs.cache-hit != 'true'
-        run: npm ci --no-audit --progress=false --silent
-
-
-      # - name: Get merge commit
-      #   id: merge_commit
-      #   run: |
-      #     git fetch origin pull/${{ github.event.pull_request.number }}/merge
-      #     echo "::set-output name=sha::$(git rev-parse FETCH_HEAD)"
-
-      # - name: Get diff
-      #   run: |
-      #     merge_sha="${{ steps.merge_commit.outputs.sha }}"
-      #     base_sha=$(git merge-base $merge_sha^1 $merge_sha)
-      #     git diff --name-only $base_sha  $merge_sha | sed 's/^/https:\/\/localhost:9001\//g' > diff.txt
-
-      #   # git diff --name-only $base_sha $merge_sha > diff.txt
-      #   # git diff --name-only -- '*.html' $base_sha $merge_sha > diff.txt
-
-      # - name: Get HTML file diff
-      #   id: html_diff
-      #   run: |
-      #     cat diff.txt | grep '\.html$' > html_diff.txt
-
-      # - name: Read HTML diff
-      #   id: read_html_diff
-      #   run: |
-      #     cat html_diff.txt
-      #     echo "::set-output name=content::$(cat html_diff.txt)"
-
-
-
-
+      # - name: Dependency Installation (If there is no cache)
+      #   if: steps.restore_node_modules.outputs.cache-hit != 'true'
+      #   run: npm ci --no-audit --progress=false --silent
 
       - name: Run Lighthouse against a static dist dir
         id: lighthouse_audit
         uses: treosh/lighthouse-ci-action@v11
         with:
-          configPath: './.lighthouserc.json'
+          configPath: './.github/config/.lighthouserc.json'
           temporaryPublicStorage: true
 
       - name: Comment on PR
@@ -83,21 +47,19 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const urls = ${{steps.lighthouse_audit.outputs.links}};
             const result = ${{ steps.lighthouse_audit.outputs.manifest }}[0].summary;
             const obj = ${{ steps.lighthouse_audit.outputs.manifest }};
             const formatResult = (res) => Math.round((res * 100));
             const file_name = (url) => { return url.replace(/^http:\/\/localhost:\d+\//, ""); };
             const score = res => res >= 90 ? '🟢' : res >= 50 ? '🟠' : '🔴';
-            const getValueByKey = (key) => { return urls[key] || null };
-
             let view_text = "";
-              const table_body = (urlArray) => {
+
+            const table_body = (urlArray) => {
               const accessibility = formatResult(urlArray.summary["accessibility"]);
               const practices = formatResult(urlArray.summary["best-practices"]);
               const performance = formatResult(urlArray.summary["performance"]);
               const seo = formatResult(urlArray.summary["seo"]);
-              view_text += `[${file_name(urlArray.url)}](${getValueByKey(urlArray.url)}) | ${score(performance)} ${performance} | ${score(accessibility)} ${accessibility} | ${score(practices)} ${practices} | ${score(seo)} ${seo} |
+              view_text += `${file_name(urlArray.url)} | ${score(performance)} ${performance} | ${score(accessibility)} ${accessibility} | ${score(practices)} ${practices} | ${score(seo)} ${seo} |
             `;
             };
             Object.keys(obj).forEach(key => obj[key] = table_body(obj[key]));
@@ -106,7 +68,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `⚡️ [Lighthouse Mobile Report]:
+              body: `⚡️ [Lighthouse monile report]:
 
             | File name | Performance | Accessibility | Best practices | SEO |
             | --- | --- | --- | --- | --- |

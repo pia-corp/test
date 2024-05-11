@@ -17,8 +17,8 @@ jobs:
         run: |
           lf='\n'
           message="@${{ github.event.pull_request.user.login }} さん、プルリクエストを受け付けました！ :tada:"
-          message+="${lf}${lf}ステージング環境へのデプロイは下記の手順で行ってください。"
-          message+="${lf}1. リリース予定の\`feature\`ブランチを\`release\`ブランチにマージします。"
+          message+="${lf}${lf}デプロイは下記の手順で行ってください。"
+          message+="${lf}1. リリース予定の\`develop\`ブランチを\`main\`ブランチにマージします。"
           message+="${lf}1. \`ready-for-build\`ラベルを付けます。"
           message+="${lf}1. \`github-actions\`ボットのプルリクエストに対するアクションを待ちます。"
           message+="${lf}    - \`approve\`された場合、\`staging\`ブランチにマージします。"
