@@ -49,7 +49,8 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const test = ${{steps.lighthouse_audit.outputs}};
+            const test = "${{ toJson(steps.lighthouse_audit.outputs) }}";
+            console.log(JSON.stringify(test));
             const urls = ${{steps.lighthouse_audit.outputs.links}};
             const result = ${{ steps.lighthouse_audit.outputs.manifest }}[0].summary;
             const obj = ${{ steps.lighthouse_audit.outputs.manifest }};
