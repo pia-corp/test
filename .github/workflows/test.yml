@@ -61,7 +61,7 @@ jobs:
       - name: Create Release Pull Request
         run: |
           gh pr create \
-            -B feature/${RELEASE_BRANCH_NAME} \
+            -B main\
             -t '【コード整形】' \
             -a ${{ github.actor }}  \
             -b 'auto rewrite'
