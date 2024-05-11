@@ -19,13 +19,10 @@ jobs:
           message="@${{ github.event.pull_request.user.login }} さん、プルリクエストを受け付けました！ :tada:"
           message+="${lf}${lf}デプロイは下記の手順で行ってください。"
           message+="${lf}1. リリース予定の\`develop\`ブランチを\`main\`ブランチにマージします。"
-          message+="${lf}1. \`ready-for-build\`ラベルを付けます。"
-          message+="${lf}1. \`github-actions\`ボットのプルリクエストに対するアクションを待ちます。"
-          message+="${lf}    - \`approve\`された場合、\`staging\`ブランチにマージします。"
-          message+="${lf}    - \`ready-for-build\`ラベルが剥がされた場合、原因を特定して手順2からやり直してください。"
-          message+="${lf}${lf}プルリクエストをマージすると、ステージング環境にデプロイが行われます。 :rocket:"
-          message+="${lf}\`github-actions\`ボットから\`approve\`された後にプルリクエストを更新した場合は、"
-          message+="${lf}\`ready-for-build\`ラベルを付ける手順からやり直してください。"
+          message+="${lf}2. コードオーナーの承認を受ける前にチェックを通過していることを確認してください。"
+          message+="${lf}    - \`linter\`に合格しなかった場合は、原因を特定して手順2からやり直してください。"
+          message+="${lf}    - HTMLのMarkupルールは[ドキュメント](https://github.com/pia-corp/test/blob/main/doc/markup_rule.md)を確認してください。"
+          message+="${lf}    - \`approve\`された場合、\`main\`ブランチにマージします。"
           echo "message=${message}" >> $GITHUB_OUTPUT
 
       - name: Comment opening announce
