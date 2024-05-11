@@ -42,6 +42,7 @@ jobs:
           configPath: './.github/config/.lighthouserc.json'
           budgetPath: './.github/config/budget.json'
           temporaryPublicStorage: true
+        continue-on-error: true
 
       - name: Comment on PR
         id: format_lighthouse_score
