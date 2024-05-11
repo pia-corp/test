@@ -5,6 +5,7 @@ on:
 
 jobs:
   BUILD_SETUP:
+    if: ${{ github.event.sender.type != 'Bot' }}
     uses: ./.github/workflows/_npm.yml
 
   LINTER:
