@@ -5,11 +5,7 @@ on:
   push:
 
 jobs:
-  BUILD_SETUP:
-    if: ${{ github.actor != 'dependabot[bot]' }}
-    uses: ./.github/workflows/_npm.yml
-
-  test:
+  build_and_test:
     name: Build and Test
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -20,6 +16,7 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4.1.4
+        if: ${{ github.actor != 'dependabot[bot]' }}
         with:
           ref: ${{ github.head_ref }}
 
