@@ -62,6 +62,23 @@ jobs:
       #     echo "${{ env.RELEASE_BRANCH_NAME }}"
       #     echo "${{ env.PR_URL }}"
 
+      - name: Check PullRequest Exists
+        id: check_pr
+        env:
+          HEAD_MESSAGE: ${{ github.event.head_commit.message }}
+              run: |
+                COMMIT_MESSAGE=$(echo "${HEAD_MESSAGE}" | sed -n -e 1p)
+                echo "message=${COMMIT_MESSAGE}" >> "$GITHUB_OUTPUT"
+                echo "count=$(gh pr list -S 'コード整形'in:title | wc -l)" >> "$GITHUB_OUTPUT"
+
+      - name: Create Release Pull Request
+        if: ${{ steps.check_pr.outputs.count == 0 }}
+        run: |
+          gh pr create \
+            -B main \
+            -t '【コード整形】${{ steps.check_pr.outputs.message }}' \
+            -a ${{ github.actor }}  \
+
       - name: Approve PR
         if: startsWith(github.head_ref, 'feature/')
         run: gh pr review "$PR_URL" --approve

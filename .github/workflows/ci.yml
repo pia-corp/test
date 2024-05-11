@@ -7,6 +7,10 @@ on:
 permissions: {}
 
 jobs:
+  BUILD_SETUP:
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    uses: ./.github/workflows/_npm.yml
+
   test:
     name: Build and Test
     runs-on: ubuntu-latest
