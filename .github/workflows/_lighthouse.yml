@@ -46,7 +46,7 @@ jobs:
 
       - name: Extract Budget Error
         run: |
-          budgetError=$(echo "${{ steps.lighthouse_audit.outputs }}"
+          budgetError=${{ steps.lighthouse_audit.outputs }}
           echo "${$budgetError}"
 
 
@@ -86,6 +86,7 @@ jobs:
             ${view_text}
 
             ${budgetError}
+            ※パフォーマンス結果は+-10程度のブレがありますリンク先の診断結果を見て判断してください。
             `};
 
             await github.rest.issues.createComment(param);
