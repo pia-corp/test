@@ -13,27 +13,19 @@ jobs:
     if: ${{ github.actor != 'dependabot[bot]' }}
     uses: ./.github/workflows/_npm.yml
 
-  BUILD:
-    needs: BUILD_SETUP
-    uses: ./.github/workflows/_build_nextjs.yml
-    secrets:
-      APIKEY: '${{ secrets.MICROCMS_API_KEY }}'
-      TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # BUILD:
+  #   needs: BUILD_SETUP
+  #   uses: ./.github/workflows/_build_nextjs.yml
+  #   secrets:
+  #     APIKEY: '${{ secrets.MICROCMS_API_KEY }}'
+  #     TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   FORMATTER:
-    needs: BUILD
+    needs: BUILD_SETUP
     uses: ./.github/workflows/_formatter.yml
 
-  # 手動でアップロードするようにする
-  # UPLOAD:
-  #   needs: BUILD_SETUP
-  #   uses: ./.github/workflows/_upload.yml
-  #   secrets:
-  #     TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #     PASSWORD: ${{ secrets.SFTP_PASSWORD }}
-
-  # CREATE_TAG:
-  #   # needs: UPLOAD
-  #   uses: ./.github/workflows/_create_relese_note.yml
-  #   secrets:
-  #     TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  CREATE_TAG:
+    needs: FORMATTER
+    uses: ./.github/workflows/_create_relese_note.yml
+    secrets:
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}

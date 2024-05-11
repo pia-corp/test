@@ -2,11 +2,6 @@ name: Markup Lint
 
 on:
   workflow_call:
-    # inputs:
-    #   head_ref:
-    #     description: 'check out point'
-    #     required: true
-    #     type: string
 
 jobs:
   Markup_Linter:
@@ -39,4 +34,4 @@ jobs:
         run: npm ci --no-audit --progress=false --silent
 
       - name: Lint and rewrite markup
-        run: npm run linter
+        run: npm run lint:markuplint

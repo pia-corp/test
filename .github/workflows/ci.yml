@@ -1,92 +1,34 @@
 name: Build and Test
 
 on:
-  workflow_dispatch:
-  push:
-
-permissions: {}
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
 
 jobs:
-  build_and_test:
-    name: Build and Test
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+  BUILD_SETUP:
+    if: ${{ github.event.sender.type != 'Bot' }} && (!startsWith(github.head_ref, 'develop') || !startsWith(github.head_ref, 'hotfix'))
+    uses: ./.github/workflows/_npm.yml
 
-    permissions:
-      contents: read
-      issues: write
-      pull-requests: write
+  PR_AGENT:
+    needs: BUILD_SETUP
+    uses: ./.github/workflows/_pr_agent.yml
+    secrets:
+      APIKEY: '${{ secrets.OPENAI_KEY }}'
+      TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 
-    steps:
-      - name: Checkout Code
-        if: ${{ github.actor != 'dependabot[bot]' }}
-        uses: actions/checkout@v4.1.4
-        with:
-          ref: ${{ github.head_ref }}
+  COMMENT_OPENING_ANNOUNCE:
+    needs: PR_AGENT
+    uses: ./.github/workflows/_init_comment.yml
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4.0.2
-        with:
-          node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
-          cache: 'npm'
+  LINTER:
+    needs: COMMENT_OPENING_ANNOUNCE
+    uses: ./.github/workflows/_linter.yml
 
-      - name: Cache node (if not already cached)
-        id: cache_dependency
-        uses: actions/cache@v4.0.2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install dependencies (if cache miss)
-        if: ${{ steps.cache_dependency.outputs.cache-hit != 'true' }}
-        run: npm ci --no-audit --progress=false --silent
-
-      - name: MarkUpLint
-        run: npm run linter
-
-      - name: Run Lighthouse against a static dist dir
-        id: lighthouse_audit
-        uses: treosh/lighthouse-ci-action@v11
-        with:
-          configPath: './.github/config/.lighthouserc.json'
-          temporaryPublicStorage: true
-
-      - name: Comment on PR
-        id: format_lighthouse_score
-        uses: actions/github-script@v7.0.1
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const urls = ${{steps.lighthouse_audit.outputs.links}};
-            const result = ${{ steps.lighthouse_audit.outputs.manifest }}[0].summary;
-            const obj = ${{ steps.lighthouse_audit.outputs.manifest }};
-            const formatResult = (res) => Math.round((res * 100));
-            const file_name = (url) => { return url.replace(/^http:\/\/localhost:\d+\//, ""); };
-            const score = res => res >= 90 ? '🟢' : res >= 50 ? '🟠' : '🔴';
-            const getValueByKey = (key) => { return urls[key] || null };
-
-            let view_text = "";
-              const table_body = (urlArray) => {
-                const accessibility = formatResult(urlArray.summary["accessibility"]);
-                const practices = formatResult(urlArray.summary["best-practices"]);
-                const performance = formatResult(urlArray.summary["performance"]);
-                const seo = formatResult(urlArray.summary["seo"]);
-                view_text += `[${file_name(urlArray.url)}](${getValueByKey(urlArray.url)}) | ${score(performance)} ${performance} | ${score(accessibility)} ${accessibility} | ${score(practices)} ${practices} | ${score(seo)} ${seo} |
-              `;
-            };
-            Object.keys(obj).forEach(key => obj[key] = table_body(obj[key]));
-
-            let param = {
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `⚡️ [Lighthouse Mobile Report]:
-
-            | File name | Performance | Accessibility | Best practices | SEO |
-            | --- | --- | --- | --- | --- |
-            ${view_text}
-            `};
-
-            await github.rest.issues.createComment(param);
+  CORE_WEB_VITALS:
+    needs: COMMENT_OPENING_ANNOUNCE
+    uses: ./.github/workflows/_lighthouse.yml
+    secrets:
+      TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}

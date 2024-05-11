@@ -11,6 +11,13 @@ jobs:
       contents: read
 
     steps:
+      - name: Check if the executor is the repository owner
+        if: github.actor != github.repository_owner
+        run: |
+          echo "Error handling"
+          echo "アップロード権限がありません。コードオーナーに依頼してください。
+          exit 1
+
       - uses: actions/checkout@v4.1.4
         with:
           ref: ${{ github.head_ref }}
