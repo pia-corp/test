@@ -4,14 +4,17 @@ on:
   workflow_dispatch:
   push:
 
+# permissions: {}
+
 jobs:
   build_and_test:
     name: Build and Test
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    permissions:
-      contents: read
-      pull-requests: write
+
+    # permissions:
+    #   contents: read
+    #   pull-requests: write
 
     steps:
       - name: Checkout Code
