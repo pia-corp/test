@@ -59,20 +59,28 @@ jobs:
 
       - name: Create Release Pull Request
         run: |
-          gh pr create \
+          PR_URL=$(gh pr create \
             -B main\
             -t '【コード整形】' \
             -a ${{ github.actor }}  \
-            -b 'auto rewrite'
+            -b 'auto rewrite' \
+            --json | jq -r '.url')
+          echo "PR_URL=${PR_URL}" >> $GITHUB_ENV
+        # run: |
+        #   gh pr create \
+        #     -B main\
+        #     -t '【コード整形】' \
+        #     -a ${{ github.actor }}  \
+        #     -b 'auto rewrite'
 
       - name: Approve PR
-        run: gh pr review "${{ github.event.pull_request.html_url }}" --approve
+        run: gh pr review "${{ env.PR_URL }}" --approve
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: Enable auto-merge for Steward PRs
         if: steps.check_pr.outputs.message == 'null'
-        run: gh pr merge --merge --auto "$PR_URL"
+        run: gh pr merge --merge --auto "${{ env.PR_URL }}"
 
 
 
