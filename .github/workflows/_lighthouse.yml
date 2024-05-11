@@ -61,7 +61,8 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const assertionResults = ${{steps.lighthouse_audit.outputs.assertionResults}};
+            const assertionResults = ${{steps.lighthouse_audit.outputs.assertionResults.passed}};
+            const assertionResults2 = ${{steps.lighthouse_audit.outputs.assertionResults.message}};
             const urls = ${{steps.lighthouse_audit.outputs.links}};
             const result = ${{ steps.lighthouse_audit.outputs.manifest }}[0].summary;
             const obj = ${{ steps.lighthouse_audit.outputs.manifest }};
@@ -69,8 +70,6 @@ jobs:
             const file_name = (url) => { return url.replace(/^http:\/\/localhost:\d+\//, ""); };
             const score = res => res >= 90 ? '🟢' : res >= 50 ? '🟠' : '🔴';
             const getValueByKey = (key) => { return urls[key] || null };
-            const test = "${{ toJson(steps.lighthouse_audit.outputs) }}";
-            console.log(JSON.stringify(test));
 
             let view_text = "";
               const table_body = (urlArray) => {
