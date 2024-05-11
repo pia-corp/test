@@ -46,9 +46,7 @@ jobs:
 
       - name: Extract Budget Error
         run: |
-          budgetError=${{ steps.lighthouse_audit.outputs }}
-          echo "${$budgetError}"
-
+          echo "${{ steps.lighthouse_audit.outputs }}　| jq ."
 
       - name: Comment on PR
         id: format_lighthouse_score
