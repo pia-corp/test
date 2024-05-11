@@ -8,7 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
-      PR_URL: ${{github.event.pull_request.html_url}}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       RELEASE_BRANCH_NAME: ${{ github.run_id }}
 
@@ -67,7 +66,7 @@ jobs:
             -b 'auto rewrite'
 
       - name: Approve PR
-        run: gh pr review "$PR_URL" --approve
+        run: gh pr review "${{ github.event.pull_request.html_url }}" --approve
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
