@@ -82,6 +82,7 @@ jobs:
             | File name | Performance | Accessibility | Best practices | SEO |
             | --- | --- | --- | --- | --- |
             ${view_text}
-            ※パフォーマンス結果は+-10程度のブレがありますリンク先の診断結果を見て判断してください。`};
+            ※表示されている結果は3回の結果から得られた中央値です。
+            ※パフォーマンス結果はブレがありますリンク先の診断結果を見て判断してください。`};
 
             await github.rest.issues.createComment(param);
