@@ -68,7 +68,7 @@ jobs:
                   const performance = formatResult(urlArray.summary["performance"]);
                   const seo = formatResult(urlArray.summary["seo"]);
                   view_text += `| [${file_name(urlArray.url)}](${getValueByKey(urlArray.url)}) | ${score(performance)} ${performance} | ${score(accessibility)} ${accessibility} | ${score(practices)} ${practices} | ${score(seo)} ${seo} |
-                  `;
+                `;
                 }
             };
             Object.keys(obj).forEach(key => obj[key] = table_body(obj[key]));
