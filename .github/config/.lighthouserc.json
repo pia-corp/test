@@ -2,7 +2,6 @@
   "ci": {
     "collect": {
 			"staticDistDir": "./public/",
-			"autodiscoverUrlBlocklist": "./out/",
 			"numberOfRuns": 3,
       "settings": {
         "locale": "ja"

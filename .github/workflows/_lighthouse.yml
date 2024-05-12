@@ -41,20 +41,20 @@ jobs:
         if: steps.restore_node_modules.outputs.cache-hit != 'true'
         run: npm ci --no-audit --progress=false --silent
 
-      - name: run Lighthouse CI
-        run: |
-          npm install -g @lhci/cli@0.13.x
-          lhci autorun
-        env:
-          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-        continue-on-error: true
+      # - name: run Lighthouse CI
+      #   run: |
+      #     npm install -g @lhci/cli@0.13.x
+      #     lhci autorun
+      #   env:
+      #     LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+      #   continue-on-error: true
 
-      - name: Parse Lighthouse CI report
-        id: parse-report
-        run: |
-          report_json=$(cat ./lhci/lhci-report.json)
-          report_data=$(echo $report_json | jq .)
-          # Parse report data here and store results in variables
+      # - name: Parse Lighthouse CI report
+      #   id: parse-report
+      #   run: |
+      #     report_json=$(cat ./lhci/lhci-report.json)
+      #     report_data=$(echo $report_json | jq .)
+      #     # Parse report data here and store results in variables
 
       - name: Run Lighthouse against a static dist dir
         id: lighthouse_audit
