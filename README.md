@@ -29,9 +29,17 @@ git clone https://github.com/pia-corp/faloom.jp.git
 npm run lint
 ```
 
+### サイトの健全性
+
+Googleの`Lighthouse`を使い**読み込み時間**、**インタラクティブ性**、**コンテンツの視聴的安全性**について評価します。
+評価はブレが生じるため3回のテストを実施した中央値で判断しています。
+Push前にテストし一定の評価以上となるようにしてください。
+
+🔴：修正必須、🟠：必要に応じて修正、🟢：問題なし です。
+
 # ディレクトリ構造
 
-HTML、JavaScript、CSSなどはpublicフォルダに作成してください。
+HTML、JavaScript、CSSなどは　`public`フォルダに作成してください。
 
 ```sh
 └── project/
@@ -81,7 +89,24 @@ HTML、JavaScript、CSSなどはpublicフォルダに作成してください。
 
 ## microCMS
 
-マイクロ CMS のお知らせ一覧用サンプルコードです。必要に応じて改変してください。
+マイクロCMS のお知らせ一覧用サンプルコードです。必要に応じて改変してください。
+
+[公式のサンプルコード](https://document.microcms.io/tutorial/javascript/javascript-getting-started)
+
+```javascript
+<script src="https://unpkg.com/microcms-js-sdk@latest/dist/umd/microcms-js-sdk.js"></script>
+<script>
+  const { createClient } = microcms;
+
+  const client = createClient({
+    serviceDomain: 'service-domain', // service-domain は XXXX.microcms.io の XXXX 部分
+    apiKey: 'api-key',
+  })
+  client.get({ endpoint: 'hello'}).then((res) => {
+    document.querySelector('#text').textContent = res.text
+  })
+</script>
+```
 
 ```javascript
 const API_KEY = "XXXXX"; // APIキー
@@ -201,7 +226,7 @@ https://document.microcms.io/
 
 ## 構造化データマークアップ
 
-マークアップは JSON-LD 形式で記述。
+マークアップは JSON-LD 形式で記述してください。
 
 [構造化データ マークアップ](https://developers.google.com/search/docs/appearance/structured-data/search-gallery?hl=ja)
 
