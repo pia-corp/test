@@ -22,13 +22,13 @@ jobs:
           ref: ${{ github.head_ref }}
 
       - name: Error handling
-        if: ${{ vars.PROTOCOL }} != 'ftp' || ${{ vars.PROTOCOL }} != 'sftp'
+        if: ${{ vars.PROTOCOL != 'ftp' || vars.PROTOCOL != 'sftp' }}
         run: |
           echo "::error file=プロトコルの指定が不正です。"
           exit 1
 
       - name: Deploy via SFTP
-        if: ${{ vars.PROTOCOL }}  == 'SFTP'
+        if: ${{ vars.PROTOCOL == 'SFTP' }}
         uses: wangyucode/sftp-upload-action@v2.0.2
         with:
           host: ${{ vars.HOST }}
@@ -41,7 +41,7 @@ jobs:
           # removeExtraFilesOnServer: false
 
       - name: Deploy via FTP
-        if: ${{ vars.PROTOCOL }}  == 'FTP'
+        if: ${{ vars.PROTOCOL == 'FTP' }}
         uses: SamKirkland/FTP-Deploy-Action@4.2.0
         with:
           server: ${{ vars.HOST }}
