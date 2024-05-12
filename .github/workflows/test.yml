@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.4
         with:
-          ref: release/${{ github.run_id }}
+          ref: ${{ github.head_ref }}
 
       # - name: Create new branch
       #   run: |
