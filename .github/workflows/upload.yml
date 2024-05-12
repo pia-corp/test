@@ -22,7 +22,7 @@ jobs:
           ref: ${{ github.head_ref }}
 
       - name: Error handling
-        if: ${{ vars.PROTOCOL  == 'FTP' || vars.PROTOCOL  == 'SFTP' }}
+        if: ${{ vars.PROTOCOL  != 'FTP' || vars.PROTOCOL  != 'SFTP' }}
         run: |
           echo "::error file=プロトコルの指定が不正です。"
           exit 1
