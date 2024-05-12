@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.4
         with:
-          ref: main
+          ref: release/${{ github.run_id }}
 
       # - name: Create new branch
       #   run: |
@@ -53,32 +53,30 @@ jobs:
       #   with:
       #     github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # この設定がないと差分検出がうまくいかないので注意
-          ref: release
+      # - name: Checkout repository
+      #   uses: actions/checkout@v4
+      #   with:
+      #     fetch-depth: 0 # この設定がないと差分検出がうまくいかないので注意
+      #     ref: release
 
-      - name: Diff
-        id: diff
-        # diffがあるとfailureになる
-        run: |
-          git diff origin/main origin/release --exit-code
-        # failure時に次のジョブを実行できるようにする
-        continue-on-error: true
+      # - name: Diff
+      #   id: diff
+      #   # diffがあるとfailureになる
+      #   run: |
+      #     git diff origin/main origin/release --exit-code
+      #   # failure時に次のジョブを実行できるようにする
+      #   continue-on-error: true
 
       - name: 【定期実行】Create Pull Request
         id: create-pull-request
         # diffがある時のみPRを作成する
-        if: steps.diff.outcome == 'failure'
         run: |
-          PULL_REQUEST_URI=$(gh pr create -B main -t "【定期実行】本番リリース ${{ env.CURRENT_DATETIME }}" -l 'daily deploy' -b "")
+          PULL_REQUEST_URI=$(gh pr create -B main -t "【定期実行】本番リリース " -l 'daily deploy' -b "")
           echo "PULL_REQUEST_URI=$PULL_REQUEST_URI" >> "$GITHUB_OUTPUT"
 
       - name: 【定期実行】Merge Pull Request
         id: merge_pr
         # diffがある時のみPRをマージする
-        if: steps.diff.outcome == 'failure'
         run: |
           gh pr merge ${{steps.create-pull-request.outputs.PULL_REQUEST_URI}} --merge
           echo "IS_DISPATCH=TRUE" >> "$GITHUB_OUTPUT"
