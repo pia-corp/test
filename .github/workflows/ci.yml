@@ -2,14 +2,16 @@ name: CI
 
 on:
   workflow_dispatch:
-  push:
+  pull_request:
     branches:
-      - develop
-      - feature
+      - main
+    types: [edited, reopened, synchronize]
+    paths:
+      - '**'
 
 jobs:
   LINTER:
-    if: ${{ github.event.sender.type != 'Bot' }}
+    if: github.event.action != 'closed' && (startsWith(github.head_ref, 'develop') || startsWith(github.head_ref, 'hotfix'))
     uses: ./.github/workflows/_linter.yml
 
   CORE_WEB_VITALS:

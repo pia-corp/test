@@ -10,15 +10,8 @@ on:
 
 jobs:
   BUILD_SETUP:
-    if: ${{ github.actor != 'dependabot[bot]' }}
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && startsWith(github.head_ref, 'develop')
     uses: ./.github/workflows/_npm.yml
-
-  # BUILD:
-  #   needs: BUILD_SETUP
-  #   uses: ./.github/workflows/_build_nextjs.yml
-  #   secrets:
-  #     APIKEY: '${{ secrets.MICROCMS_API_KEY }}'
-  #     TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   FORMATTER:
     needs: BUILD_SETUP

@@ -3,8 +3,8 @@
 </p>
 
 [![npm version](https://img.shields.io/npm/v/react.svg?style=flat)](https://www.npmjs.com/package/react)
-[![Linter](https://github.com/pia-corp/test/actions/workflows/prettier.yml/badge.svg)](https://github.com/pia-corp/test/actions/workflows/prettier.yml)
-[![Deploy](https://github.com/pia-corp/test/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/pia-corp/test/actions/workflows/deploy.yml)
+[![CI](https://github.com/pia-corp/test/actions/workflows/ci.yml/badge.svg?event=workflow_dispatch)](https://github.com/pia-corp/test/actions/workflows/ci.yml)
+[![Deploy](https://github.com/pia-corp/test/actions/workflows/deploy.yml/badge.svg?branch=main&event=workflow_dispatch)](https://github.com/pia-corp/test/actions/workflows/deploy.yml)
 
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS](https://img.shields.io/badge/CSS-239120?&style=for-the-badge&logo=css3&logoColor=white)
@@ -23,7 +23,7 @@ git clone https://github.com/pia-corp/faloom.jp.git
 ### コードチェック
 
 ローカル環境でテストする場合は下記のコードで確認ができます。
-チェック内容は[CODECHECK.md](https://github.com/pia-corp/test/doc/CODECHECK.md)を確認してください。
+チェック内容は[CODECHECK.md](tree/main/doc/markup_rule.md)を確認してください。
 
 ```bash
 npm run lint

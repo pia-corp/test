@@ -2,10 +2,13 @@
   "ci": {
     "collect": {
 			"staticDistDir": "./public/",
-			"numberOfRuns": 1,
+			"numberOfRuns": 3,
       "settings": {
         "locale": "ja"
       }
+    },
+    "budgetsFile": {
+      "budgetsFile": "./.github/config/budget.json"
     },
     "upload": {
       "target": "temporary-public-storage"
