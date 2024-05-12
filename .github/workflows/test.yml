@@ -14,7 +14,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.4
         with:
-          ref: ${{ github.head_ref }}
+          ref: main
+
+      - name: Create new branch
+        run: |
+          git checkout -b release/${RELEASE_BRANCH_NAME}
+          git push origin release/${RELEASE_BRANCH_NAME}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4.0.2
@@ -34,21 +39,29 @@ jobs:
         run: npm ci --no-audit --progress=false --silent
 
       - name: Lint and rewrite markup
-        run: npm run lint:prettier
+        run: npm run formatting
 
-      # releasブランチ名を作成
-      - name: Create and push release branch
-        id: release_branch
+      - name: Stage Commit changes
         run: |
-          git checkout -b feature/${RELEASE_BRANCH_NAME}
-          git commit -m \"Automatically format code with Prettier\"
-          git push origin HEAD
-          gh pr create \
-            -B main\
-            -t '【コード整形】' \
-            -a ${{ github.actor }}  \
-            -b 'auto rewrite'
-          echo "pr_url=$(gh pr view --json number,url | jq -r '.[] | .url' | head -n 1)" >> $GITHUB_ENV
+          git add .
+          git commit -m "Committing changes"
+
+      - name: Push changes to remote repository
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+
+
+          # git checkout -b release/${RELEASE_BRANCH_NAME}
+          # git commit -m \"Automatically format code with Prettier\"
+          # git push origin HEAD
+          # gh pr create \
+          #   -B main\
+          #   -t '【コード整形】' \
+          #   -a ${{ github.actor }}  \
+          #   -b 'auto rewrite'
+          # echo "pr_url=$(gh pr view --json number,url | jq -r '.[] | .url' | head -n 1)" >> $GITHUB_ENV
 
         # git checkout [branch]
 
@@ -75,14 +88,14 @@ jobs:
       #       -b 'auto rewrite'
       #     echo "PR=${{ github.event.pull_request.html_url }}" >> $GITHUB_ENV
 
-      - name: Approve PR
-        run: gh pr review "${{ env.pr_url }}" --approve
-        env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      # - name: Approve PR
+      #   run: gh pr review "${{ env.pr_url }}" --approve
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
-      - name: Enable auto-merge for Steward PRs
-        if: steps.check_pr.outputs.message == 'null'
-        run: gh pr merge --merge --auto "${{ env.pr_url }}"
+      # - name: Enable auto-merge for Steward PRs
+      #   if: steps.check_pr.outputs.message == 'null'
+      #   run: gh pr merge --merge --auto "${{ env.pr_url }}"
 
 
 
