@@ -36,7 +36,7 @@ jobs:
         run: npm run formatting
 
       - name: Create release branch
-        run: git branch -b release/github_${{ github.run_id }}
+        run: git checkout -b release/github_${{ github.run_id }}
 
       - name: Add built files to git
         run: |
