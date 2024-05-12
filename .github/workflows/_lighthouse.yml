@@ -14,9 +14,9 @@ jobs:
       contents: read
       issues: write
       pull-requests: write
-    strategy:
-      matrix:
-        platform: [".lighthouserc_pc.json",".lighthouserc.json"]
+    # strategy:
+    #   matrix:
+    #     platform: [".lighthouserc_pc.json",".lighthouserc.json"]
 
     steps:
       - name: Check out repository
@@ -45,6 +45,7 @@ jobs:
         run: |
           npm install -g @lhci/cli@0.13.x
           lhci autorun
+          lhci open
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
@@ -52,7 +53,7 @@ jobs:
         id: lighthouse_audit
         uses: treosh/lighthouse-ci-action@v11
         with:
-          configPath: './.github/config/${{ matrix.platform }}'
+          configPath: './.github/config/.lighthouserc.json'
           uploadArtifacts: true
           temporaryPublicStorage: true
         continue-on-error: true
