@@ -2,17 +2,9 @@
   "ci": {
     "collect": {
 			"staticDistDir": "./public/",
-			"numberOfRuns": 1,
+			"numberOfRuns": 3,
       "settings": {
-        "locale": "ja",
-        "formFactor": "desktop",
-        "screenEmulation": {
-          "width": 2480,
-          "height": 1600,
-          "deviceScaleRatio": 2,
-          "mobile": false,
-          "disabled": false
-        }
+        "locale": "ja"
       }
     },
     "budgetsFile": {

@@ -13,7 +13,7 @@ jobs:
       pull-requests: write
     strategy:
       matrix:
-        platform: [".lighthouserc_pc.yml",".lighthouserc.yml"]
+        platform: [".lighthouserc_pc.json",".lighthouserc.json"]
 
     steps:
       - name: Check out repository
@@ -38,11 +38,19 @@ jobs:
         if: steps.restore_node_modules.outputs.cache-hit != 'true'
         run: npm ci --no-audit --progress=false --silent
 
+      - name: run Lighthouse CI
+        run: |
+          npm install -g @lhci/cli@0.13.x
+          lhci autorun
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
       - name: Run Lighthouse against a static dist dir
         id: lighthouse_audit
         uses: treosh/lighthouse-ci-action@v11
         with:
           configPath: './.github/config/${{ matrix.platform }}'
+          uploadArtifacts: true
           temporaryPublicStorage: true
         continue-on-error: true
 

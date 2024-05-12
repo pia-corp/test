@@ -17,3 +17,5 @@ jobs:
   CORE_WEB_VITALS:
     needs: LINTER
     uses: ./.github/workflows/_lighthouse.yml
+    secrets:
+      TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
