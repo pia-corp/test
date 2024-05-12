@@ -61,14 +61,14 @@ jobs:
             const getValueByKey = (key) => { return urls[key] || null };
 
             let view_text = "";
-              const table_body = (urlArray) => {
-                if (urlArray.isRepresentativeRun == true) {
-                  const accessibility = formatResult(urlArray.summary["accessibility"]);
-                  const practices = formatResult(urlArray.summary["best-practices"]);
-                  const performance = formatResult(urlArray.summary["performance"]);
-                  const seo = formatResult(urlArray.summary["seo"]);
-                  view_text += `| [${file_name(urlArray.url)}](${getValueByKey(urlArray.url)}) | ${score(performance)} ${performance} | ${score(accessibility)} ${accessibility} | ${score(practices)} ${practices} | ${score(seo)} ${seo} |`;
-                }
+            const table_body = (urlArray) => {
+              if (urlArray.isRepresentativeRun == true) {
+                const accessibility = formatResult(urlArray.summary["accessibility"]);
+                const practices = formatResult(urlArray.summary["best-practices"]);
+                const performance = formatResult(urlArray.summary["performance"]);
+                const seo = formatResult(urlArray.summary["seo"]);
+                view_text += `| [${file_name(urlArray.url)}](${getValueByKey(urlArray.url)}) | ${score(performance)} ${performance} | ${score(accessibility)} ${accessibility} | ${score(practices)} ${practices} | ${score(seo)} ${seo} |\n`;
+              }
             };
             Object.keys(obj).forEach(key => obj[key] = table_body(obj[key]));
 
@@ -81,7 +81,6 @@ jobs:
             | File name | Performance | Accessibility | Best practices | SEO |
             | --- | --- | --- | --- | --- |
             ${view_text}
-
             ※パフォーマンス結果は+-10程度のブレがありますリンク先の診断結果を見て判断してください。`};
 
             await github.rest.issues.createComment(param);
