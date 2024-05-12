@@ -83,7 +83,7 @@ jobs:
 
             let view_text = "";
               const table_body = (urlArray) => {
-                if (isRepresentativeRun == true) {
+                if (urlArray.isRepresentativeRun == true) {
                   const accessibility = formatResult(urlArray.summary["accessibility"]);
                   const practices = formatResult(urlArray.summary["best-practices"]);
                   const performance = formatResult(urlArray.summary["performance"]);
