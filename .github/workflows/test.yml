@@ -59,12 +59,14 @@ jobs:
           body: "Automatically generated SSG build for ${{ github.run_id }}"
           reviewers: "github-actions"
 
-      - name: Merge pull request
-        uses: peter-evans/merge-pull-request@v4
+      - name: Merge pull request (if squash is desired)
+        uses: actions/github-script@v7.0.1
         with:
-          branch: release/github_${{ github.run_id }}
-          merge-method: squash
-          commit-message: "Merge pull request: ${{ github.run_id }}"
+          script: |
+            github.issues.createPullRequestMerge({
+              pull_number: context.issue.number,
+              merge_method: 'squash'  # Change 'squash' to 'merge' if desired
+            })
 
 
 
