@@ -11,9 +11,9 @@ jobs:
       contents: read
       issues: write
       pull-requests: write
-    strategy:
-      matrix:
-        platform: [".lighthouserc_pc.json",".lighthouserc.json"]
+    # strategy:
+    #   matrix:
+    #     platform: [".lighthouserc_pc.json",".lighthouserc.json"]
 
     steps:
       - name: Check out repository
@@ -37,21 +37,6 @@ jobs:
       - name: Dependency Installation (If there is no cache)
         if: steps.restore_node_modules.outputs.cache-hit != 'true'
         run: npm ci --no-audit --progress=false --silent
-
-      # - name: run Lighthouse CI
-      #   run: |
-      #     npm install -g @lhci/cli@0.13.x
-      #     lhci autorun
-      #   env:
-      #     LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-      #   continue-on-error: true
-
-      # - name: Parse Lighthouse CI report
-      #   id: parse-report
-      #   run: |
-      #     report_json=$(cat ./lhci/lhci-report.json)
-      #     report_data=$(echo $report_json | jq .)
-      #     # Parse report data here and store results in variables
 
       - name: Run Lighthouse against a static dist dir
         id: lighthouse_audit
@@ -85,7 +70,8 @@ jobs:
                   const practices = formatResult(urlArray.summary["best-practices"]);
                   const performance = formatResult(urlArray.summary["performance"]);
                   const seo = formatResult(urlArray.summary["seo"]);
-                  view_text += `[${file_name(urlArray.url)}](${getValueByKey(urlArray.url)}) | ${score(performance)} ${performance} | ${score(accessibility)} ${accessibility} | ${score(practices)} ${practices} | ${score(seo)} ${seo} |`;
+                  view_text += `[${file_name(urlArray.url)}](${getValueByKey(urlArray.url)}) | ${score(performance)} ${performance} | ${score(accessibility)} ${accessibility} | ${score(practices)} ${practices} | ${score(seo)} ${seo} |
+                  `;
                 }
             };
             Object.keys(obj).forEach(key => obj[key] = table_body(obj[key]));
