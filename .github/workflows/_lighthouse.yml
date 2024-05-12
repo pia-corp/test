@@ -6,7 +6,7 @@ on:
 jobs:
   Lighthouse:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 120
     permissions:
       contents: read
       issues: write
@@ -43,7 +43,6 @@ jobs:
         uses: treosh/lighthouse-ci-action@v11
         with:
           configPath: './.github/config/.lighthouserc.json'
-          uploadArtifacts: true
           temporaryPublicStorage: true
         continue-on-error: true
 
