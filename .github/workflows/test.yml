@@ -63,13 +63,12 @@ jobs:
         uses: actions/github-script@v7.0.1
         with:
           script: |
-            github.issues.createPullRequestMerge({
-              pull_number: context.issue.number,
-              merge_method: 'squash'  # Change 'squash' to 'merge' if desired
+            await github.pulls.merge({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              merge_method: 'squash'
             })
-
-
-
 
 
 
