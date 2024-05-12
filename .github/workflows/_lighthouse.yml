@@ -14,9 +14,9 @@ jobs:
       contents: read
       issues: write
       pull-requests: write
-    # strategy:
-    #   matrix:
-    #     platform: [".lighthouserc_pc.json",".lighthouserc.json"]
+    strategy:
+      matrix:
+        platform: [".lighthouserc_pc.json",".lighthouserc.json"]
 
     steps:
       - name: Check out repository
@@ -60,7 +60,7 @@ jobs:
         id: lighthouse_audit
         uses: treosh/lighthouse-ci-action@v11
         with:
-          configPath: './.github/config/.lighthouserc.json'
+          configPath: './.github/config/${{ strateg.matrix }}'
           uploadArtifacts: true
           temporaryPublicStorage: true
         continue-on-error: true
