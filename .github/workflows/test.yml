@@ -12,9 +12,9 @@ jobs:
       RELEASE_BRANCH_NAME: ${{ github.run_id }}
 
     steps:
-      # - uses: actions/checkout@v4.1.4
-      #   with:
-      #     ref: main
+      - uses: actions/checkout@v4.1.4
+        with:
+          ref: main
 
       # - name: Create new branch
       #   run: |
@@ -57,13 +57,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0 # この設定がないと差分検出がうまくいかないので注意
-          ref: develop
+          ref: release
 
       - name: Diff
         id: diff
         # diffがあるとfailureになる
         run: |
-          git diff origin/main origin/develop --exit-code
+          git diff origin/main origin/release --exit-code
         # failure時に次のジョブを実行できるようにする
         continue-on-error: true
 
