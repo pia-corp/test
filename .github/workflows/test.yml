@@ -16,11 +16,6 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      # - name: Create new branch
-      #   run: |
-      #     git checkout -b release/${RELEASE_BRANCH_NAME}
-      #     git push origin release/${RELEASE_BRANCH_NAME}
-
       - name: Setup Node.js
         uses: actions/setup-node@v4.0.2
         with:
@@ -40,6 +35,12 @@ jobs:
 
       - name: Lint and rewrite markup
         run: npm run formatting
+
+      - name: Create new branch
+        run: |
+          git checkout -b release/${RELEASE_BRANCH_NAME}
+          git push origin release/${RELEASE_BRANCH_NAME}
+
 
       # - name: Stage Commit changes
       #   run: |
