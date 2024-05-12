@@ -53,22 +53,21 @@ jobs:
         with:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           branch: release/github_${{ github.run_id }}
-          head: release/github_${{ github.run_id }}
           base: main
           title: "Build: ${{ github.run_id }}"
           body: "Automatically generated SSG build for ${{ github.run_id }}"
           reviewers: "github-actions"
 
-      - name: Merge pull request (if squash is desired)
-        uses: actions/github-script@v7.0.1
-        with:
-          script: |
-            await github.pulls.merge({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.payload.pull_request.number,
-              merge_method: 'squash'
-            })
+      # - name: Merge pull request (if squash is desired)
+      #   uses: actions/github-script@v7.0.1
+      #   with:
+      #     script: |
+      #       await github.pulls.merge({
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         pull_number: context.payload.pull_request.number,
+      #         merge_method: 'squash'
+      #       })
 
 
 
