@@ -70,7 +70,7 @@ jobs:
                 const seo = formatResult(urlArray.summary["seo"]);
                 view_text += `| [${file_name(urlArray.url)}](${getValueByKey(urlArray.url)}) | ${score(performance)} ${performance} | ${score(accessibility)} ${accessibility} | ${score(practices)} ${practices} | ${score(seo)} ${seo} |\n`;
               }
-              if (${score(performance)} < 50) {
+              if (performance < 50) {
                 exists_error = true
               }
             };
