@@ -83,12 +83,14 @@ jobs:
 
             let view_text = "";
               const table_body = (urlArray) => {
-              const accessibility = formatResult(urlArray.summary["accessibility"]);
-              const practices = formatResult(urlArray.summary["best-practices"]);
-              const performance = formatResult(urlArray.summary["performance"]);
-              const seo = formatResult(urlArray.summary["seo"]);
-              view_text += `[${file_name(urlArray.url)}](${getValueByKey(urlArray.url)}) | ${score(performance)} ${performance} | ${score(accessibility)} ${accessibility} | ${score(practices)} ${practices} | ${score(seo)} ${seo} |
-            `;
+                if (isRepresentativeRun == true) {
+                  const accessibility = formatResult(urlArray.summary["accessibility"]);
+                  const practices = formatResult(urlArray.summary["best-practices"]);
+                  const performance = formatResult(urlArray.summary["performance"]);
+                  const seo = formatResult(urlArray.summary["seo"]);
+                  view_text += `[${file_name(urlArray.url)}](${getValueByKey(urlArray.url)}) | ${score(performance)} ${performance} | ${score(accessibility)} ${accessibility} | ${score(practices)} ${practices} | ${score(seo)} ${seo} |
+                `;
+                }
             };
             Object.keys(obj).forEach(key => obj[key] = table_body(obj[key]));
 
@@ -106,3 +108,17 @@ jobs:
             `};
 
             await github.rest.issues.createComment(param);
+
+
+
+          # const obj = [
+          #   {"url":"http://localhost:38639/about.html",
+          # "isRepresentativeRun":false,
+          # "htmlPath":"/home/runner/work/test/test/.lighthouseci/localhost-_about_html-2024_05_12_04_29_35.report.html",
+          # "jsonPath":"/home/runner/work/test/test/.lighthouseci/localhost-_about_html-2024_05_12_04_29_35.report.json",
+          # "summary":{"performance":0.54,
+          # "accessibility":0.82,
+          # "best-practices":0.74,
+          # "seo":0.92,
+          # "pwa":0.38}},
+          # {"url":"http://localhost:38639/about.html","isRepresentativeRun":false,"htmlPath":"/home/runner/work/test/test/.lighthouseci/localhost-_about_html-2024_05_12_04_30_00.report.html","jsonPath":"/home/runner/work/test/test/.lighthouseci/localhost-_about_html-2024_05_12_04_30_00.report.json","summary":{"performance":0.65,"accessibility":0.82,"best-practices":0.74,"seo":0.92,"pwa":0.63}},{"url":"http://localhost:38639/company.html","isRepresentativeRun":false,"htmlPath":"/home/runner/work/test/test/.lighthouseci/localhost-_company_html-2024_05_12_04_30_15.report.html","jsonPath":"/home/runner/work/test/test/.lighthouseci/localhost-_company_html-2024_05_12_04_30_15.report.json","summary":{"performance":0.55,"accessibility":0.93,"best-practices":0.56,"seo":1,"pwa":0.63}},{"url":"http://localhost:38639/company.html","isRepresentativeRun":false,"htmlPath":"/home/runner/work/test/test/.lighthouseci/localhost-_company_html-2024_05_12_04_30_28.report.html","jsonPath":"/home/runner/work/test/test/.lighthouseci/localhost-_company_html-2024_05_12_04_30_28.report.json","summary":{"performance":0.58,"accessibility":0.93,"best-practices":0.56,"seo":1,"pwa":0.63}},{"url":"http://localhost:38639/about.html","isRepresentativeRun":true,"htmlPath":"/home/runner/work/test/test/.lighthouseci/localhost-_about_html-2024_05_12_04_29_48.report.html","jsonPath":"/home/runner/work/test/test/.lighthouseci/localhost-_about_html-2024_05_12_04_29_48.report.json","summary":{"performance":0.61,"accessibility":0.82,"best-practices":0.74,"seo":0.92,"pwa":0.63}},{"url":"http://localhost:38639/company.html","isRepresentativeRun":true,"htmlPath":"/home/runner/work/test/test/.lighthouseci/localhost-_company_html-2024_05_12_04_30_41.report.html","jsonPath":"/home/runner/work/test/test/.lighthouseci/localhost-_company_html-2024_05_12_04_30_41.report.json","summary":{"performance":0.6,"accessibility":0.93,"best-practices":0.56,"seo":1,"pwa":0.63}}];
