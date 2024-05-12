@@ -72,7 +72,7 @@ jobs:
         id: create-pull-request
         # diffがある時のみPRを作成する
         run: |
-          PULL_REQUEST_URI=$(gh pr create -B main -t "【定期実行】本番リリース " -l 'daily deploy' -b "")
+          PULL_REQUEST_URI=$(gh pr create -B main -t "【定期実行】本番リリース " -b "")
           echo "PULL_REQUEST_URI=$PULL_REQUEST_URI" >> "$GITHUB_OUTPUT"
 
       - name: 【定期実行】Merge Pull Request
