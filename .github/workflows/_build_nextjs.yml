@@ -27,13 +27,13 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      - name: Set release branch name
-        run: echo "RELEASE_BRANCH_NAME=release/$(date +'%Y%m%d%H%M')" >> $GITHUB_ENV
+      # - name: Set release branch name
+      #   run: echo "RELEASE_BRANCH_NAME=release/$(date +'%Y%m%d%H%M')" >> $GITHUB_ENV
 
-      - name: Create and push release branch
-        run: |
-          git checkout -b ${{ env.RELEASE_BRANCH_NAME }}
-          git push origin ${{ env.RELEASE_BRANCH_NAME }}
+      # - name: Create and push release branch
+      #   run: |
+      #     git checkout -b ${{ env.RELEASE_BRANCH_NAME }}
+      #     git push origin ${{ env.RELEASE_BRANCH_NAME }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4.0.2
