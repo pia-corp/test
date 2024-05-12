@@ -18,6 +18,7 @@ jobs:
     uses: ./.github/workflows/_formatter.yml
 
   NRXTJS:
+    needs: BUILD_SETUP
     uses: ./.github/workflows/_build_nextjs.yml
     secrets:
       APIKEY: '${{ secrets.MICROCMS_API_KEY }}'
