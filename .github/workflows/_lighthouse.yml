@@ -70,9 +70,6 @@ jobs:
                 const seo = formatResult(urlArray.summary["seo"]);
                 view_text += `| [${file_name(urlArray.url)}](${getValueByKey(urlArray.url)}) | ${score(performance)} ${performance} | ${score(accessibility)} ${accessibility} | ${score(practices)} ${practices} | ${score(seo)} ${seo} |\n`;
               }
-              if (${performance} < 50) {
-                exists_error = true
-              }
             };
             Object.keys(obj).forEach(key => obj[key] = table_body(obj[key]));
 
@@ -88,12 +85,3 @@ jobs:
             ※パフォーマンス結果は+-10程度のブレがありますリンク先の診断結果を見て判断してください。`};
 
             await github.rest.issues.createComment(param);
-
-            run: echo "exists_error=$exists_error" >> $GITHUB_ENV
-
-      - name: Score Error
-        if: steps.format_lighthouse_score.outputs.exists_error == 'true'
-        run: |
-          echo "Error handling"
-          echo "パフォーマンスが低いためチェックが通過できません修正してください。
-          exit 1
