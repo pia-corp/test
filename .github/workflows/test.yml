@@ -32,17 +32,20 @@ jobs:
         if: steps.restore_node_modules.outputs.cache-hit != 'true'
         run: npm ci --no-audit --progress=false --silent
 
-      - name: Create release branch
-        run: git checkout -b release/github_${{ github.run_id }}
+      # - name: Create release branch
+      #   run: git checkout -b release/github_${{ github.run_id }}
 
       - name: Lint and rewrite markup
         run: |
-          git config --global push.default simple
           npm run formatting
 
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: Apply formatting
+          branch: release/github_${{ github.run_id }}
+          commit_user_name: github-actions
+          commit_user_email: github-actions@github.com
+          create_branch: true
 
       # - name: Add built files to git
       #   run: |
