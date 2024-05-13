@@ -37,6 +37,7 @@ jobs:
 
       - name: Lint and rewrite markup
         run: |
+          git config --global push.default simple
           npm run formatting
 
       - uses: stefanzweifel/git-auto-commit-action@v5
