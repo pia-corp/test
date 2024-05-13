@@ -77,6 +77,10 @@ jobs:
           body: "Automatically generated SSG build for ${{ github.run_id }}"
           reviewers: "github-actions"
 
+      - name: Check outputs
+        run: |
+          echo "${{ steps.cpr.outputs.pull-request-number }}"
+
       - name: Enable auto-merge
         uses: peter-evans/enable-pull-request-automerge@v3
         with:
