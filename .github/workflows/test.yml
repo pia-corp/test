@@ -50,7 +50,7 @@ jobs:
       #   run: git push origin release/github_${{ github.run_id }}
 
 
-        - name: Count changes
+      - name: Count changes
         id: changes
         run: |
           git add -N . # 新規ファイルを含める
