@@ -36,35 +36,24 @@ jobs:
         run: git checkout -b release/github_${{ github.run_id }}
 
       - name: Lint and rewrite markup
-        run: npm run formatting
-
-      # - name: Add built files to git
-      #   run: |
-      #     git config user.email github-actions@github.com
-      #     git config user.name github-actions
-      #     git add .
-      #     git status
-      #     git commit -m "build: ${{ github.run_id }}"
-
-      # - name: Push changes to release branch
-      #   run: git push origin release/github_${{ github.run_id }}
-
-
-      - name: Count changes
-        id: changes
         run: |
-          git add -N . # 新規ファイルを含める
-          echo "::set-output name=count::$(git diff --name-only | wc -l)"
-      - name: commit & push
+          npm run formatting
+          git status
+
+      - name: Add built files to git
         run: |
-          git config user.name github-actions
           git config user.email github-actions@github.com
+          git config user.name github-actions
           git add .
-          git commit -m "Update"
-          git push
-        if: steps.changes.outputs.count > 0
 
+      - name: Add commit
+        run: |
+          git commit -m "build: ${{ github.run_id }}"
 
+      - name: Push changes to release branch
+        run: git push
+
+      # run: git push origin release/github_${{ github.run_id }}
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@v6.0.5
