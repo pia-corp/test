@@ -32,17 +32,18 @@ jobs:
         if: steps.restore_node_modules.outputs.cache-hit != 'true'
         run: npm ci --no-audit --progress=false --silent
 
-      - name: Lint and rewrite markup
-        run: npm run formatting
-
       - name: Create release branch
         run: git checkout -b release/github_${{ github.run_id }}
+
+      - name: Lint and rewrite markup
+        run: npm run formatting
 
       - name: Add built files to git
         run: |
           git config user.email github-actions@github.com
           git config user.name github-actions
           git add .
+          git status
           git commit -m "build: ${{ github.run_id }}"
 
       - name: Push changes to release branch
