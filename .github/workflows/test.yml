@@ -35,9 +35,11 @@ jobs:
       # - name: Create release branch
       #   run: git checkout -b release/github_${{ github.run_id }}
 
-      - name: Lint and rewrite markup
-        run: |
-          npm run formatting
+      - name: Build Next.js App
+        run: npm run build
+        env:
+          MICROCMS_SERVICE_DOMAIN: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY: ${{ secrets.APIKEY }}
 
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
@@ -62,15 +64,15 @@ jobs:
 
       # run: git push origin release/github_${{ github.run_id }}
 
-      - name: Create pull request
-        uses: peter-evans/create-pull-request@v6.0.5
-        with:
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          branch: release/github_${{ github.run_id }}
-          base: main
-          title: "Build: ${{ github.run_id }}"
-          body: "Automatically generated SSG build for ${{ github.run_id }}"
-          reviewers: "github-actions"
+      # - name: Create pull request
+      #   uses: peter-evans/create-pull-request@v6.0.5
+      #   with:
+      #     token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      #     branch: release/github_${{ github.run_id }}
+      #     base: main
+      #     title: "Build: ${{ github.run_id }}"
+      #     body: "Automatically generated SSG build for ${{ github.run_id }}"
+      #     reviewers: "github-actions"
 
       # - name: Merge pull request (if squash is desired)
       #   uses: actions/github-script@v7.0.1
