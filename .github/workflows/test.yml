@@ -38,20 +38,23 @@ jobs:
       - name: Lint and rewrite markup
         run: |
           npm run formatting
-          git status
 
-      - name: Add built files to git
-        run: |
-          git config user.email github-actions@github.com
-          git config user.name github-actions
-          git add .
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Apply formatting
 
-      - name: Add commit
-        run: |
-          git commit -m "build: ${{ github.run_id }}"
+      # - name: Add built files to git
+      #   run: |
+      #     git config user.email github-actions@github.com
+      #     git config user.name github-actions
+      #     git add .
 
-      - name: Push changes to release branch
-        run: git push --set-upstream origin release/github_${{ github.run_id }}
+      # - name: Add commit
+      #   run: |
+      #     git commit -m "build: ${{ github.run_id }}"
+
+      # - name: Push changes to release branch
+      #   run: git push --set-upstream origin release/github_${{ github.run_id }}
 
       # run: git push origin release/github_${{ github.run_id }}
 
