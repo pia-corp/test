@@ -71,6 +71,7 @@ jobs:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           branch: release/github_${{ github.run_id }}
           title: "Build: ${{ github.run_id }}"
+          base: main
           author: GitHub Action <action@github.com>
           committer: GitHub Action <action@github.com>
           body: "Automatically generated SSG build for ${{ github.run_id }}"
