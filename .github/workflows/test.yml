@@ -51,7 +51,7 @@ jobs:
           git commit -m "build: ${{ github.run_id }}"
 
       - name: Push changes to release branch
-        run: git push
+        run: git push --set-upstream origin release/github_${{ github.run_id }}
 
       # run: git push origin release/github_${{ github.run_id }}
 
