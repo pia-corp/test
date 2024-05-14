@@ -68,6 +68,10 @@ jobs:
           committer: github-actions <github-actions@github.com>
           body: "Automatically generated SSG build for ${{ github.run_id }}"
           reviewers: "github-actions"
+          commit-message: '[create-pull-request] automated change'
+          signoff: false
+          delete-branch: false
+          draft: false
 
       - name: Check outputs url
         run: |
