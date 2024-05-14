@@ -41,7 +41,8 @@ jobs:
           MICROCMS_SERVICE_DOMAIN: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
           MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
 
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - name: Auto commit
+        uses: stefanzweifel/git-auto-commit-action@v5
         id: aca
         with:
           commit_message: Apply formatting
@@ -54,6 +55,39 @@ jobs:
         run: |
           echo "changes_detected: ${{ steps.aca.outputs.changes_detected }}"
           echo "commit_hash: ${{ steps.aca.outputs.commit_hash }}"
+
+
+
+  auto_merge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: test
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      RELEASE_BRANCH_NAME: ${{ github.run_id }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.1.4
+
+      - name: Create pull request
+        id: cpr
+        uses: peter-evans/create-pull-request@v6.0.5
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          branch: release/github_${{ github.run_id }}
+          title: "Build: ${{ github.run_id }}"
+          base: main
+          author: GitHub Action <action@github.com>
+          committer: GitHub Action <action@github.com>
+          body: "Automatically generated SSG build for ${{ github.run_id }}"
+          reviewers: "github-actions"
+
+      - name: Check outputs url
+        run: |
+          echo "pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "pull-request-url: ${{ steps.cpr.outputs.pull-request-url }}"
+
 
 
 
