@@ -64,22 +64,22 @@ jobs:
 
       # run: git push origin release/github_${{ github.run_id }}
 
-      - name: Create pull request
-        id: cpr
-        uses: peter-evans/create-pull-request@v6.0.5
-        with:
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          branch: release/github_${{ github.run_id }}
-          title: "Build: ${{ github.run_id }}"
-          base: main
-          author: GitHub Action <action@github.com>
-          committer: GitHub Action <action@github.com>
-          body: "Automatically generated SSG build for ${{ github.run_id }}"
-          reviewers: "github-actions"
+      # - name: Create pull request
+      #   id: cpr
+      #   uses: peter-evans/create-pull-request@v6.0.5
+      #   with:
+      #     token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      #     branch: release/github_${{ github.run_id }}
+      #     title: "Build: ${{ github.run_id }}"
+      #     base: main
+      #     author: GitHub Action <action@github.com>
+      #     committer: GitHub Action <action@github.com>
+      #     body: "Automatically generated SSG build for ${{ github.run_id }}"
+      #     reviewers: "github-actions"
 
-      - name: Check outputs
-        run: |
-          echo "${{ steps.cpr.outputs.pull-request-number }}"
+      # - name: Check outputs
+      #   run: |
+      #     echo "${{ steps.cpr.outputs.pull-request-number }}"
 
       # - name: Enable auto-merge
       #   uses: peter-evans/enable-pull-request-automerge@v3
