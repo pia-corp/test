@@ -66,8 +66,7 @@ jobs:
               if (value.passed == false) {
                 const passed = value.passed;
                 const auditProperty = value.auditProperty;
-                const file_name = ${file_name(value.url)}
-                view_text2 += `${file_name}の${auditProperty}が閾値に達していません。レポートを確認して修正してください。`;
+                view_text2 += `${file_name(value.url)}の${auditProperty}が閾値に達していません。レポートを確認して修正してください。`;
               }
               if (!exists_error) {
                 if (value.passed == false) {
