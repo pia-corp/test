@@ -11,9 +11,6 @@ jobs:
       contents: read
       issues: write
       pull-requests: write
-    # strategy:
-    #   matrix:
-    #     platform: [".lighthouserc_pc.json",".lighthouserc.json"]
 
     steps:
       - name: Check out repository
@@ -124,30 +121,3 @@ jobs:
       - name: Checks Stop
         if: ${{ steps.format_lighthouse_score.outputs.exists_error == '1' }}
         run: exit 1
-
-          # const assertionResults = [
-          #   {
-          #       "name":"minScore",
-          #       "expected":0.6,
-          #       "actual":0.59,
-          #       "values":[0.57,0.59,0.59],
-          #     "operator":">=",
-          #     "passed":false,
-          #     "auditProperty":"performance",
-          #     "auditId":"categories",
-          #     "level":"error",
-          #     "url":"http://localhost:34189/company.html"
-          #   },
-          #   {
-          #     "name":"minScore",
-          #     "expected":0.6,
-          #     "actual":0.56,
-          #     "values":[0.56,0.56,0.56],
-          #     "operator":">=",
-          #     "passed":false,
-          #     "auditProperty":"best-practices",
-          #     "auditId":"categories",
-          #     "level":"error",
-          #     "url":"http://localhost:34189/company.html"
-          #   }
-          # ];
