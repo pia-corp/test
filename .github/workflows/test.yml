@@ -85,11 +85,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Use PR Number
-        run: echo "The created PR number is ${{ steps.create_pr.outputs.pr_number }}"
 
       - name: Auto Merge Pull Request
-        uses: pascalgn/automerge-action@v3.0.0
+        uses: pascalgn/automerge-action@v0.16.3
         with:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           merge-method: squash
