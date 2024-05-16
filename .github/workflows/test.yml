@@ -12,8 +12,31 @@ jobs:
       RELEASE_BRANCH_NAME: ${{ github.run_id }}
 
     steps:
+      - name: 今のブランチ
+        run: |
+          git branch --contains
+
       - name: Checkout code
         uses: actions/checkout@v4.1.4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: 今のブランチ3
+        run: |
+          git branch --contains
+
+      - name: Set Git configuration
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+
+      - name: Create new branch
+        run: |
+          git checkout -b develop/github_${{ env.RELEASE_BRANCH_NAME }}
+
+      - name: 今のブランチ3
+        run: |
+          git branch --contains
 
       - name: Setup Node.js
         uses: actions/setup-node@v4.0.2
@@ -41,16 +64,15 @@ jobs:
           MICROCMS_SERVICE_DOMAIN: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
           MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
 
-
-
-      - name: auto M
+      - name: Commit existing changes
         run: |
-          git config --global user.name "${{ github.actor}}"
-          git config --global user.email "${{ github.actor}}@users.noreply.github.com"
-          git checkout -b develop/github_${{ github.run_id }}
-          git push -u origin HEAD
-          gh pr create --fill
-          gh pr merge --auto
+          git add .
+          git commit -m "Commit existing changes for PR"
+
+      - name: Push new branch
+        run: |
+          git push -u origin develop/github_${{ env.RELEASE_BRANCH_NAME }}
+
 
 
 
