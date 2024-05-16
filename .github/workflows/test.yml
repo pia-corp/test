@@ -41,42 +41,70 @@ jobs:
           MICROCMS_SERVICE_DOMAIN: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
           MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
 
-      - name: Auto commit
-        uses: stefanzweifel/git-auto-commit-action@v5
-        id: aca
-        with:
-          commit_message: Apply formatting
-          branch: release/github_${{ github.run_id }}
-          commit_user_name: github-actions
-          commit_user_email: github-actions@github.com
-          create_branch: true
 
-      - name: Add commit
+
+      - name: auto M
         run: |
-          echo "changes_detected: ${{ steps.aca.outputs.changes_detected }}"
-          echo "commit_hash: ${{ steps.aca.outputs.commit_hash }}"
+          git config --global user.name "${{ github.actor}}"
+          git config --global user.email "${{ github.actor}}@users.noreply.github.com"
+          git checkout -b develop/github_${{ github.run_id }}
+          git push -u origin HEAD
+          gh pr create --fill
+          gh pr merge --auto
 
-      - name: Create pull request
-        id: cpr
-        uses: peter-evans/create-pull-request@v6.0.5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: release/github_${{ github.run_id }}
-          title: "Build: ${{ github.run_id }}"
-          base: main
-          author: github-actions <github-actions@github.com>
-          committer: github-actions <github-actions@github.com>
-          body: "Automatically generated SSG build for ${{ github.run_id }}"
-          reviewers: "github-actions"
-          commit-message: '[create-pull-request] automated change'
-          signoff: false
-          delete-branch: false
-          draft: false
 
-      - name: Check outputs url
-        run: |
-          echo "pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}"
-          echo "pull-request-url: ${{ steps.cpr.outputs.pull-request-url }}"
+
+
+
+
+
+      # - name: Auto commit
+      #   uses: stefanzweifel/git-auto-commit-action@v5
+      #   id: aca
+      #   with:
+      #     commit_message: Apply formatting
+      #     branch: release/github_${{ github.run_id }}
+      #     commit_user_name: github-actions
+      #     commit_user_email: github-actions@github.com
+      #     create_branch: true
+
+      # - name: Add commit
+      #   run: |
+      #     echo "changes_detected: ${{ steps.aca.outputs.changes_detected }}"
+      #     echo "commit_hash: ${{ steps.aca.outputs.commit_hash }}"
+
+      # - name: Create pull request
+      #   id: cpr
+      #   uses: peter-evans/create-pull-request@v6.0.5
+      #   with:
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     branch: release/github_${{ github.run_id }}
+      #     title: "Build: ${{ github.run_id }}"
+      #     base: main
+      #     author: github-actions <github-actions@github.com>
+      #     committer: github-actions <github-actions@github.com>
+      #     body: "Automatically generated SSG build for ${{ github.run_id }}"
+      #     reviewers: "github-actions"
+      #     commit-message: '[create-pull-request] automated change'
+      #     signoff: false
+      #     delete-branch: false
+      #     draft: false
+
+      # - name: Check outputs url
+      #   run: |
+      #     echo "pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}"
+      #     echo "pull-request-url: ${{ steps.cpr.outputs.pull-request-url }}"
+
+
+
+
+
+
+
+
+
+
+
 
 
 
