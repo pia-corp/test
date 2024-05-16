@@ -88,7 +88,7 @@ jobs:
 
       - name: assertionResults
         run: |
-          echo ${{ steps.lighthouse_audit.outputs.assertionResults }}
+          echo ${{ fromJson(steps.lighthouse_audit.outputs.assertionResults).length }}
           echo ${{ fromJson(steps.lighthouse_audit.outputs.assertionResults).length > 0 }}
 
 
