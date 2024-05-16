@@ -108,7 +108,8 @@ jobs:
             await github.rest.issues.createComment(param);
 
       - name: Use the output from GitHub Script
-        run: echo "The output is: ${{ steps.format_lighthouse_score.outputs.exists_error }}"
+        run: |
+          echo "The output is: ${{ steps.format_lighthouse_score.outputs.exists_error }}"
 
 
 
