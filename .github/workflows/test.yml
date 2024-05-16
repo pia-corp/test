@@ -12,6 +12,9 @@ jobs:
       RELEASE_BRANCH_NAME: ${{ github.run_id }}
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.1.4
+
       - name: 今のブランチ
         run: |
           git branch --contains
@@ -21,7 +24,7 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      - name: 今のブランチ3
+      - name: 今のブランチ2
         run: |
           git branch --contains
 
