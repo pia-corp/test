@@ -18,11 +18,19 @@ jobs:
     uses: ./.github/workflows/_formatter.yml
 
   NRXTJS:
-    needs: BUILD_SETUP
+    needs: FORMATTER
     uses: ./.github/workflows/_build_nextjs.yml
     secrets:
       APIKEY: '${{ secrets.MICROCMS_API_KEY }}'
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  AUTO_MERGE:
+    needs: NRXTJS
+    uses: ./.github/workflows/_test.yml
+    secrets:
+      APIKEY: '${{ secrets.MICROCMS_API_KEY }}'
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PTOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
   CREATE_TAG:
     needs: FORMATTER
