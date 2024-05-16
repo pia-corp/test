@@ -87,7 +87,7 @@ jobs:
             await github.rest.issues.createComment(param);
 
       - name: Comment on Warning
-        if: ${{ steps.lighthouse_audit.outputs.assertionResults }} == 1
+        if: ${{ fromJson(steps.lighthouse_audit.outputs.assertionResults).length > 0 }}
         uses: actions/github-script@v7.0.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
