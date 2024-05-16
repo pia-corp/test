@@ -88,12 +88,12 @@ jobs:
 
       - name: assertionResults
         run: |
-          echo ${{ steps.lighthouse_audit.outputs.assertionResults.length }}
-          echo ${{ fromJson(steps.lighthouse_audit.outputs.assertionResults).length > 0 }}
+          echo ${{ steps.lighthouse_audit.outputs.assertionResults }}
+          echo ${{ steps.lighthouse_audit.outputs.assertionResults[0] }}
 
 
       - name: Comment on Warning
-        if: ${{ fromJson(steps.lighthouse_audit.outputs.assertionResults).length > 0 }}
+        if: ${{ steps.lighthouse_audit.outputs.assertionResults[0] }}
         uses: actions/github-script@v7.0.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
