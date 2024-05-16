@@ -11,9 +11,6 @@ jobs:
       contents: read
       issues: write
       pull-requests: write
-    # strategy:
-    #   matrix:
-    #     platform: [".lighthouserc_pc.json",".lighthouserc.json"]
 
     steps:
       - name: Check out repository
@@ -44,7 +41,7 @@ jobs:
         with:
           configPath: './.github/config/.lighthouserc.json'
           temporaryPublicStorage: true
-        # continue-on-error: true
+        continue-on-error: true
 
       - name: Comment on PR
         id: format_lighthouse_score
@@ -66,7 +63,8 @@ jobs:
               if (value.passed == false) {
                 const passed = value.passed;
                 const auditProperty = value.auditProperty;
-                view_text2 += `${file_name(value.url)}の${auditProperty}が閾値に達していません。レポートを確認して修正してください。`;
+                view_text2 += `❌${file_name(value.url)}の${auditProperty}が閾値に達していません。レポートを確認して修正してください。
+                `;
               }
               if (!exists_error) {
                 if (value.passed == false) {
@@ -98,59 +96,28 @@ jobs:
             | --- | --- | --- | --- | --- |
             ${view_text}
 
-            ${view_text2}
             ※表示されている結果は3回の結果から得られた中央値です。
             ※パフォーマンス結果はブレがありますリンク先の診断結果を見て判断してください。`};
 
             core.setOutput("exists_error", exists_error);
+            core.setOutput("error_message", view_text2);
             await github.rest.issues.createComment(param);
 
-      - name: Use the output from GitHub Script
-        run: |
-          echo "The output is: ${{ steps.format_lighthouse_score.outputs.exists_error }}"
-
-
-
-
       - name: Comment on Warning
-        if: ${{ steps.lighthouse_audit.outputs.assertionResults }}
+        if: ${{ steps.format_lighthouse_score.outputs.exists_error == '1' }}
         uses: actions/github-script@v7.0.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const assertionResults = ${{ steps.lighthouse_audit.outputs.assertionResults }};
+            const error_message = `${{ steps.format_lighthouse_score.outputs.error_message }}`;
             let param = {
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `結果が低いので修正が必要です`};
+              body: error_message
+            };
             await github.rest.issues.createComment(param);
-          run: exit 1
 
-
-          # const assertionResults = [
-          #   {
-          #       "name":"minScore",
-          #       "expected":0.6,
-          #       "actual":0.59,
-          #       "values":[0.57,0.59,0.59],
-          #     "operator":">=",
-          #     "passed":false,
-          #     "auditProperty":"performance",
-          #     "auditId":"categories",
-          #     "level":"error",
-          #     "url":"http://localhost:34189/company.html"
-          #   },
-          #   {
-          #     "name":"minScore",
-          #     "expected":0.6,
-          #     "actual":0.56,
-          #     "values":[0.56,0.56,0.56],
-          #     "operator":">=",
-          #     "passed":false,
-          #     "auditProperty":"best-practices",
-          #     "auditId":"categories",
-          #     "level":"error",
-          #     "url":"http://localhost:34189/company.html"
-          #   }
-          # ];
+      - name: Checks Stop
+        if: ${{ steps.format_lighthouse_score.outputs.exists_error == '1' }}
+        run: exit 1
