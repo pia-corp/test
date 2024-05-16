@@ -15,9 +15,6 @@
         "categories:seo": ["error", {"minScore": 0.6}]
       }
     },
-    "budgetsFile": {
-      "budgetsFile": "./.github/config/budget.json"
-    },
     "upload": {
       "target": "temporary-public-storage"
     }
