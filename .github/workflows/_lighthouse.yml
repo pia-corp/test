@@ -89,7 +89,7 @@ jobs:
       - name: Error handling
         id: checkAarray
         run: |
-          const assertion = ${{ steps.lighthouse_audit.outputs.assertionResults }};
+          assertion = ${{ steps.lighthouse_audit.outputs.assertionResults }}
           if [[ ${#assertion[@]} -gt 0 ]]; then
             echo "The array has elements"
           else
