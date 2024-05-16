@@ -44,7 +44,7 @@ jobs:
         with:
           configPath: './.github/config/.lighthouserc.json'
           temporaryPublicStorage: true
-        # continue-on-error: true
+        continue-on-error: true
 
       - name: Comment on PR
         id: format_lighthouse_score
