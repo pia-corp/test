@@ -44,7 +44,7 @@ jobs:
         with:
           configPath: './.github/config/.lighthouserc.json'
           temporaryPublicStorage: true
-        continue-on-error: true
+        # continue-on-error: true
 
       - name: Comment on PR
         id: format_lighthouse_score
@@ -85,12 +85,6 @@ jobs:
             ※パフォーマンス結果はブレがありますリンク先の診断結果を見て判断してください。`};
 
             await github.rest.issues.createComment(param);
-
-      - name: assertionResults
-        run: |
-          echo ${{ steps.lighthouse_audit.outputs.assertionResults }}
-          echo ${{ steps.lighthouse_audit.outputs.assertionResults[0] }}
-
 
       - name: Comment on Warning
         if: ${{ steps.lighthouse_audit.outputs.assertionResults }}

@@ -82,14 +82,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
-
-      # - name: Auto Merge Pull Request
-      #   uses: pascalgn/automerge-action@v0.16.3
-      #   with:
-      #     token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-      #     merge-method: squash
-      #     pull-request-number: ${{ steps.create_pr.outputs.pr_number }}
-
+      - name: Auto-merge PR
+        run: gh pr merge --auto
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
 
