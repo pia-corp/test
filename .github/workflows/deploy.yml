@@ -26,7 +26,7 @@ jobs:
 
   AUTO_MERGE:
     needs: NRXTJS
-    uses: ./.github/workflows/_test.yml
+    uses: ./.github/workflows/test.yml
     secrets:
       APIKEY: '${{ secrets.MICROCMS_API_KEY }}'
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
