@@ -86,8 +86,19 @@ jobs:
 
             await github.rest.issues.createComment(param);
 
+      - name: Error handling
+        id: checkAarray
+        run: |
+          const assertion = ${{ steps.lighthouse_audit.outputs.assertionResults }};
+          if [[ ${#assertion[@]} -gt 0 ]]; then
+            echo "The array has elements"
+          else
+            echo "The array is empty"
+          fi
+
+
       - name: Comment on Warning
-        if: ${{ steps.lighthouse_audit.outputs.assertionResults != [] }}
+        if: ${{ steps.lighthouse_audit.outputs.assertionResults }}
         uses: actions/github-script@v7.0.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
