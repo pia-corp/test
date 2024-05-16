@@ -53,14 +53,32 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const urls = ${{steps.lighthouse_audit.outputs.links}};
+            const assertion = ${{steps.lighthouse_audit.outputs.assertionResults}};
             const obj = ${{ steps.lighthouse_audit.outputs.manifest }};
             const formatResult = (res) => Math.round((res * 100));
             const file_name = (url) => { return url.replace(/^http:\/\/localhost:\d+\//, ""); };
             const score = res => res >= 90 ? '🟢' : res >= 50 ? '🟠' : '🔴';
             const getValueByKey = (key) => { return urls[key] || null };
-            let exists_error = false;
+            let exists_error = 0;
+
+            let view_text2 = "";
+            const assertion_body = (value) => {
+              if (value.passed == false) {
+                const passed = value.passed;
+                const auditProperty = value.auditProperty;
+                const file_name = ${file_name(value.url)}
+                view_text2 += `${file_name}の${auditProperty}が閾値に達していません。レポートを確認して修正してください。`;
+              }
+              if (!exists_error) {
+                if (value.passed == false) {
+                  exists_error = 1;
+                }
+              }
+            ;}
+            Object.keys(assertion).forEach(key => assertion[key] = assertion_body(assertion[key]));
 
             let view_text = "";
+            let exists_error = "";
             const table_body = (urlArray) => {
               if (urlArray.isRepresentativeRun == true) {
                 const accessibility = formatResult(urlArray.summary["accessibility"]);
@@ -81,20 +99,18 @@ jobs:
             | File name | Performance | Accessibility | Best practices | SEO |
             | --- | --- | --- | --- | --- |
             ${view_text}
+
+            ${view_text2}
             ※表示されている結果は3回の結果から得られた中央値です。
             ※パフォーマンス結果はブレがありますリンク先の診断結果を見て判断してください。`};
 
+            core.setOutput("exists_error", exists_error);
             await github.rest.issues.createComment(param);
 
-      - name: Error handling
-        id: checkAarray
-        run: |
-          assertion=("${{ steps.lighthouse_audit.outputs.assertionResults }}")
-          if [[ ${#assertion[@]} -gt 0 ]]; then
-            echo "The array has elements"
-          else
-            echo "The array is empty"
-          fi
+      - name: Use the output from GitHub Script
+        run: echo "The output is: ${{ steps.format_lighthouse_score.outputs.exists_error }}"
+
+
 
 
       - name: Comment on Warning
