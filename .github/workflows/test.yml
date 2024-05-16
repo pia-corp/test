@@ -35,7 +35,7 @@ jobs:
 
       - name: Create new branch
         run: |
-          git checkout -b develop/github_${{ env.RELEASE_BRANCH_NAME }}
+          git checkout -b release/github_${{ env.RELEASE_BRANCH_NAME }}
 
       - name: 今のブランチ3
         run: |
@@ -74,7 +74,7 @@ jobs:
 
       - name: Push new branch
         run: |
-          git push -u origin develop/github_${{ env.RELEASE_BRANCH_NAME }}
+          git push -u origin release/github_${{ env.RELEASE_BRANCH_NAME }}
 
       - name: Create PR
         run: gh pr create --fill
