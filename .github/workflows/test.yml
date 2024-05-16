@@ -76,7 +76,10 @@ jobs:
         run: |
           git push -u origin develop/github_${{ env.RELEASE_BRANCH_NAME }}
 
-
+      - name: Create PR
+        run: gh pr create --fill
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
 
