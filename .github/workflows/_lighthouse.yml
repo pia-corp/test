@@ -77,7 +77,6 @@ jobs:
             Object.keys(assertion).forEach(key => assertion[key] = assertion_body(assertion[key]));
 
             let view_text = "";
-            let exists_error = "";
             const table_body = (urlArray) => {
               if (urlArray.isRepresentativeRun == true) {
                 const accessibility = formatResult(urlArray.summary["accessibility"]);
