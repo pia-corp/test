@@ -84,7 +84,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PTOKEN }}
 
       - name: Auto-merge PR
-        run: gh pr merge --auto
+        run: gh pr merge --auto --merge
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
