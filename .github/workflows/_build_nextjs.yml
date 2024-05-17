@@ -39,7 +39,7 @@ jobs:
 
       - name: Dependency Installation (If there is no cache)
         if: steps.restore_node_modules.outputs.cache-hit != 'true' || steps.check_package_lock.outputs.result == 'no'
-        run: npm install
+        run: npx next build
 
       - name: Build Next.js App
         run: npm run build
