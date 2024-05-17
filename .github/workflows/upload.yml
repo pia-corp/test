@@ -17,11 +17,12 @@ jobs:
           echo "::error file=アップロード権限がありません。コードオーナーに依頼してください。"
           exit 1
 
-      - uses: actions/checkout@v4.1.4
+      - name: Checkout the repository
+        uses: actions/checkout@v4.1.4
         with:
           ref: ${{ github.head_ref }}
 
-      - name: Error handling
+      - name: Error handling for invalid protocol
         if: ${{ vars.PROTOCOL != 'ftp' && vars.PROTOCOL != 'sftp' }}
         run: |
           echo "::error file=プロトコルの指定が不正です。"
