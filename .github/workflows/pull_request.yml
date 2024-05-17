@@ -19,16 +19,13 @@ jobs:
   #     TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 
   COMMENT_OPENING_ANNOUNCE:
-    if: startsWith(github.head_ref, 'release') != false
     # needs: PR_AGENT
     uses: ./.github/workflows/_init_comment.yml
 
   LINTER:
-    if: startsWith(github.head_ref, 'release') != false
     needs: COMMENT_OPENING_ANNOUNCE
     uses: ./.github/workflows/_linter.yml
 
   CORE_WEB_VITALS:
-    if: startsWith(github.head_ref, 'release') != false
     needs: COMMENT_OPENING_ANNOUNCE
     uses: ./.github/workflows/_lighthouse.yml

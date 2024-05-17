@@ -85,10 +85,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
-      # マージ後にブランチを削除
-      - name: Delete merged branch
-        run: |
-          git branch -d release/github_${{ env.RELEASE_BRANCH_NAME }}
+  # test2:
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 10
+
+  #   steps:
+  #     # マージ後にブランチを削除
+  #     - name: Delete merged branch
+  #       run: |
+  #         git branch -d release/github_${{ env.RELEASE_BRANCH_NAME }}
 
 
 
