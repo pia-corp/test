@@ -4,7 +4,8 @@ on:
   pull_request:
     branches:
       - main
-    types: [opened]
+    types:
+      - opened
 
 jobs:
   BUILD_SETUP:
@@ -19,7 +20,7 @@ jobs:
   #     TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 
   COMMENT_OPENING_ANNOUNCE:
-    # needs: PR_AGENT
+    needs: BUILD_SETUP
     uses: ./.github/workflows/_init_comment.yml
 
   LINTER:
