@@ -4,7 +4,7 @@ const nextConfig = {
   output: 'export',
   generateBuildId: async () => {
     return 'pia';
-  }
+  },
 };
 
 export default nextConfig;

@@ -1,9 +1,11 @@
 import Link from "next/link";
+// import Head from 'next/head';
 import CustomHead from '@/components/head';
 import { client } from "@/libs/client";
 import { INewsProps, INewsItem } from '@/interface/index';
 import { GetStaticProps } from 'next';
 import styles from "@/styles/Home.module.css";
+
 
 export const getStaticProps: GetStaticProps = async () => {
   const data: INewsProps = await client.get({ endpoint: 'news', queries: { offset: 0, limit: parseInt(process.env.PER_PAGE as string) }});
@@ -17,11 +19,11 @@ export const getStaticProps: GetStaticProps = async () => {
   };
 };
 
-export default function Home ({ news }: { news:INewsItem[] }) {
+export default function Home ({ news }: { news: INewsItem[] }) {
   const title = "これはWebページのタイトル";
   return (
     <>
-      <CustomHead title={title} />
+      <CustomHead title={title}  />
       <main className={styles.main}>
         <div>
           <ul>
