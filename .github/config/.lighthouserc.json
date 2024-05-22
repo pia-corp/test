@@ -3,6 +3,7 @@
     "collect": {
 			"staticDistDir": "./public/",
 			"numberOfRuns": 3,
+      "maxAutodiscoverUrls": 0,
       "settings": {
         "locale": "ja"
       }

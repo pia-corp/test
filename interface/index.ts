@@ -6,10 +6,12 @@ export interface IHomeProps {
 export interface INewsProps {
   contents: INewsItem[];
   totalCount: number;
+  offset: number;
   limit: number;
 }
 
 export interface INewsItem {
   id: string;
   title: string;
+  body: string;
 }

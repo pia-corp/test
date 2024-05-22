@@ -1,18 +1,29 @@
 import fs from 'fs';
 import path from 'path';
-import {client} from '@/libs/client';
-import CustomHead from '@/components/head';
+import Head from 'next/head';
+import Handlebars from 'handlebars';
+import parse from 'html-react-parser';
 import sanitize from 'sanitize-html';
+import {client} from '@/libs/client';
 import styles from '@/styles/Home.module.css';
 import {GetStaticPropsContext, GetStaticPropsResult} from 'next';
-import {INewsProps} from '@/interface/page/index';
-import Handlebars from 'handlebars';
+import { minify } from 'html-minifier-terser';
 
 type Props = {
-  html: string;
+  news: NewsData,
+  html_mini: string;
+  metaTags: string;
 };
 
-const fetchNewsData = async (id: string): Promise<INewsProps> => {
+type NewsData = {
+  id: string;
+  title: string;
+  publishedAt: string;
+  body: string;
+  img?: string;
+}
+
+const fetchNewsData = async (id: string): Promise<NewsData> => {
   const data = await client.get({endpoint: 'news', contentId: id});
   return data;
 };
@@ -30,12 +41,25 @@ export const getStaticProps = async (context: GetStaticPropsContext<any>): Promi
     throw new Error(`Template file ${templatePath} not found`);
   }
 
+  const metaTagsPath = path.join(process.cwd(), 'template', 'import.html');
+  const metaTags = fs.readFileSync(metaTagsPath, 'utf8');
+
   const template = fs.readFileSync(templatePath, 'utf8');
-  const html = Handlebars.compile(template)(contents);
+  const templateCache = Handlebars.compile(template);
+  const html = templateCache(contents);
+
+  const html_mini = await minify(html, {
+    removeComments: true,
+    collapseWhitespace: true,
+    minifyCSS: true,
+    minifyJS: true,
+  });
 
   return {
     props: {
-      html,
+      news,
+      html_mini,
+      metaTags
     },
   };
 };
@@ -50,10 +74,15 @@ export const getStaticPaths = async () => {
   };
 };
 
-interface NewsIdProps {
-  html: string;
-}
-
-export default function NewsId({ html }: NewsIdProps) {
-  return <div dangerouslySetInnerHTML={{__html: html}} />;
+export default function NewsId({ news, html_mini, metaTags }: Props) {
+  const sanitizedHtml = sanitize(news.body);
+  return (
+    <>
+      <Head>
+        <title>{news.title} | サイト名</title>
+        {parse(metaTags)}
+      </Head>
+      {parse(html_mini)}
+    </>
+  );
 }
