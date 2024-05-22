@@ -6,6 +6,6 @@
 version: 2
 updates:
   - package-ecosystem: "npm"
-    directory: "/dependencies"
+    directory: "/"
     schedule:
       interval: "daily"

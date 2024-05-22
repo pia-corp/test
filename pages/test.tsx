@@ -1,25 +1,33 @@
 import fs from 'fs';
 import path from 'path';
 import Head from 'next/head';
+import Handlebars from 'handlebars';
+import parse from 'html-react-parser';
 import { client } from "@/libs/client";
 import { GetStaticProps } from 'next';
 import { INewsProps, INewsItem } from '@/interface/index';
 import { minify } from 'html-minifier-terser';
-import Handlebars from 'handlebars';
-import parse from 'html-react-parser';
 
-export const getStaticProps: GetStaticProps = async () => {
-  const data: INewsProps = await client.get({ endpoint: 'news', queries: { offset: 0, limit: parseInt(process.env.PER_PAGE as string) }});
+type Props = {
+  html_mini: string;
+  metaTags: string;
+};
+
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const perPage = parseInt(process.env.PER_PAGE as string);
+  if (isNaN(perPage)) {
+    throw new Error('process.env.PER_PAGE must be a valid number');
+  }
+
+  const data: INewsProps = await client.get({ endpoint: 'news', queries: { offset: 0, limit: perPage }});
   const metaTagsPath = path.join(process.cwd(), 'template', 'import.html');
   const metaTags = fs.readFileSync(metaTagsPath, 'utf8');
 
-  // Handlebarsテンプレートを読み込む
   const template = fs.readFileSync('template/test.hbs', 'utf-8');
+  const templateCache = Handlebars.compile(template);
+  const html = templateCache(data);
 
-  // Handlebarsテンプレートにデータを適用する
-  let html = Handlebars.compile(template)(data);
-
-  html = await minify(html, {
+  const html_mini = await minify(html, {
     removeComments: true,
     collapseWhitespace: true,
     minifyCSS: true,
@@ -28,19 +36,19 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return {
     props: {
-      html,
+      html_mini,
       metaTags
     }
   };
 };
 
-export default function Home({html, metaTags}) {
+export default function Home({ html_mini, metaTags }: Props) {
   return (
     <>
       <Head>
         {parse(metaTags)}
       </Head>
-      <div dangerouslySetInnerHTML={{__html: html}} />
+      {parse(html_mini)}
     </>
   );
 }
