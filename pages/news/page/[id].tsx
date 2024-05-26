@@ -6,6 +6,10 @@ import { GetStaticPropsContext } from 'next';
 import { IHomeProps } from '@/interface/index';
 import styles from "@/styles/Home.module.css";
 
+export const config = {
+  unstable_runtimeJS: false
+};
+
 interface HomeProps {
   news: IHomeProps[];
   totalCount: number;
