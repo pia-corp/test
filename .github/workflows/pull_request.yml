@@ -24,9 +24,11 @@ jobs:
     uses: ./.github/workflows/_init_comment.yml
 
   LINTER:
+    if: ${{ !contains(github.head_ref, 'release') }}
     needs: COMMENT_OPENING_ANNOUNCE
     uses: ./.github/workflows/_linter.yml
 
   CORE_WEB_VITALS:
+    if: ${{ !contains(github.head_ref, 'release') }}
     needs: COMMENT_OPENING_ANNOUNCE
     uses: ./.github/workflows/_lighthouse.yml
