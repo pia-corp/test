@@ -9,6 +9,10 @@ import styles from '@/styles/Home.module.css';
 import {GetStaticPropsContext, GetStaticPropsResult} from 'next';
 import { minify } from 'html-minifier-terser';
 
+export const config = {
+  unstable_runtimeJS: false
+};
+
 type Props = {
   news: NewsData,
   html_mini: string;

@@ -6,6 +6,9 @@ import { INewsProps, INewsItem } from '@/interface/index';
 import { GetStaticProps } from 'next';
 import styles from "@/styles/Home.module.css";
 
+export const config = {
+  unstable_runtimeJS: false
+};
 
 export const getStaticProps: GetStaticProps = async () => {
   const data: INewsProps = await client.get({ endpoint: 'news', queries: { offset: 0, limit: parseInt(process.env.PER_PAGE as string) }});

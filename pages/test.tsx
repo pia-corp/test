@@ -8,6 +8,10 @@ import { GetStaticProps } from 'next';
 import { INewsProps, INewsItem } from '@/interface/index';
 import { minify } from 'html-minifier-terser';
 
+export const config = {
+  unstable_runtimeJS: false
+};
+
 type Props = {
   html_mini: string;
   metaTags: string;

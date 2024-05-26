@@ -1,9 +1,16 @@
 name: HOOK
 
 on:
-  workflow_dispatch:
+  repository_dispatch:
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Event Information
+        run: |
+          echo "Event is '${{ github.event.action }}'"
+          echo "Message is '${{ github.event.client_payload.message }}'"
   BUILD:
     uses: ./.github/workflows/_build_nextjs.yml
     secrets:
