@@ -11,8 +11,11 @@ jobs:
         run: |
           echo "Event is '${{ github.event.action }}'"
           echo "Message is '${{ github.event.client_payload.message }}'"
-  BUILD:
-    uses: ./.github/workflows/_build_nextjs.yml
+
+  AUTO_MERGE:
+    needs: test
+    uses: ./.github/workflows/_auto_merge_deploycd.yml
     secrets:
       APIKEY: '${{ secrets.MICROCMS_API_KEY }}'
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PTOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
