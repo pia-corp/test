@@ -2,13 +2,9 @@ name: CI
 
 on:
   push:
-    paths:
-      - "develop/**"
   pull_request:
     types:
       - opened
-    paths:
-      - "develop/**"
     # branches:
     #   - main
     #   - develop
