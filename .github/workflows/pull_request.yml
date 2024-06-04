@@ -6,29 +6,84 @@ on:
       - main
     types:
       - opened
+    paths:
+      - "develop/**"
 
 jobs:
-  BUILD_SETUP:
-    if: ${{ github.event.sender.type != 'Bot' }} && (startsWith(github.head_ref, 'develop') || startsWith(github.head_ref, 'hotfix'))
-    uses: ./.github/workflows/_npm.yml
+  SETUP:
+    if: ${{ github.event.sender.type != 'Bot' }} && startsWith(github.head_ref, 'develop')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
 
-  # PR_AGENT:
-  #   needs: BUILD_SETUP
-  #   uses: ./.github/workflows/_pr_agent.yml
-  #   secrets:
-  #     APIKEY: '${{ secrets.OPENAI_KEY }}'
-  #     TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+    steps:
+      - uses: actions/checkout@v4.1.4
 
-  COMMENT_OPENING_ANNOUNCE:
-    needs: BUILD_SETUP
-    uses: ./.github/workflows/_init_comment.yml
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+          cache: npm
 
-  LINTER:
-    if: ${{ !contains(github.head_ref, 'release') }}
-    needs: COMMENT_OPENING_ANNOUNCE
-    uses: ./.github/workflows/_linter.yml
+      - name: Cache npm dependencies
+        id: cache_dependency
+        uses: actions/cache@v4.0.2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
-  CORE_WEB_VITALS:
-    if: ${{ !contains(github.head_ref, 'release') }}
-    needs: COMMENT_OPENING_ANNOUNCE
-    uses: ./.github/workflows/_lighthouse.yml
+      - name: Install npm dependencies
+        if: ${{ steps.cache_dependency.outputs.cache-hit != 'true' }}
+        run: npm ci --no-audit --progress=false --silent
+
+  OPENING_ANNOUNCE:
+    needs: SETUP
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Set up opening announce
+        id: opening_announce
+        run: |
+          lf='\n'
+          message="@${{ github.event.pull_request.user.login }} さん、プルリクエストを受け付けました！ :tada:"
+          message+="${lf}${lf}コード検収は下記の手順で行ってください。"
+          message+="${lf}コードオーナーは承認前にチェックを通過していることを確認してください。"
+          message+="${lf}    - \`linter\`に合格しなかった場合は、原因を特定して修正してください。"
+          message+="${lf}    - HTMLのMarkupルールは[ドキュメント](../blob/main/doc/markup_rule.md)を確認してください。"
+          message+="${lf}    - Lighthouseは1ファイルのチェックに30秒〜60秒かかります。可能な限りローカルで検証してからプルリクを出してください。"
+          message+="${lf}    - 🔴：**修正必須**、🟠：**必要に応じて修正**、🟢：**問題なし** です。"
+          message+="${lf}    - コードオーナーから\`approve\`された後に、\`main\`ブランチにマージします。"
+          echo "message=${message}" >> $GITHUB_OUTPUT
+
+      - name: Comment opening announce
+        uses: actions/github-script@v7.0.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const params = {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: '${{ steps.opening_announce.outputs.message }}'
+            }
+            await github.rest.issues.createComment(params)
+
+
+
+
+  # LINTER:
+  #   if: ${{ !contains(github.head_ref, 'release') }}
+  #   needs: OPENING_ANNOUNCE
+  #   uses: ./.github/workflows/_linter.yml
+
+  # CORE_WEB_VITALS:
+  #   if: ${{ !contains(github.head_ref, 'release') }}
+  #   needs: OPENING_ANNOUNCE
+  #   uses: ./.github/workflows/_lighthouse.yml
