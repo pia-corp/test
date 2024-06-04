@@ -108,17 +108,17 @@ jobs:
           git add .
           if ! git diff-index --quiet HEAD; then
             git commit -m "Commit existing changes for PR"
-            echo "chaged-files=true" >> $GITHUB_OUTPUT
+            echo "changed_files=true" >> $GITHUB_OUTPUT
           else
             echo "No changes to commit"
-            echo "chaged-files=false" >> $GITHUB_OUTPUT
+            echo "changed_files=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Test name
         id: opening_announce
         run: |
-          echo "$commit_status.outputs.chaged-files"
-          echo "$chaged-files"
+          echo "${{ steps.commit_status.outputs.changed_files }}"
+          echo "${{ env.chaged_files }}"
 
       - name: Push new branch
         if: steps.commit_status.outputs.changed_files == 'true'
