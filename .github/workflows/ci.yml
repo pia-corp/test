@@ -9,7 +9,7 @@ on:
 jobs:
   Markup_Linter:
     name: Markup Linter
-    if: ${{ github.event.sender.type != 'Bot' }} && contains(github.head_ref, 'develop')
+    if: ${{ github.event.sender.type != 'Bot' }} || contains(github.head_ref, 'develop')
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -62,7 +62,7 @@ jobs:
 
   Lighthouse:
     name: Lighthouse
-    if: ${{ github.event.sender.type != 'Bot' }} && contains(github.head_ref, 'develop')
+    if: ${{ github.event.sender.type != 'Bot' }} || contains(github.head_ref, 'develop')
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
