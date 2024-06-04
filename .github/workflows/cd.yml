@@ -88,24 +88,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
-      - name: Generate release tag
-        id: pre_release_tag
+      - name: Create Tag
         run: |
-          today=$(date +'%Y.%m.%d')
-          pre_release_date=$(echo "${{ env.pre_tag }}" | awk -F'-' '{print $1}')
-          pre_release_count=$(echo "${{ env.pre_tag }}" | awk -F'-' '{print $2}')
-          if [[ ! $pre_release_date = $today ]]; then
-            echo "init count"
-            pre_release_count=0
-          fi
-          echo "release_tag=pre-release-$today-$(($pre_release_count + 1))" >> $GITHUB_ENV
-
-      - name: Create Release
-        run: |
-          curl -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -d "{ \"tag_name\": \"${{ env.pre_release_tag }}\", \"name\": \"${{ env.pre_release_tag }}\", \"body\": \"${{ env.pre_release_tag }}\"}" \
-            https://api.github.com/repos/${{ github.repository }}/releases
+          echo "pre-$(TZ=Asia/Tokyo date +%Y%m%d-%H%M%S)" > TAG_NAME
+          git tag $(cat TAG_NAME)
+          git push origin $(cat TAG_NAME)
 
       - name: Auto-merge PR
         if: steps.commit_status.outputs.changed_files == 'true'
@@ -144,7 +131,7 @@ jobs:
             echo "init count"
             pre_release_count=0
           fi
-          echo "release_tag=$today-$(($pre_release_count + 1))" >> $GITHUB_ENV
+          echo "release_tag=v$today-$(($pre_release_count + 1))" >> $GITHUB_ENV
 
       - name: Generate release note
         id: release_note
