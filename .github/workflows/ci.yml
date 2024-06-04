@@ -46,8 +46,9 @@ jobs:
         if: steps.restore_node_modules.outputs.cache-hit != 'true'
         run: npm ci --no-audit --progress=false --silent
 
-      # - name: Lint and rewrite markup
-      #   run: npm run linter
+      - name: Lint and rewrite markup
+        if: startsWith(github.ref, 'pre')
+        run: npm run linter
 
   Markup_Linter_no_need:
     name: Markup Linter(no need)
