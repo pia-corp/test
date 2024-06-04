@@ -50,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       RELEASE_BRANCH_NAME: ${{ github.run_id }}
 
     steps:
@@ -95,7 +95,7 @@ jobs:
         run: npx next build
         env:
           MICROCMS_SERVICE_DOMAIN: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
-          MICROCMS_API_KEY: ${{ secrets.APIKEY }}
+          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
 
       - name: Commit existing changes
         run: |
@@ -124,12 +124,12 @@ jobs:
         run: |
           gh pr create --fill
         env:
-          GITHUB_TOKEN: ${{ secrets.PTOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: Auto-merge PR
         run: gh pr merge --auto --merge
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   no-commit:
     runs-on: ubuntu-latest
@@ -139,7 +139,6 @@ jobs:
     steps:
       - name: skip
         run: echo "No Changes in files related to"
-        // ブランチ削除
 
 
 
@@ -151,7 +150,7 @@ jobs:
   #   secrets:
   #     APIKEY: '${{ secrets.MICROCMS_API_KEY }}'
   #     TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #     PTOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+  #     PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
   CREATE_TAG:
     needs: AUTO_MERGE
