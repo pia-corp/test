@@ -47,6 +47,8 @@ jobs:
 
   build:
     name: build
+    outputs:
+      has-changed-related-files: ${{ steps.commit.outputs.chaged-files == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
@@ -98,16 +100,15 @@ jobs:
           MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
 
       - name: Commit existing changes
+        id: commit
         run: |
           git add .
           if ! git diff-index --quiet HEAD; then
             git commit -m "Commit existing changes for PR"
-            echo "::set-output name=changes::true"
-            echo "has-chaged-related-files=true" >> $GITHUB_OUTPUT
+            echo "chaged-files=true" >> $GITHUB_OUTPUT
           else
             echo "No changes to commit"
-            echo "::set-output name=changes::false"
-            echo "has-chaged-related-files=false" >> $GITHUB_OUTPUT
+            echo "chaged-files=false" >> $GITHUB_OUTPUT
           fi
 
   commit:
