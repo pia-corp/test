@@ -13,7 +13,6 @@ jobs:
     if: contains(github.head_ref, 'release')
     runs-on: ubuntu-latest
     timeout-minutes: 2
-    if: needs.build.outputs.changed_files == 'true'
 
     steps:
       - name: Checkout code
