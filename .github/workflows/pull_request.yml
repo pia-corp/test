@@ -78,16 +78,3 @@ jobs:
               body: '${{ steps.opening_announce.outputs.message }}'
             }
             await github.rest.issues.createComment(params)
-
-
-
-
-  # LINTER:
-  #   if: ${{ !contains(github.head_ref, 'release') }}
-  #   needs: OPENING_ANNOUNCE
-  #   uses: ./.github/workflows/_linter.yml
-
-  # CORE_WEB_VITALS:
-  #   if: ${{ !contains(github.head_ref, 'release') }}
-  #   needs: OPENING_ANNOUNCE
-  #   uses: ./.github/workflows/_lighthouse.yml

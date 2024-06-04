@@ -9,17 +9,149 @@ on:
       - closed
 
 jobs:
-  BUILD_SETUP:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && startsWith(github.head_ref, 'develop')
-    uses: ./.github/workflows/_npm.yml
+  SETUP:
+    if: ${{ github.event.sender.type != 'Bot' }} && startsWith(github.head_ref, 'develop')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
 
-  AUTO_MERGE:
-    needs: BUILD_SETUP
-    uses: ./.github/workflows/_auto_merge_deploycd.yml
-    secrets:
-      APIKEY: '${{ secrets.MICROCMS_API_KEY }}'
-      TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      PTOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+    steps:
+      - name: Test name
+        id: opening_announce
+        run: |
+          echo "${{ github.event.sender.type }}"
+          echo "${{ github.head_ref }}"
+
+      - uses: actions/checkout@v4.1.4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+          cache: npm
+
+      - name: Cache npm dependencies
+        id: cache_dependency
+        uses: actions/cache@v4.0.2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install npm dependencies
+        if: ${{ steps.cache_dependency.outputs.cache-hit != 'true' }}
+        run: npm ci --no-audit --progress=false --silent
+
+
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      RELEASE_BRANCH_NAME: ${{ github.run_id }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.1.4
+
+      - name: Checkout code
+        uses: actions/checkout@v4.1.4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+
+      - name: Set Git configuration
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create new branch
+        run: |
+          git checkout -b release/github_${{ env.RELEASE_BRANCH_NAME }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+          cache: npm
+
+      - name: Restore node_modules
+        uses: actions/cache@v4.0.2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+
+      - name: Dependency Installation (If there is no cache)
+        if: steps.restore_node_modules.outputs.cache-hit != 'true'
+        run: npm ci --no-audit --progress=false --silent
+
+      - name: Lint and rewrite markup
+        run: npm run formatting
+
+      - name: Build Next.js App
+        run: npx next build
+        env:
+          MICROCMS_SERVICE_DOMAIN: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY: ${{ secrets.APIKEY }}
+
+      - name: Commit existing changes
+        run: |
+          git add .
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "Commit existing changes for PR"
+            echo "::set-output name=changes::true"
+            echo "has-chaged-related-files=true" >> $GITHUB_OUTPUT
+          else
+            echo "No changes to commit"
+            echo "::set-output name=changes::false"
+            echo "has-chaged-related-files=false" >> $GITHUB_OUTPUT
+          fi
+
+  commit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: needs.build.outputs.has-chaged-related-files == 'true'
+
+    steps:
+      - name: Push new branch
+        run: |
+          git push -u origin release/github_${{ env.RELEASE_BRANCH_NAME }}
+
+      - name: Create PR
+        run: |
+          gh pr create --fill
+        env:
+          GITHUB_TOKEN: ${{ secrets.PTOKEN }}
+
+      - name: Auto-merge PR
+        run: gh pr merge --auto --merge
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+
+  no-commit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: needs.build.outputs.has-chaged-related-files == 'false'
+
+    steps:
+      - name: skip
+        run: echo "No Changes in files related to"
+        // ブランチ削除
+
+
+
+
+  #   // ビルドファイルに差分がなければスキップ、タグの作成もしない
+  # AUTO_MERGE:
+  #   needs: BUILD_SETUP
+  #   uses: ./.github/workflows/_auto_merge_deploycd.yml
+  #   secrets:
+  #     APIKEY: '${{ secrets.MICROCMS_API_KEY }}'
+  #     TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     PTOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
   CREATE_TAG:
     needs: AUTO_MERGE

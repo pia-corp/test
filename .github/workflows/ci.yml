@@ -15,6 +15,13 @@ jobs:
     permissions:
       contents: read
 
+    #   Run echo "User"
+    #   echo "User"
+    #   echo "develop/分岐処理"
+    #   shell: /usr/bin/bash -e {0}
+    # User
+    # develop/分岐処理
+
     steps:
       - name: Test name
         id: opening_announce
