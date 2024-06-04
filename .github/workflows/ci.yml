@@ -9,7 +9,7 @@ on:
 jobs:
   Markup_Linter:
     name: Markup Linter
-    if: ${{ github.event.sender.type != 'Bot' }} && contains(${{ github.head_ref || github.ref_name }}, 'develop')
+    if: ${{ github.event.sender.type != 'Bot' }} && contains(github.head_ref, 'develop')
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -50,7 +50,7 @@ jobs:
 
   Markup_Linter_no_need:
     name: Markup Linter(no need)
-    if: not startsWith(${{ github.head_ref || github.ref_name }}, 'develop')
+    if: contains(github.head_ref, 'release')
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -62,7 +62,7 @@ jobs:
 
   Lighthouse:
     name: Lighthouse
-    if: startsWith(${{ github.head_ref || github.ref_name }}, 'develop')
+    if: ${{ github.event.sender.type != 'Bot' }} && contains(github.head_ref, 'develop')
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -188,7 +188,7 @@ jobs:
 
   Lighthouse_no_need:
     name: Lighthouse(no need)
-    if: not startsWith(${{ github.head_ref || github.ref_name }}, 'develop')
+    if: contains(github.head_ref, 'release')
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
