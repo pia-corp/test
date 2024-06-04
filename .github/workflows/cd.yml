@@ -103,7 +103,7 @@ jobs:
           MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
 
       - name: Commit existing changes
-        id: commit
+        id: commit_status
         run: |
           git add .
           if ! git diff-index --quiet HEAD; then
@@ -113,6 +113,11 @@ jobs:
             echo "No changes to commit"
             echo "chaged-files=false" >> $GITHUB_OUTPUT
           fi
+
+      - name: Test name
+        id: opening_announce
+        run: |
+          echo "${{ steps.commit_status.outputs.changed_files }}"
 
       - name: Push new branch
         if: steps.commit_status.outputs.changed_files == 'true'
