@@ -69,13 +69,42 @@ export const getStaticProps = async (context: GetStaticPropsContext<any>): Promi
 };
 
 export const getStaticPaths = async () => {
-  const data = await client.get({endpoint: 'news'});
-  const paths = data.contents.map((content: {id: string}) => ({params: {id: content.id}}));
 
+  const data = await client
+  .getAllContents({
+    endpoint: 'news',
+  });
+
+  // const data = await client.get({endpoint: 'news', queries: {
+  //   orders: '-publishedAt', limit: 100
+  // }});
+  // // await client.getAllContentIds({endpoint: 'news'})
+  // // .then((res) => {
+  // //   // let contents = {
+  // //   //   contents:  res
+  // //   // };
+
+  // //   console.log(res);
+  // //   // console.log(res.data);
+
+  // //   // const paths = res.contents.map((content: {id: string}) => ({params: {id: content.id}}));
+
+  // //   // return {
+  // //   //   paths,
+  // //   //   fallback: false,
+  // //   // };
+
+  // // }) // コンテンツの配列が得られる
+  // // .catch((err) => console.error(err));
+
+  // // revisedAt 公開中記事をそのまま更新
+  // const paths = data.contents.map((content: {id: string}) => ({params: {id: content.id}}));
+  const paths = data.map((content: {id: string}) => ({params: {id: content.id}}));
   return {
     paths,
     fallback: false,
   };
+
 };
 
 export default function NewsId({ news, html_mini, metaTags }: Props) {

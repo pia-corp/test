@@ -1,19 +1,21 @@
 name: CI
 
 on:
-  workflow_dispatch:
+  push:
   pull_request:
-    branches:
-      - main
-      - develop
-      - feature
-    types: [edited, reopened, synchronize]
-    paths:
-      - '**'
+    types:
+      - opened
+    # branches:
+    #   - main
+    #   - develop
+    #   - feature
+    # types: [edited, reopened, synchronize]
+    # paths:
+    #   - '**'
 
 jobs:
   LINTER:
-    if: github.event.action != 'closed' && (startsWith(github.head_ref, 'develop') || startsWith(github.head_ref, 'hotfix'))
+    if: github.event.action != 'closed'
     uses: ./.github/workflows/_linter.yml
 
   CORE_WEB_VITALS:
