@@ -9,7 +9,7 @@ on:
 jobs:
   Markup_Linter:
     name: Markup Linter
-    if: startsWith(${{ github.head_ref || github.ref_name }}, 'develop')
+    if: ${{ github.event.sender.type != 'Bot' }} && contains(${{ github.head_ref || github.ref_name }}, 'develop')
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
