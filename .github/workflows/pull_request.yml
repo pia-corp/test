@@ -16,6 +16,12 @@ jobs:
       contents: read
 
     steps:
+      - name: Test name
+        id: opening_announce
+        run: |
+          echo "${{ github.event.sender.type }}"
+          echo "${{ github.head_ref }}"
+
       - uses: actions/checkout@v4.1.4
 
       - name: Setup Node.js
