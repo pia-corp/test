@@ -117,7 +117,8 @@ jobs:
       - name: Test name
         id: opening_announce
         run: |
-          echo "${{ steps.commit_status.outputs.changed_files }}"
+          echo "$commit_status.outputs.chaged-files"
+          echo "$chaged-files"
 
       - name: Push new branch
         if: steps.commit_status.outputs.changed_files == 'true'
