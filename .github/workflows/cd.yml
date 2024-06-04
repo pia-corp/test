@@ -47,8 +47,6 @@ jobs:
 
   build:
     name: build
-    outputs:
-      has-changed-related-files: ${{ steps.commit.outputs.chaged-files == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
@@ -111,50 +109,31 @@ jobs:
             echo "chaged-files=false" >> $GITHUB_OUTPUT
           fi
 
-  commit:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    if: needs.build.outputs.has-chaged-related-files == 'true'
-
-    steps:
       - name: Push new branch
+        if: steps.commit_status.outputs.changed_files == 'true'
         run: |
           git push -u origin release/github_${{ env.RELEASE_BRANCH_NAME }}
 
       - name: Create PR
+        if: steps.commit_status.outputs.changed_files == 'true'
         run: |
           gh pr create --fill
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: Auto-merge PR
+        if: steps.commit_status.outputs.changed_files == 'true'
         run: gh pr merge --auto --merge
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  no-commit:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    if: needs.build.outputs.has-chaged-related-files == 'false'
-
-    steps:
       - name: skip
+        if: steps.commit_status.outputs.changed_files == 'false'
         run: echo "No Changes in files related to"
 
 
-
-
-  #   // ビルドファイルに差分がなければスキップ、タグの作成もしない
-  # AUTO_MERGE:
-  #   needs: BUILD_SETUP
-  #   uses: ./.github/workflows/_auto_merge_deploycd.yml
+  # CREATE_TAG:
+  #   if: needs.build.outputs.has-chaged-related-files == 'true'
+  #   uses: ./.github/workflows/_create_relese_note.yml
   #   secrets:
-  #     APIKEY: '${{ secrets.MICROCMS_API_KEY }}'
   #     TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #     PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-
-  CREATE_TAG:
-    if: needs.build.outputs.has-chaged-related-files == 'true'
-    uses: ./.github/workflows/_create_relese_note.yml
-    secrets:
-      TOKEN: ${{ secrets.GITHUB_TOKEN }}
