@@ -131,7 +131,7 @@ jobs:
             echo "init count"
             pre_release_count=0
           fi
-          echo "release_tag=v$today-$(($pre_release_count + 1))" >> $GITHUB_ENV
+          echo "release_tag=$today-$(($pre_release_count + 1))" >> $GITHUB_ENV
 
       - name: Generate release note
         id: release_note
@@ -140,12 +140,12 @@ jobs:
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             https://api.github.com/repos/${{ github.repository }}/releases/generate-notes \
-            -d "{\"tag_name\":\"${{ env.release_tag }}\", \"previous_tag_name\":\"${{ env.pre_tag }}\"}" | jq .body | sed 's/"//g')
+            -d "{\"tag_name\":\v"${{ env.release_tag }}\", \"previous_tag_name\":\"${{ env.pre_tag }}\"}" | jq .body | sed 's/"//g')
           echo "release_note=$release_note" >> $GITHUB_ENV
 
       - name: Create Release
         run: |
           curl -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -d "{ \"tag_name\": \"${{ env.release_tag }}\", \"name\": \"${{ env.release_tag }}\", \"body\": \"${{ env.release_note }}\"}" \
+            -d "{ \"tag_name\": \v"${{ env.release_tag }}\", \"name\": \v"${{ env.release_tag }}\", \"body\": \"${{ env.release_note }}\"}" \
             https://api.github.com/repos/${{ github.repository }}/releases

@@ -43,6 +43,7 @@ jobs:
           restore-keys: ${{ runner.os }}-node-
 
       - name: Install npm dependencies (if cache miss)
+        if: startsWith(github.ref, 'pre')
         if: steps.restore_node_modules.outputs.cache-hit != 'true'
         run: npm ci --no-audit --progress=false --silent
 
