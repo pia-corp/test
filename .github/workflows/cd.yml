@@ -21,9 +21,11 @@ jobs:
         id: opening_announce
         run: |
           echo "${{ github.event.sender.type }}"
-          echo "${{ github.head_ref }}"
+          echo "${{ github.head_ref || github.ref_name }}"
 
       - uses: actions/checkout@v4.1.4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4.0.2
@@ -133,14 +135,6 @@ jobs:
       - name: skip
         if: steps.commit_status.outputs.changed_files == 'false'
         run: echo "No Changes in files related to"
-
-
-
-  # CREATE_TAG:
-  #   if: needs.build.outputs.has-chaged-related-files == 'true'
-  #   uses: ./.github/workflows/_create_relese_note.yml
-  #   secrets:
-  #     TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   create_tag:
     needs: build
