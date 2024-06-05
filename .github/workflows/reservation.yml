@@ -123,12 +123,11 @@ jobs:
           CRON_SCHEDULE="* * * * *"  # 毎分実行
           CRON_JOB_ACTION="echo 'Hello, world!'"
 
-          curl \
-            -X PATCH \
+          curl -X PATCH "https://api.cron-job.org/jobs/5132071" \
             -H "Authorization: Bearer GOmptxhN7sYnzVZiV0XMFJWVfRrjy2avJ0xtauPuMcs=" \
             -H "Content-Type: application/json" \
             -d '{"job": {"enabled":true},}' \
-            https://api.cron-job.org/jobs/5132071
+
 
 # # cron-job APIにリクエストを送信
 # curl -X POST -H "Authorization: Bearer $AUTH_TOKEN" \
