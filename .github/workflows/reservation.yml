@@ -111,3 +111,40 @@ jobs:
       - name: Set Git configuration
         run: |
           echo "test"
+
+      - name: Register Cron job
+        run: |
+          # Cron jobのURLと認証トークンを設定
+          CRON_JOB_URL="https://api.cron-job.org"
+          AUTH_TOKEN="GOmptxhN7sYnzVZiV0XMFJWVfRrjy2avJ0xtauPuMcs="
+
+          # Cron jobの情報を設定
+          CRON_JOB_NAME="my-cron-job"
+          CRON_SCHEDULE="* * * * *"  # 毎分実行
+          CRON_JOB_ACTION="echo 'Hello, world!'"
+
+          curl -X PATCH \
+                -H "Authorization: Bearer $AUTH_TOKEN" \
+                -H "Content-Type: application/json" \
+                -d '{
+                  "job": {
+                    "enabled":true
+                  },
+                }' \
+                https://api.cron-job.org/jobs/5132071
+
+# # cron-job APIにリクエストを送信
+# curl -X POST -H "Authorization: Bearer $AUTH_TOKEN" \
+#       -H "Content-Type: application/json" \
+#       -d '{
+#         "name": "$CRON_JOB_NAME",
+#         "schedule": "$CRON_SCHEDULE",
+#         "action": "$CRON_JOB_ACTION"
+#       }' \
+#       "$CRON_JOB_URL"
+
+# curl -X PATCH \
+# -H 'Content-Type: application/json' \
+# -H 'Authorization: Bearer GOmptxhN7sYnzVZiV0XMFJWVfRrjy2avJ0xtauPuMcs=' \
+# -d '{"job":{"enabled":true}}' \
+# https://api.cron-job.org/jobs/5132071
