@@ -1,0 +1,113 @@
+name: Reservation
+
+on:
+  workflow_dispatch:
+    inputs:
+      年:
+        type: choice
+        required: true
+        description: 年
+        options:
+          - 2024
+          - 2025
+          - 2026
+          - 2027
+          - 2028
+          - 2029
+          - 2030
+          - 2031
+          - 2032
+          - 2033
+          - 2034
+          - 2035
+      月:
+        type: choice
+        required: true
+        description: 月
+        options:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          - 7
+          - 8
+          - 9
+          - 10
+          - 11
+          - 12
+      日:
+        type: choice
+        required: true
+        description: 日
+        options:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          - 7
+          - 8
+          - 9
+          - 10
+          - 11
+          - 12
+          - 13
+          - 14
+          - 15
+          - 16
+          - 17
+          - 18
+          - 19
+          - 20
+          - 21
+          - 22
+          - 23
+          - 24
+          - 25
+          - 26
+          - 27
+          - 28
+          - 29
+          - 30
+          - 31
+      時間:
+        type: choice
+        required: true
+        description: 時間
+        options:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          - 7
+          - 8
+          - 9
+          - 10
+          - 11
+          - 12
+      分:
+        type: choice
+        required: true
+        description: 分
+        options:
+          - 00
+          - 10
+          - 20
+          - 30
+          - 40
+          - 50
+
+
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set Git configuration
+        run: |
+          echo "test"
