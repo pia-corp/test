@@ -1,6 +1,7 @@
 name: Dependabot automation
 
 on:
+  workflow_dispatch:
   repository_dispatch:
     types: [on-demand-test]
 
