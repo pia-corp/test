@@ -1,0 +1,14 @@
+name: Dependabot automation
+
+on:
+  repository_dispatch:
+    types: [on-demand-test]
+
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set Git configuration
+        run: |
+          echo "test"

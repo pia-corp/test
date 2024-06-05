@@ -10,13 +10,12 @@ on:
 
 jobs:
   build:
-    if: ${{ github.event.sender.type != 'Bot' }} && contains(github.head_ref, 'develop')
+    if: github.event.sender.type != 'Bot' && contains(github.head_ref, 'develop')
     outputs:
       changed_files: ${{ steps.commit_status.outputs.changed_files }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       RELEASE_BRANCH_NAME: ${{ github.run_id }}
 
     steps:
@@ -87,12 +86,6 @@ jobs:
           gh pr create --fill
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-
-      # - name: Create Tag
-      #   run: |
-      #     echo "pre-$(TZ=Asia/Tokyo date +%Y%m%d-%H%M%S)" > TAG_NAME
-      #     git tag $(cat TAG_NAME)
-      #     git push origin $(cat TAG_NAME)
 
       - name: Auto-merge PR
         if: steps.commit_status.outputs.changed_files == 'true'
