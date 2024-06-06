@@ -116,7 +116,12 @@ jobs:
           curl -X PATCH \
           -H 'Content-Type: application/json' \
           -H 'Authorization: Bearer GOmptxhN7sYnzVZiV0XMFJWVfRrjy2avJ0xtauPuMcs=' \
-          -d '{"job":"schedule":{"hours":${{env.hour}},"mdays":${{env.day}},"minutes":${{env.minutes}},"months":${{env.month}}}}' \
+          -d '{"job":{"enabled":"true","schedule":{"hours":${{env.hour}},"mdays":${{env.day}},"minutes":${{env.minutes}},"months":${{env.month}}}}}' \
+          https://api.cron-job.org/jobs/5128562
+
+          curl -X GET \
+          -H 'Content-Type: application/json' \
+          -H 'Authorization: Bearer GOmptxhN7sYnzVZiV0XMFJWVfRrjy2avJ0xtauPuMcs=' \
           https://api.cron-job.org/jobs/5128562
 
 # curl -X PUT \
