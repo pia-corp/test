@@ -123,7 +123,13 @@ jobs:
           CRON_SCHEDULE="* * * * *"  # 毎分実行
           CRON_JOB_ACTION="echo 'Hello, world!'"
 
-          curl -X PATCH -H "Authorization: Bearer GOmptxhN7sYnzVZiV0XMFJWVfRrjy2avJ0xtauPuMcs=" -H "Content-Type: application/json" -d '{"job": {"enabled":true},}' 'https://api.cron-job.org/jobs/5132071'
+          curl -X PUT \
+          -H 'Content-Type: application/json' \
+          -H 'Authorization: Bearer GOmptxhN7sYnzVZiV0XMFJWVfRrjy2avJ0xtauPuMcs=' \
+          -d '{"job":{"url":"https://example.com","enabled":"true","saveResponses":true,"schedule":{"timezone":"Europe/Berlin","expiresAt":0,"hours":[-1],"mdays":[-1],"minutes":[-1],"months":[-1],"wdays":[-1]}}}' \
+          https://api.cron-job.org/jobs
+
+          curl -X POST -H "Authorization: Bearer GOmptxhN7sYnzVZiV0XMFJWVfRrjy2avJ0xtauPuMcs=" -H "Content-Type: application/json" -d '{"job": {"enabled":true},}' https://api.cron-job.org/jobs/5132071
 
 
 # # cron-job APIにリクエストを送信
