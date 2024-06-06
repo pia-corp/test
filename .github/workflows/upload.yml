@@ -51,3 +51,15 @@ jobs:
           port:  ${{ vars.PORT }}
           local-dir: ${{ vars.LOCAL_PATH }}
           server-dir: ${{ vars.REMOTE_PATH }}
+
+  cron:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Cancellation Cron job
+        run: |
+          curl -X PATCH \
+          -H 'Content-Type: application/json' \
+          -H 'Authorization: Bearer ${{ secrets.CRON_TOKEN }}' \
+          -d '{"job":{"enabled":false}}' \
+          https://api.cron-job.org/jobs/${{ env.CRON_ID }}
