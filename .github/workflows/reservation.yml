@@ -109,19 +109,15 @@ jobs:
           hour: ${{ github.event.inputs.hour }}
           minutes: ${{ github.event.inputs.minutes }}
         run: |
-          # Cron jobのURLと認証トークンを設定
-          CRON_JOB_URL="https://api.cron-job.org"
-          AUTH_TOKEN="GOmptxhN7sYnzVZiV0XMFJWVfRrjy2avJ0xtauPuMcs="
-
           curl -X PATCH \
           -H 'Content-Type: application/json' \
-          -H 'Authorization: Bearer GOmptxhN7sYnzVZiV0XMFJWVfRrjy2avJ0xtauPuMcs=' \
+          -H 'Authorization: Bearer ${{ secrets.CRON_TOKEN }}' \
           -d '{"job":{"enabled":"true","schedule":{"hours":[${{env.hour}}],"mdays":[${{env.day}}],"minutes":[${{env.minutes}}],"months":[${{env.month}}]}}}' \
-          https://api.cron-job.org/jobs/5128562
+          https://api.cron-job.org/jobs/${{ env.CRON_ID }}
 
           curl -X GET \
           -H 'Content-Type: application/json' \
-          -H 'Authorization: Bearer GOmptxhN7sYnzVZiV0XMFJWVfRrjy2avJ0xtauPuMcs=' \
+          -H 'Authorization: Bearer ${{ secrets.CRON_TOKEN }}' \
           https://api.cron-job.org/jobs/5128562
 
 
@@ -132,7 +128,10 @@ jobs:
   #     - name: Cancel Cron job
   #       run: |
   #         echo "stop"
-# curl -X PUT \
+
+
+
+  # curl -X PUT \
 # -H 'Content-Type: application/json' \
 # -H 'Authorization: Bearer GOmptxhN7sYnzVZiV0XMFJWVfRrjy2avJ0xtauPuMcs=' \
 # -d '{"job":{"url":"https://example.com","enabled":"true","saveResponses":true,"schedule":{"timezone":"Europe/Berlin","expiresAt":0,"hours":[-1],"mdays":[-1],"minutes":[-1],"months":[-1],"wdays":[-1]}}}' \
