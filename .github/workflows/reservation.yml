@@ -125,13 +125,13 @@ jobs:
           https://api.cron-job.org/jobs/5128562
 
 
-  CronStop:
-    runs-on: ubuntu-latest
+  # CronStop:
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Cancel Cron job
-        run: |
-          echo "stop"
+  #   steps:
+  #     - name: Cancel Cron job
+  #       run: |
+  #         echo "stop"
 # curl -X PUT \
 # -H 'Content-Type: application/json' \
 # -H 'Authorization: Bearer GOmptxhN7sYnzVZiV0XMFJWVfRrjy2avJ0xtauPuMcs=' \
