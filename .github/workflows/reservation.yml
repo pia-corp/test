@@ -3,24 +3,7 @@ name: Reservation
 on:
   workflow_dispatch:
     inputs:
-      年:
-        type: choice
-        required: true
-        description: 年
-        options:
-          - 2024
-          - 2025
-          - 2026
-          - 2027
-          - 2028
-          - 2029
-          - 2030
-          - 2031
-          - 2032
-          - 2033
-          - 2034
-          - 2035
-      月:
+      month:
         type: choice
         required: true
         description: 月
@@ -37,7 +20,7 @@ on:
           - 10
           - 11
           - 12
-      日:
+      day:
         type: choice
         required: true
         description: 日
@@ -73,7 +56,7 @@ on:
           - 29
           - 30
           - 31
-      時間:
+      hour:
         type: choice
         required: true
         description: 時間
@@ -90,7 +73,7 @@ on:
           - 10
           - 11
           - 12
-      分:
+      minutes:
         type: choice
         required: true
         description: 分
@@ -102,32 +85,27 @@ on:
           - 40
           - 50
 
-
 jobs:
   cron:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set Git configuration
-        run: |
-          echo "test"
-
       - name: Register Cron job
+        env:
+          month: ${{ github.event.inputs.month }}
+          day: ${{ github.event.inputs.day }}
+          hour: ${{ github.event.inputs.hour }}
+          minutes: ${{ github.event.inputs.minutes }}
         run: |
           # Cron jobのURLと認証トークンを設定
           CRON_JOB_URL="https://api.cron-job.org"
           AUTH_TOKEN="GOmptxhN7sYnzVZiV0XMFJWVfRrjy2avJ0xtauPuMcs="
 
-          # Cron jobの情報を設定
-          CRON_JOB_NAME="my-cron-job"
-          CRON_SCHEDULE="* * * * *"  # 毎分実行
-          CRON_JOB_ACTION="echo 'Hello, world!'"
-
           curl -X PATCH \
           -H 'Content-Type: application/json' \
           -H 'Authorization: Bearer GOmptxhN7sYnzVZiV0XMFJWVfRrjy2avJ0xtauPuMcs=' \
-          -d '{"job":{"enabled":true}}' \
-          https://api.cron-job.org/jobs/5128562
+          -d '{"job":"schedule":{"hours":${{env.hour}},"mdays":${{env.day}},"minutes":${{env.minutes}},"months":${{env.month}}}}' \
+          https://api.cron-job.org/jobs/5132071
 
 # curl -X PUT \
 # -H 'Content-Type: application/json' \
