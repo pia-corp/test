@@ -73,6 +73,18 @@ on:
           - 10
           - 11
           - 12
+          - 13
+          - 14
+          - 15
+          - 16
+          - 17
+          - 18
+          - 19
+          - 20
+          - 21
+          - 22
+          - 23
+          - 24
       minutes:
         type: choice
         required: true
@@ -105,7 +117,7 @@ jobs:
           -H 'Content-Type: application/json' \
           -H 'Authorization: Bearer GOmptxhN7sYnzVZiV0XMFJWVfRrjy2avJ0xtauPuMcs=' \
           -d '{"job":"schedule":{"hours":${{env.hour}},"mdays":${{env.day}},"minutes":${{env.minutes}},"months":${{env.month}}}}' \
-          https://api.cron-job.org/jobs/5132071
+          https://api.cron-job.org/jobs/5128562
 
 # curl -X PUT \
 # -H 'Content-Type: application/json' \

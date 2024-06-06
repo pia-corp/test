@@ -13,8 +13,8 @@
 
 # ファイルの取得
 
-1. リポジトリをクローンしてください。プロジェクトのローカルコピーが作成されます。作業を進める前に、必ず新しいdevelopブランチを作成してください。
-2. developブランチから別のブランチを切ることは問題ありません、mainへプルリクエストを出す場合はdevelopブランチにmergeしてください。
+1. リポジトリをクローンしてください。プロジェクトのローカルコピーが作成されます。作業を進める前に、必ず新しく`develop/※※※※`ブランチを作成してください。
+2. developブランチから別のブランチを切ることは問題ありません、mainへプルリクエストを出す場合はdevelopブランチからのみ受け付けます。
 
 ```bash
 git clone https://github.com/pia-corp/faloom.jp.git
@@ -109,9 +109,9 @@ HTML、JavaScript、CSSなどは　`public`フォルダに作成してくださ�
 ```
 
 ```javascript
-const API_KEY = "XXXXX"; // APIキー
-const ENDPOINT = "https://XXXXX.microcms.io/api/v1/news"; // microCMSのエンドポイント
-const TARGET_SELECTOR = ".news_list"; // 表示先の要素のセレクター
+const API_KEY = 'XXXXX'; // APIキー
+const ENDPOINT = 'https://XXXXX.microcms.io/api/v1/news'; // microCMSのエンドポイント
+const TARGET_SELECTOR = '.news_list'; // 表示先の要素のセレクター
 const MAX_COUNT = 3; // 表示するニュースの最大数
 
 // 日付をフォーマットする関数
@@ -127,7 +127,7 @@ function createNewsHtml(news) {
   const newsUrl = news.url;
   const isExternal = news.external;
 
-  let newsHtml = "";
+  let newsHtml = '';
 
   if (newsUrl) {
     if (isExternal) {
@@ -155,7 +155,7 @@ function createNewsHtml(news) {
 function fetchAndDisplayNews() {
   fetch(ENDPOINT, {
     headers: {
-      "X-MICROCMS-API-KEY": API_KEY,
+      'X-MICROCMS-API-KEY': API_KEY,
     },
   })
     .then((response) => response.json())
@@ -166,11 +166,11 @@ function fetchAndDisplayNews() {
 
       for (let i = 0; i < count; i++) {
         const newsHtml = createNewsHtml(newsData[i]);
-        targetElement.insertAdjacentHTML("beforeend", newsHtml);
+        targetElement.insertAdjacentHTML('beforeend', newsHtml);
       }
     })
     .catch((error) => {
-      console.error("Error fetching news:", error);
+      console.error('Error fetching news:', error);
     });
 }
 
@@ -180,15 +180,15 @@ fetchAndDisplayNews();
 
 ### ブランドサイト用
 
-| 項目     | 値                                      |
-| -------- | --------------------------------------- |
-| apiKey   |     |
+| 項目     | 値                                     |
+| -------- | -------------------------------------- |
+| apiKey   |                                        |
 | endpoint | https://faloom.microcms.io/api/v1/news |
 
 ### カスタム変数
 
-| 変数名       | 型      | 説明                                         | サンプル                 |
-| ----------- | ------- | ------------------------------------------- | ----------------------- |
+| 変数名      | 型      | 説明                                        | サンプル                   |
+| ----------- | ------- | ------------------------------------------- | -------------------------- |
 | id          | String  | 作成したコンテンツの ID。                   | ag7iz3olfn                 |
 | createdAt   | UTC     | 初回にコンテンツを作成した日時。            | 2024-03-01T01:48:10.626Z   |
 | updatedAt   | UTC     | コンテンツを更新した日時。                  | 2024-03-01T02:02:50.176Z   |
