@@ -105,7 +105,7 @@ jobs:
     steps:
       - name: mini
         run: |
-          npx html-minifier --input-dir public --output-dir out --file-ext html -c html-minifier.json
+          npx html-minifier --input-dir public --output-dir out --file-ext html -c html-minifier.conf
 
   create_tag:
     needs: minify
