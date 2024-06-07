@@ -88,6 +88,25 @@ jobs:
         if: steps.restore_node_modules.outputs.cache-hit != 'true'
         run: npm ci --no-audit --progress=false --silent
 
+      - name: diff
+      - uses: actions/checkout@v4
+        name: checkout "${{ github.base_ref }}"
+        with:
+          fetch-depth: 1
+          ref: ${{ github.base_ref }}
+      - uses: actions/checkout@v4
+        name: checkout "${{ github.head_ref }}"
+        with:
+          fetch-depth: 1
+          ref: ${{ github.head_ref}}
+      - name: check_diff
+        shell: bash
+        run: |
+          files=(`git diff origin/${{ github.base_ref }} --name-only|tr '\n' ' ' `)
+          for file in ${files[@]}; do
+            echo ${file}
+          done
+
       # - name: Run Lighthouse against a static dist dir
       #   id: lighthouse_audit
       #   uses: treosh/lighthouse-ci-action@v11
