@@ -103,6 +103,23 @@ jobs:
     if: needs.build.outputs.changed_files == 'true'
 
     steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+          cache: npm
+
+      - name: Restore node_modules
+        uses: actions/cache@v4.0.2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+
+      - name: Dependency Installation (If there is no cache)
+        if: steps.restore_node_modules.outputs.cache-hit != 'true'
+        run: npm ci --no-audit --progress=false --silent
+
       - name: mini
         run: |
           npx html-minifier --input-dir public --output-dir out --file-ext html -c html-minifier.conf
