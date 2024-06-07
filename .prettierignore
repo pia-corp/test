@@ -12,6 +12,8 @@ test
 # .で始まるすべてのファイルを無視：
 out/_next/*
 out/news/*
+out/contact/*
+public/contact/*
 
 # 現在のディレクトリとそのサブディレクトリに存在する全ての .xxx を無視：
 **/.git
