@@ -154,7 +154,9 @@ jobs:
             https://api.github.com/repos/${{ github.repository }}/releases
 
   cleanup:
+    needs: minify
     runs-on: ubuntu-latest
+
     steps:
       - name: Check out code
         uses: actions/checkout@v4.1.4
