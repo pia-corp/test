@@ -96,8 +96,19 @@ jobs:
         if: steps.commit_status.outputs.changed_files == 'false'
         run: echo "No Changes in files related to"
 
-  create_tag:
+  minify:
     needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    if: needs.build.outputs.changed_files == 'true'
+
+    steps:
+      - name: mini
+        run: |
+          npx html-minifier --input-dir public --output-dir out --file-ext html -c html-minifier.json
+
+  create_tag:
+    needs: minify
     runs-on: ubuntu-latest
     timeout-minutes: 2
     if: needs.build.outputs.changed_files == 'true'
