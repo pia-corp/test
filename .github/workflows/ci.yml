@@ -99,7 +99,7 @@ jobs:
           fetch-depth: 1
           ref: ${{ github.head_ref}}
       - name: check_diff
-        id: read-changed-files
+        id: read_changed_files
         shell: bash
         run: |
           files=(`git diff origin/${{ github.base_ref }} --name-only|tr '\n' ' ' `)
@@ -117,8 +117,7 @@ jobs:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
         with:
           urls: |
-            ${{ env.files }}
-          serverBaseUrl: ${{ secrets.LHCI_SERVER_BASE_URL }}
+            ${{ steps.read_changed_files.outputs.files }}
           configPath: './.github/config/.lighthouserc.json'
           temporaryPublicStorage: true
         continue-on-error: true
