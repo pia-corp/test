@@ -103,10 +103,12 @@ jobs:
         shell: bash
         run: |
           files=(`git diff origin/${{ github.base_ref }} --name-only|tr '\n' ' ' `)
+          output=""
           for file in ${files[@]}; do
-            echo ${file}
-            echo "::set-output name=files::$files"
+            output="$output,$file"
           done
+          output="${output#,}"  # Remove leading comma
+          echo "files=$output" >> $GITHUB_ENV
 
       - name: Run Lighthouse against a static dist dir
         id: lighthouse_audit
