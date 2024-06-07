@@ -7,8 +7,7 @@
     "start": "next start",
     "formatting": "prettier --write ./public",
     "linter": "markuplint public{/**/,/}*.html",
-    "postbuild": "next-sitemap",
-    "mini": "html-minifier --input-dir public --output-dir out --file-ext html -c html-minifier.json"
+    "postbuild": "next-sitemap"
   },
   "dependencies": {
     "date-fns": "^3.6.0",
