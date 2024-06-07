@@ -1,7 +1,6 @@
 {
   "ci": {
     "collect": {
-			"staticDistDir": "./public/",
 			"numberOfRuns": 2,
       "maxAutodiscoverUrls": 0,
       "settings": {

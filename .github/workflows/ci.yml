@@ -113,14 +113,14 @@ jobs:
       - name: Run Lighthouse against a static dist dir
         id: lighthouse_audit
         uses: treosh/lighthouse-ci-action@v11
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
         with:
           urls: |
-            ${{ steps.read-changed-files.outputs.files }}
+            ${{ env.files }}
           serverBaseUrl: ${{ secrets.LHCI_SERVER_BASE_URL }}
           configPath: './.github/config/.lighthouserc.json'
           temporaryPublicStorage: true
-        env:
-          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
         continue-on-error: true
 
       - name: Comment on PR with Lighthouse results
