@@ -154,7 +154,7 @@ jobs:
             https://api.github.com/repos/${{ github.repository }}/releases
 
   cleanup:
-    needs: minify
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
