@@ -221,7 +221,7 @@ jobs:
             echo "init count"
             pre_release_count=0
           fi
-          echo "release_tag=$today-$(($pre_release_count + 1))" >> $GITHUB_ENV
+          echo "release_tag=$today-$("v" + ($pre_release_count + 0.1))" >> $GITHUB_ENV
 
       - name: Generate release note
         id: release_note
