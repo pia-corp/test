@@ -34,10 +34,10 @@ jobs:
 
   execute_process:
     needs: process_data
-    if: ${{ needs.process_data.outputs.data.exists_brand }} == true
     runs-on: ubuntu-latest
     steps:
       - name: Build Next.js App
+        if: needs.process_data.outputs.data.exists_brand == 'true'
         env:
           test: ${{ needs.process_data.outputs.data.exists_brand }}
         run: |
