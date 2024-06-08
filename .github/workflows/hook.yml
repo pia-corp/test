@@ -2,6 +2,7 @@ name: HOOK
 
 on:
   repository_dispatch:
+    types: [update-posts]
 
 jobs:
   test:
