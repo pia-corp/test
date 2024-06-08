@@ -38,6 +38,9 @@ jobs:
     needs: process_data
     if: needs.process_data.outputs.exists_brand == 'true'
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      RELEASE_BRANCH_NAME: ${{ github.run_id }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4.1.4
