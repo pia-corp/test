@@ -29,17 +29,17 @@ jobs:
 
       - name: Get Data from MicroCMS
         env:
-          article_id: ${payload.client_payload.id}`)
+          article_id: ${payload.client_payload.id}
           domain: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
           api_key: ${{ secrets.MICROCMS_API_KEY }}
         run: |
           DATA=$(curl -X GET "https://${{ env.domain }}.microcms.io/api/v1/news/${{ env.article_id }}" -H "X-MICROCMS-API-KEY: ${{ env.api_key }}")
-          echo "$DATA"
+          echo "::set-output name=data::$DATA"
 
       - name: Confirm Data
         run: |
           echo "Data received from MicroCMS:"
-          echo "$DATA"
+          echo "${{ steps.get_data.outputs.data }}"
 
       - name: Build Next.js App
         run: |
