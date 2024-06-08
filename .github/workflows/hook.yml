@@ -37,6 +37,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Build Next.js App
+        run: |
+          echo "${{ needs.process_data.outputs.data.exists_brand }}"
+          echo "$needs.process_data.outputs.data.exists_brand"
+          echo "${needs.process_data.outputs.data.exists_brand}"
+
+      - name: Build Next.js App
         if: needs.process_data.outputs.data.exists_brand == 'true'
         env:
           test: ${{ needs.process_data.outputs.data.exists_brand }}
