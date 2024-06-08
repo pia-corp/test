@@ -7,8 +7,6 @@ on:
 jobs:
   process_data:
     runs-on: ubuntu-latest
-    outputs:
-      exists_brand: ${{ steps.set_exists.outputs.exists_brand }}
 
     steps:
       - name: Get Data from MicroCMS
