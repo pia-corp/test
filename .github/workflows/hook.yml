@@ -36,7 +36,7 @@ jobs:
 
   execute_process:
     needs: process_data
-    if: needs.process_data.outputs.exists_brand == '1'
+    if: steps.process_data.outputs.exists_brand == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Build Next.js App
