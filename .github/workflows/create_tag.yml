@@ -9,7 +9,7 @@ on:
 
 jobs:
   create_tag:
-    if: contains(github.head_ref, 'release')
+    if: github.event.sender.type == 'Bot' && contains(github.head_ref, 'release')
     runs-on: ubuntu-latest
     timeout-minutes: 2
 
@@ -34,7 +34,8 @@ jobs:
             echo "init count"
             pre_release_count=0
           fi
-          echo "release_tag=$today-$(($pre_release_count + 1))" >> $GITHUB_ENV
+          release_ver=$(echo "$pre_release_count + 1" | bc)
+          echo "release_tag=$today-$release_ver" >> $GITHUB_ENV
 
       - name: Generate release note
         id: release_note
