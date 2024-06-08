@@ -9,20 +9,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check webhook payload
-        id: check-payload
+        id: check_payload
         uses: actions/github-script@v6
         with:
           script: |
             const { payload } = context;
             console.log(`Received webhook event: ${payload.client_payload.id}`);
             console.log(`Payload data: ${JSON.stringify(payload)}`);
+            echo "id=${payload.client_payload.id}" >> $GITHUB_OUTPUT
+
 
       - name: Set up cURL
         uses: wei/curl@v1
 
       - name: Get Data from MicroCMS
         env:
-          article_id: ${{ payload.client_payload.id }}
+          article_id: ${{ steps.check_payload.outputs.id }}
           domain: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
           api_key: ${{ secrets.MICROCMS_API_KEY }}
         run: |
