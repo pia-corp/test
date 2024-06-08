@@ -28,13 +28,14 @@ jobs:
 
       - name: Confirm Data
         env:
+          REPOSITORY: ${{ github.repository }}
           DATA: ${{ env.data }}
         run: |
           echo "Data received from MicroCMS:"
           echo "$DATA"
           CATEGORY=$(echo "$DATA" | jq -r '.category[0]')
           echo "Category: $CATEGORY"
-          if [[ "$CATEGORY" == "hoge" ]]; then
+          if [[ "$CATEGORY" == "$REPOSITORY" ]]; then
             echo "Category match: true"
             echo "exists_brand=1" >> $GITHUB_ENV
           else
