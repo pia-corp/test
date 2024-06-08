@@ -28,7 +28,7 @@ jobs:
 
       - name: Confirm Data
         env:
-          REPOSITORY: ${{ github.repository }}
+          REPOSITORY: ${{ github.event.repository.name }}
           DATA: ${{ env.data }}
         run: |
           echo "$REPOSITORY"
