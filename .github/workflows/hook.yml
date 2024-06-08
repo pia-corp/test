@@ -15,16 +15,14 @@ jobs:
           script: |
             const { payload } = context;
             console.log(`Received webhook event: ${payload.event}`);
-            console.log(`Content ID: ${payload.contentId}`);
-            console.log(`Content type: ${payload.contentType}`);
-            console.log(`Updated data: ${JSON.stringify(payload.data)}`);
+            console.log(`Payload data: ${JSON.stringify(payload)}`);
 
       - name: Event Information
         run: |
           echo "Event is '${{ github.event.action }}'"
           echo "Event is '${{ github.event.client_payload }}'"
           echo "Event payload:"
-          echo '${{ toJson(github.event) }}' | jq '.'
+          echo '${{ toJson(github.event.context.payload) }}' | jq '.'
 
       - name: Build Next.js App
         run: |
