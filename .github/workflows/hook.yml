@@ -14,7 +14,7 @@ jobs:
           API_KEY: ${{ secrets.MICROCMS_API_KEY }}
         run: |
           article_id=${{ github.event.client_payload.id }}
-          DATA=$(curl -X GET "https://${{ env.domain }}.microcms.io/api/v1/news/$article_id" -H "X-MICROCMS-API-KEY: ${{ env.api_key }}")
+          DATA=$(curl -X GET "https://${{ env.DOMAIN }}.microcms.io/api/v1/news/$article_id" -H "X-MICROCMS-API-KEY: ${{ env.API_KEY }}")
           echo "$DATA" > data.json
           echo "data=$(cat data.json | jq -c '.')" >> $GITHUB_ENV
 
