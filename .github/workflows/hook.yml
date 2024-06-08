@@ -25,7 +25,7 @@ jobs:
         run: |
           DATA=$(curl -X GET "https://${{ env.domain }}.microcms.io/api/v1/news/${{ env.article_id }}" -H "X-MICROCMS-API-KEY: ${{ env.api_key }}")
           echo "$DATA" > data.json
-          echo "data=$(cat data.json | jq -r '.')" >> $GITHUB_ENV
+          echo "data=$(cat data.json | jq -c '.')" >> $GITHUB_ENV
 
       - name: Confirm Data
         env:
