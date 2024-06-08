@@ -3,7 +3,7 @@ name: Create Tag
 on:
   pull_request:
     branches:
-      - main
+      - 'release/**'
     types:
       - closed
 
