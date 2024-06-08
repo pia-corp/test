@@ -39,6 +39,19 @@ jobs:
     if: needs.process_data.outputs.exists_brand == 'true'
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.1.4
+
+      - name: Checkout code
+        uses: actions/checkout@v4.1.4
+        with:
+          ref: main
+
+      - name: Set Git configuration
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+
       - name: Create new branch
         run: |
           git checkout -b release/github_${{ env.RELEASE_BRANCH_NAME }}
