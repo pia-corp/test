@@ -18,10 +18,6 @@ jobs:
           echo "$DATA" > data.json
           echo "data=$(cat data.json | jq -c '.')" >> $GITHUB_ENV
 
-        # article_id=${{ github.event.client_payload.id }}
-        # echo "data=$(curl -X GET \"https://${DOMAIN}.microcms.io/api/v1/news/${article_id}\" -H \"X-MICROCMS-API-KEY: ${API_KEY}\" | jq -c '.')" >> $GITHUB_ENV
-
-
       - name: Confirm Data
         env:
           REPOSITORY: ${{ github.event.repository.name }}
@@ -40,7 +36,7 @@ jobs:
 
   execute_process:
     needs: process_data
-    if: needs.process_data.outputs.exists_brand == 'true'
+    if: needs.process_data.outputs.exists_brand == true
     runs-on: ubuntu-latest
     steps:
       - name: Build Next.js App
