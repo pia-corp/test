@@ -21,7 +21,7 @@ jobs:
           REPOSITORY: ${{ github.event.repository.name }}
           DATA: ${{ env.data }}
         run: |
-          CATEGORY=$(echo "$DATA" | jq -r '.category[0]')
+          CATEGORY=$(echo "$data" | jq -r '.category[0]')
           echo "$REPOSITORY"
           echo "Category: $CATEGORY"
           if [[ "$CATEGORY" == "$REPOSITORY" ]]; then
