@@ -17,7 +17,6 @@ jobs:
         uses: wei/curl@v1
 
       - name: Get Data from MicroCMS
-        id: get_data
         env:
           article_id: ${{ steps.check_payload.outputs.id }}
           domain: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
@@ -33,7 +32,15 @@ jobs:
         run: |
           echo "Data received from MicroCMS:"
           echo "$DATA"
-          echo "$DATA.category[0]"
+          CATEGORY=$(echo "$DATA" | jq -r '.category[0]')
+          echo "Category: $CATEGORY"
+          if [[ "$CATEGORY" == "hoge" ]]; then
+            echo "Category match: true"
+            echo "exists_brand=1" >> $GITHUB_ENV
+          else
+            echo "Category match: false"
+            echo "exists_brand=0" >> $GITHUB_ENV
+          fi
 
       - name: Build Next.js App
         run: |
