@@ -29,11 +29,9 @@ jobs:
         run: |
           CATEGORY=$(echo "$DATA" | jq -r '.category[0]')
           if [[ "$CATEGORY" == "$REPOSITORY" ]]; then
-            echo "Category match: true"
-            echo "exists_brand=true" >> $GITHUB_ENV
+            echo "exists_brand='true'" >> $GITHUB_ENV
           else
-            echo "Category match: false"
-            echo "exists_brand=false" >> $GITHUB_ENV
+            echo "exists_brand='false'" >> $GITHUB_ENV
           fi
 
   execute_process:
