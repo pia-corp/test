@@ -156,7 +156,7 @@ jobs:
         run: |
           curl -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -d "{ \"tag_name\": \"${{ env.release_tag }}\", \"name\": \"${{ env.release_tag }}\", \"body\": \"${{ env.release_note }}\"}" \
+            -d "{ \"tag_name\": \"${{ env.release_tag__minor || env.release_tag__major }}\", \"name\": \"${{ env.release_tag__minor || env.release_tag__major }}\", \"body\": \"${{ env.release_tag__minor || env.release_tag__major }}}\"}" \
             https://api.github.com/repos/${{ github.repository }}/releases
 
   cleanup:
