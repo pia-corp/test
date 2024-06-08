@@ -8,10 +8,11 @@ jobs:
   process_data:
     runs-on: ubuntu-latest
     outputs:
-      exists_brand: ${{ steps.exists.outputs.exists_brand }}
+      exists_brand: ${{ steps.exists_data.outputs.exists_brand }}
 
     steps:
-      - name: Get Data from MicroCMS
+      - id: exists_data
+        name: Get Data from MicroCMS
         env:
           DOMAIN: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
           API_KEY: ${{ secrets.MICROCMS_API_KEY }}
@@ -22,7 +23,6 @@ jobs:
           echo "data=$(cat data.json | jq -c '.')" >> $GITHUB_ENV
 
       - name: Confirm Data
-        id: exists
         env:
           REPOSITORY: ${{ github.event.repository.name }}
           DATA: ${{ env.data }}
@@ -52,25 +52,3 @@ jobs:
     # env:
     #   MICROCMS_SERVICE_DOMAIN: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
     #   MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
-
-
-  job1:
-    runs-on: ubuntu-latest
-    outputs:
-        hoge: ${{ steps.set_outputs.outputs.hoge }}
-        fuga: ${{ steps.set_outputs.outputs.fuga }}
-    steps:
-        - id: set_outputs
-          name: Set outputs
-          run: |
-            echo "hoge=hoge" >> $GITHUB_OUTPUT
-            echo "fuga=fuga" >> $GITHUB_OUTPUT
-
-  job2:
-      runs-on: ubuntu-latest
-      needs: job1
-      steps:
-          - name: Use outputs
-            run: |
-              echo "hoge: ${{ needs.job1.outputs.hoge }}"
-              echo "fuga: ${{ needs.job1.outputs.fuga }}"
