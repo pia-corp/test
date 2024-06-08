@@ -1,4 +1,4 @@
-name: HOOK
+name: HeadlessCMS webhook
 
 on:
   repository_dispatch:
@@ -8,32 +8,20 @@ jobs:
   process_data:
     runs-on: ubuntu-latest
     steps:
-      - name: Check webhook payload (store ID)
-        id: check_payload
-        run: |
-          echo "id=${{ github.event.client_payload.id }}" >> $GITHUB_OUTPUT
-
-      - name: Set up cURL
-        uses: wei/curl@v1
-
       - name: Get Data from MicroCMS
         env:
-          article_id: ${{ steps.check_payload.outputs.id }}
-          domain: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
-          api_key: ${{ secrets.MICROCMS_API_KEY }}
+          DOMAIN: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
+          API_KEY: ${{ secrets.MICROCMS_API_KEY }}
         run: |
-          DATA=$(curl -X GET "https://${{ env.domain }}.microcms.io/api/v1/news/${{ env.article_id }}" -H "X-MICROCMS-API-KEY: ${{ env.api_key }}")
-          echo "$DATA" > data.json
-          echo "data=$(cat data.json | jq -c '.')" >> $GITHUB_ENV
+          article_id=${{ github.event.client_payload.id }}
+          echo "data=$(curl -X GET \"https://${DOMAIN}.microcms.io/api/v1/news/${article_id}\" -H \"X-MICROCMS-API-KEY: ${API_KEY}\" | jq -c '.')" >> $GITHUB_ENV
 
       - name: Confirm Data
         env:
           REPOSITORY: ${{ github.event.repository.name }}
           DATA: ${{ env.data }}
         run: |
-          echo "$DATA"
-          CATEGORY=$("echo $DATA" | jq -r '.category[0]')
-          echo "$CATEGORY"
+          CATEGORY=$(echo "$DATA" | jq -r '.category[0]')
           if [[ "$CATEGORY" == "$REPOSITORY" ]]; then
             echo "Category match: true"
             echo "exists_brand=1" >> $GITHUB_ENV
