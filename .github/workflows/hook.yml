@@ -11,7 +11,7 @@ jobs:
       - name: Check webhook payload
         id: check_payload
         run: |
-          echo "id=${github.event.client_payload.id}" >> $GITHUB_OUTPUT
+          echo "id=${{ github.event.client_payload.id }}" >> $GITHUB_OUTPUT
 
       - name: Set up cURL
         uses: wei/curl@v1
