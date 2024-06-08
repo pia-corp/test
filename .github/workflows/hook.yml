@@ -24,6 +24,23 @@ jobs:
       #     echo "Event payload:"
       #     echo '${{ toJson(github.event.context.payload) }}' | jq '.'
 
+      - name: Set up cURL
+        uses: wei/curl@v1
+
+      - name: Get Data from MicroCMS
+        env:
+          article_id: ${payload.client_payload.id}`)
+          domain: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
+          api_key: ${{ secrets.MICROCMS_API_KEY }}
+        run: |
+          DATA=$(curl -X GET "https://${{ env.domain }}.microcms.io/api/v1/news/${{ env.article_id }}" -H "X-MICROCMS-API-KEY: ${{ env.api_key }}")
+          echo "$DATA"
+
+      - name: Confirm Data
+        run: |
+          echo "Data received from MicroCMS:"
+          echo "$DATA"
+
       - name: Build Next.js App
         run: |
 
