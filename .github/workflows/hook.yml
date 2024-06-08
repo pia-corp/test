@@ -17,24 +17,17 @@ jobs:
             console.log(`Received webhook event: ${payload.client_payload.id}`);
             console.log(`Payload data: ${JSON.stringify(payload)}`);
 
-      # - name: Event Information
-      #   run: |
-      #     echo "Event is '${{ github.event.action }}'"
-      #     echo "Event is '${{ github.event.client_payload }}'"
-      #     echo "Event payload:"
-      #     echo '${{ toJson(github.event.context.payload) }}' | jq '.'
-
       - name: Set up cURL
         uses: wei/curl@v1
 
       - name: Get Data from MicroCMS
         env:
-          article_id: ${payload.client_payload.id}
+          article_id: ${{ payload.client_payload.id }}
           domain: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
           api_key: ${{ secrets.MICROCMS_API_KEY }}
         run: |
           DATA=$(curl -X GET "https://${{ env.domain }}.microcms.io/api/v1/news/${{ env.article_id }}" -H "X-MICROCMS-API-KEY: ${{ env.api_key }}")
-          echo "::set-output name=data::$DATA"
+          echo "::set-output name=data::$(cat data.json | jq -r .)"
 
       - name: Confirm Data
         run: |
