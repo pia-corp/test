@@ -8,7 +8,7 @@ jobs:
   process_data:
     runs-on: ubuntu-latest
     outputs:
-      exists_brand: ${{ steps.set_output.outputs.exists_brand }}
+      exists_brand: ${{ steps.set_exists.outputs.exists_brand }}
 
     steps:
       - name: Get Data from MicroCMS
@@ -22,6 +22,7 @@ jobs:
           echo "data=$(cat data.json | jq -c '.')" >> $GITHUB_ENV
 
       - name: Confirm Data
+        id: set_exists
         env:
           REPOSITORY: ${{ github.event.repository.name }}
           DATA: ${{ env.data }}
@@ -42,7 +43,6 @@ jobs:
       - name: Build Next.js App
         run: |
           echo "${{ needs.process_data.outputs.data.exists_brand }}"
-          echo "$needs.process_data.outputs.data.exists_brand"
           echo "${needs.process_data.outputs.data.exists_brand}"
 
       - name: Build Next.js App
