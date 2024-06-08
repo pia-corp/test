@@ -11,12 +11,12 @@ jobs:
       - name: Event Information
         run: |
           echo "Event is '${{ github.event.action }}'"
-          echo "Message is '${{ github.event }}'"
+          echo "Event payload:"
+          echo '${{ toJson(github.event) }}' | jq '.'
 
       - name: Build Next.js App
         run: |
-          MICROCMS_SERVICE_DOMAIN = ${{ vars.MICROCMS_SERVICE_DOMAIN }}
-          MICROCMS_API_KEY = ${{ secrets.MICROCMS_API_KEY }}
+
 
   # curl "https://70iz3quiza.microcms.io/api/v1/news/em2pj_ygl6n" -H "X-MICROCMS-API-KEY: 3ULBgPQ3H9xwDnj8GZ3ePlTccQn66gWPNY70"
 
