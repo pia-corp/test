@@ -126,7 +126,7 @@ jobs:
             echo "init count"
             pre_release_count=0
           fi
-          release_ver=$(awk "BEGIN {printf \"%.1f\", $pre_release_count + 0.1}")
+          release_ver=$(awk "BEGIN {printf \"%.1f\", $pre_release_count + 1}")
           echo "release_tag__major=$today-$release_ver" >> $GITHUB_ENV
 
       - name: Generate release tag minor vertion
@@ -139,7 +139,7 @@ jobs:
             echo "init count"
             pre_release_count=0
           fi
-          release_ver=$(awk "BEGIN {printf \"%.1f\", $pre_release_count + 0.1}")
+          release_ver=$(awk "BEGIN {printf \"%.1f\", $pre_release_count + 0.01}")
           echo "release_tag__minor=$today-$release_ver" >> $GITHUB_ENV
 
       - name: Generate release note
