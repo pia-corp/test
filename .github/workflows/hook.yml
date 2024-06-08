@@ -36,19 +36,68 @@ jobs:
 
   execute_process:
     needs: process_data
+    if: needs.process_data.outputs.exists_brand == 'true'
     runs-on: ubuntu-latest
     steps:
-      - name: Build Next.js App
+      - name: Create new branch
         run: |
-          echo "${{ needs.process_data.outputs.exists_brand }}"
+          git checkout -b release/github_${{ env.RELEASE_BRANCH_NAME }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+          cache: npm
+
+      - name: Restore node_modules
+        id: cache_dependency
+        if: ${{ !startsWith(github.head_ref, 'dependabot') }}
+        uses: actions/cache@v4.0.2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+
+      - name: Dependency Installation (If there is no cache)
+        if: steps.restore_node_modules.outputs.cache-hit != 'true'
+        run: npm ci --no-audit --progress=false --silent
 
       - name: Build Next.js App
-        if: needs.process_data.outputs.exists_brand == 'true'
+        run: npx next build
         env:
-          test: ${{ needs.process_data.outputs.exists_brand }}
+          MICROCMS_SERVICE_DOMAIN: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+
+      - name: Commit existing changes
+        id: commit_status
         run: |
-          echo "${{ env.test }}"
-    #   npx next build
-    # env:
-    #   MICROCMS_SERVICE_DOMAIN: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
-    #   MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+          git add .
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "Commit existing changes for PR"
+            echo "changed_files=true" >> $GITHUB_OUTPUT
+          else
+            echo "No changes to commit"
+            echo "changed_files=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Push new branch
+        if: steps.commit_status.outputs.changed_files == 'true'
+        run: |
+          git push -u origin release/github_${{ env.RELEASE_BRANCH_NAME }}
+
+      - name: Create PR
+        if: steps.commit_status.outputs.changed_files == 'true'
+        run: |
+          gh pr create --fill
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+      - name: Auto-merge PR
+        if: steps.commit_status.outputs.changed_files == 'true'
+        run: gh pr merge --auto --merge
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: skip
+        if: steps.commit_status.outputs.changed_files == 'false'
+        run: echo "No Changes in files related to"
