@@ -29,6 +29,7 @@ jobs:
 
       - name: Restore npm dependencies
         id: cache_dependency
+        if: ${{ !startsWith(github.head_ref, 'dependabot') }}
         uses: actions/cache@v4.0.2
         with:
           path: ~/.npm
@@ -77,6 +78,8 @@ jobs:
           node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
 
       - name: Restore npm dependencies
+        id: cache_dependency
+        if: ${{ !startsWith(github.head_ref, 'dependabot') }}
         uses: actions/cache@v4.0.2
         with:
           path: '**/node_modules'
