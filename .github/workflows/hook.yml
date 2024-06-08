@@ -14,14 +14,20 @@ jobs:
           API_KEY: ${{ secrets.MICROCMS_API_KEY }}
         run: |
           article_id=${{ github.event.client_payload.id }}
-          echo "data=$(curl -X GET \"https://${DOMAIN}.microcms.io/api/v1/news/${article_id}\" -H \"X-MICROCMS-API-KEY: ${API_KEY}\" | jq -c '.')" >> $GITHUB_ENV
+          DATA=$(curl -X GET "https://${{ env.domain }}.microcms.io/api/v1/news/$article_id" -H "X-MICROCMS-API-KEY: ${{ env.api_key }}")
+          echo "$DATA" > data.json
+          echo "data=$(cat data.json | jq -c '.')" >> $GITHUB_ENV
+
+        # article_id=${{ github.event.client_payload.id }}
+        # echo "data=$(curl -X GET \"https://${DOMAIN}.microcms.io/api/v1/news/${article_id}\" -H \"X-MICROCMS-API-KEY: ${API_KEY}\" | jq -c '.')" >> $GITHUB_ENV
+
 
       - name: Confirm Data
         env:
           REPOSITORY: ${{ github.event.repository.name }}
           DATA: ${{ env.data }}
         run: |
-          CATEGORY=$(echo "$data" | jq -r '.category[0]')
+          CATEGORY=$(echo "$DATA" | jq -r '.category[0]')
           echo "$REPOSITORY"
           echo "Category: $CATEGORY"
           if [[ "$CATEGORY" == "$REPOSITORY" ]]; then
