@@ -17,18 +17,20 @@ jobs:
         uses: wei/curl@v1
 
       - name: Get Data from MicroCMS
+        id: get_data
         env:
           article_id: ${{ steps.check_payload.outputs.id }}
           domain: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
           api_key: ${{ secrets.MICROCMS_API_KEY }}
         run: |
           DATA=$(curl -X GET "https://${{ env.domain }}.microcms.io/api/v1/news/${{ env.article_id }}" -H "X-MICROCMS-API-KEY: ${{ env.api_key }}")
-          echo "::set-output name=data::$(cat data.json | jq -r .)"
+          echo "name=$DATA" >> $GITHUB_OUTPUT
 
       - name: Confirm Data
         run: |
           echo "Data received from MicroCMS:"
           echo "${{ steps.get_data.outputs.data }}"
+          echo "${{ steps.get_data.outputs.name }}"
 
       - name: Build Next.js App
         run: |
