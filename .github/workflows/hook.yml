@@ -11,7 +11,15 @@ jobs:
       - name: Event Information
         run: |
           echo "Event is '${{ github.event.action }}'"
-          echo "Message is '${{ github.event.client_payload.message }}'"
+          echo "Message is '${{ github.event }}'"
+
+      - name: Build Next.js App
+        run: |
+          MICROCMS_SERVICE_DOMAIN = ${{ vars.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY = ${{ secrets.MICROCMS_API_KEY }}
+
+  # curl "https://70iz3quiza.microcms.io/api/v1/news/em2pj_ygl6n" -H "X-MICROCMS-API-KEY: 3ULBgPQ3H9xwDnj8GZ3ePlTccQn66gWPNY70"
+
 
   # AUTO_MERGE:
   #   needs: test
@@ -20,3 +28,41 @@ jobs:
   #     APIKEY: '${{ secrets.MICROCMS_API_KEY }}'
   #     TOKEN: ${{ secrets.GITHUB_TOKEN }}
   #     PTOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+
+#   {
+#   service: 'webhook-test',
+#   api: 'news',
+#   id: 'x2xkcwog9521',
+#   type: 'edit',
+#   contents: {
+#     old: {
+#       id: 'x2xkcwog9521',
+#       status: ['DRAFT'],
+#       draftKey: 'Vyf_XTclTY',
+#       publishValue: null,
+#       draftValue: {
+#         id: 'x2xkcwog9521',
+#         createdAt: '2021-06-02T05:56:24.513Z',
+#         updatedAt: '2021-06-02T06:05:09.601Z',
+#         publishedAt: '2021-06-02T06:05:09.601Z',
+#         revisedAt: '2021-06-02T06:05:09.601Z',
+#         title: 'タイトルです',
+#       },
+#     },
+#     new: {
+#       id: 'x2xkcwog9521',
+#       status: ['PUBLISH'],
+#       draftKey: null,
+#       publishValue: {
+#         id: 'x2xkcwog9521',
+#         createdAt: '2021-06-02T05:56:24.513Z',
+#         updatedAt: '2021-06-02T06:05:09.601Z',
+#         publishedAt: '2021-06-02T06:05:09.601Z',
+#         revisedAt: '2021-06-02T06:05:09.601Z',
+#         title: 'タイトルです',
+#       },
+#       draftValue: null,
+#     },
+#   },
+# }
