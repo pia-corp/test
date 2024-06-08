@@ -107,7 +107,6 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 2
-    if: needs.build.outputs.changed_files == 'false'
 
     steps:
       - uses: actions/checkout@v4.1.4
@@ -117,8 +116,8 @@ jobs:
         run: |
           echo "pre_tag=$(curl -H 'Accept: application/vnd.github.v3+json' -H 'Authorization: token ${{ secrets.GITHUB_TOKEN }}' https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)" >> $GITHUB_ENV
 
-      - name: Generate release tag
-        id: release_tag
+      - name: Generate release tag major version
+        if: needs.build.outputs.changed_files == 'true'
         run: |
           today=$(date +'%Y.%m.%d')
           pre_release_date=$(echo "${{ env.pre_tag }}" | awk -F'-' '{print $1}')
@@ -128,7 +127,20 @@ jobs:
             pre_release_count=0
           fi
           release_ver=$(echo "$pre_release_count + 0.1" | bc)
-          echo "release_tag=$today-$release_ver" >> $GITHUB_ENV
+          echo "release_tag__major=$today-$release_ver" >> $GITHUB_ENV
+
+      - name: Generate release tag minor vertion
+        if: needs.build.outputs.changed_files == 'false'
+        run: |
+          today=$(date +'%Y.%m.%d')
+          pre_release_date=$(echo "${{ env.pre_tag }}" | awk -F'-' '{print $1}')
+          pre_release_count=$(echo "${{ env.pre_tag }}" | awk -F'-' '{print $2}')
+          if [[ ! $pre_release_date = $today ]]; then
+            echo "init count"
+            pre_release_count=0
+          fi
+          release_ver=$(echo "$pre_release_count + 0.1" | bc)
+          echo "release_tag__minor=$today-$release_ver" >> $GITHUB_ENV
 
       - name: Generate release note
         id: release_note
@@ -137,7 +149,7 @@ jobs:
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             https://api.github.com/repos/${{ github.repository }}/releases/generate-notes \
-            -d "{\"tag_name\":\"${{ env.release_tag }}\", \"previous_tag_name\":\"${{ env.pre_tag }}\"}" | jq .body | sed 's/"//g')
+            -d "{\"tag_name\":\"${{ env.release_tag__minor || env.release_tag__major }}\", \"previous_tag_name\":\"${{ env.pre_tag }}\"}" | jq .body | sed 's/"//g')
           echo "release_note=$release_note" >> $GITHUB_ENV
 
       - name: Create Release
