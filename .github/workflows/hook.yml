@@ -31,7 +31,9 @@ jobs:
           REPOSITORY: ${{ github.event.repository.name }}
           DATA: ${{ env.data }}
         run: |
+          echo "$DATA"
           CATEGORY=$("echo $DATA" | jq -r '.category[0]')
+          echo "$CATEGORY"
           if [[ "$CATEGORY" == "$REPOSITORY" ]]; then
             echo "Category match: true"
             echo "exists_brand=1" >> $GITHUB_ENV
@@ -46,8 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Build Next.js App
-        run: echo "start"
-        # run: npx next build
-        # env:
-        #   MICROCMS_SERVICE_DOMAIN: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
-        #   MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+        run: npx next build
+        env:
+          MICROCMS_SERVICE_DOMAIN: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
