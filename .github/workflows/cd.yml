@@ -93,15 +93,14 @@ jobs:
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: skip
-        if: steps.commit_status.outputs.changed_files == 'false'
-        run: echo "No Changes in files related to"
+      # - name: skip
+      #   if: steps.commit_status.outputs.changed_files == 'false'
+      #   run: echo "No Changes in files related to"
 
   minify:
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 2
-    if: needs.build.outputs.changed_files == 'true'
 
     steps:
       - name: Checkout the repository
@@ -168,6 +167,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: skip
+        if: steps.commit_status.outputs.changed_files == 'false'
+        run: echo "No Changes in files related to"
 
   create_tag:
     needs: merge
