@@ -11,8 +11,7 @@ jobs:
       exists_brand: ${{ steps.exists_data.outputs.exists_brand }}
 
     steps:
-      - id: exists_data
-        name: Get Data from MicroCMS
+      - name: Get Data from MicroCMS
         env:
           DOMAIN: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
           API_KEY: ${{ secrets.MICROCMS_API_KEY }}
@@ -23,6 +22,7 @@ jobs:
           echo "data=$(cat data.json | jq -c '.')" >> $GITHUB_ENV
 
       - name: Confirm Data
+        id: exists_data
         env:
           REPOSITORY: ${{ github.event.repository.name }}
           DATA: ${{ env.data }}
