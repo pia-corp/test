@@ -8,9 +8,21 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - name: Check webhook payload
+        id: check-payload
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { payload } = context;
+            console.log(`Received webhook event: ${payload.event}`);
+            console.log(`Content ID: ${payload.contentId}`);
+            console.log(`Content type: ${payload.contentType}`);
+            console.log(`Updated data: ${JSON.stringify(payload.data)}`);
+
       - name: Event Information
         run: |
           echo "Event is '${{ github.event.action }}'"
+          echo "Event is '${{ github.event.client_payload }}'"
           echo "Event payload:"
           echo '${{ toJson(github.event) }}' | jq '.'
 
