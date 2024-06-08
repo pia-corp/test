@@ -1,4 +1,4 @@
-name: FILE UPLOAD
+name: File upload
 
 on:
   workflow_dispatch:

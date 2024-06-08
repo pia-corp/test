@@ -128,6 +128,8 @@ jobs:
       - name: mini
         run: |
           npx html-minifier --input-dir public --output-dir out --file-ext html -c html-minifier.conf
+          npx html-minifier --input-dir public --output-dir out --file-ext css -c html-minifier.conf
+          npx html-minifier --input-dir public --output-dir out --file-ext js -c html-minifier.conf
 
   merge:
     needs: minify
@@ -178,7 +180,6 @@ jobs:
     needs: merge
     runs-on: ubuntu-latest
     timeout-minutes: 2
-    if: needs.build.outputs.changed_files == 'true'
 
     steps:
       - name: Checkout code
