@@ -73,11 +73,13 @@ export const getStaticPaths = async () => {
   const data = await client
   .getAllContents({
     endpoint: 'news',
+    queries: {
+      filters: "category[equals]test",
+      orders: '-createdAt'
+    }
   });
 
-  // const data = await client.get({endpoint: 'news', queries: {
-  //   orders: '-publishedAt', limit: 100
-  // }});
+
   // // await client.getAllContentIds({endpoint: 'news'})
   // // .then((res) => {
   // //   // let contents = {
