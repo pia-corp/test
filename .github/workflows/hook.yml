@@ -33,22 +33,13 @@ jobs:
           DATA: ${{ env.data }}
         run: |
           category_id=$(echo "$DATA" | jq -r '.category.id')
-          category_name="${category_id}.jp"
-          echo "${category_name}"
+          category_name="${category_id}"
+          # category_name="${category_id}.jp" // 本番用
           if [[ "$category_id" == "$REPOSITORY" ]]; then
             echo "exists_brand=true" >> $GITHUB_OUTPUT
           else
             echo "exists_brand=false" >> $GITHUB_OUTPUT
           fi
-
-        # CATEGORY=$(echo "$DATA" | jq -r '.category["id"]')
-        # category_name = "${CATEGORY}.jp"
-        # echo "${category_name}"
-        # if [[ "$CATEGORY" == "$REPOSITORY" ]]; then
-        #   echo "exists_brand=true" >> $GITHUB_OUTPUT
-        # else
-        #   echo "exists_brand=false" >> $GITHUB_OUTPUT
-        # fi
 
   execute_process:
     needs: process_data
