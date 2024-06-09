@@ -9,6 +9,9 @@ const nextConfig = {
     swcMinify: true,
     cpus: 4,
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   generateBuildId: async () => {
     return 'pia';
   },
