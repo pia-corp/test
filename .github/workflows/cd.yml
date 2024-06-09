@@ -54,18 +54,11 @@ jobs:
       - name: Install npm dependencies (if cache miss)
         run: npm ci --no-audit --progress=false --silent
 
-      - name: Check if artifact exists
-        run: |
-          if [ -d ".next" ]; then
-            echo "next-build already exists"  # メッセージ変更
-          fi
-
       - name: Download build artifacts
         if: steps.check_artifact.outputs.exists_artifact == 'true'
         uses: actions/download-artifact@v4.1.7
         with:
           name: next-build
-          path: .next
 
       - name: Lint and rewrite markup
         run: npm run formatting
@@ -86,9 +79,6 @@ jobs:
         uses: actions/upload-artifact@v4.3.3
         with:
           name: next-build
-          path: |
-            !.next/cache
-            .next
 
       - name: Show build artifacts (optional)
         run: ls -la .next  # ビルド完了後に実行
