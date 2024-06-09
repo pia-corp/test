@@ -34,11 +34,11 @@ jobs:
           cache-name: cache-node-modules
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/.node-version') }}-${{ hashFiles('**/package-lock.json') }}
+          # restore-keys: |
+          #   ${{ runner.os }}-build-${{ env.cache-name }}-
+          #   ${{ runner.os }}-build-
+          #   ${{ runner.os }}-
 
       - name: Install npm dependencies (if cache miss)
         if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
@@ -75,27 +75,27 @@ jobs:
         with:
           ref: ${{ github.head_ref || github.ref_name }}
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4.0.2
-        with:
-          node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+      # - name: Setup Node.js
+      #   uses: actions/setup-node@v4.0.2
+      #   with:
+      #     node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
 
-      - name: Restore npm dependencies
-        id: cache-npm
-        uses: actions/cache@v4.0.2
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+      # - name: Restore npm dependencies
+      #   id: cache-npm
+      #   uses: actions/cache@v4.0.2
+      #   env:
+      #     cache-name: cache-node-modules
+      #   with:
+      #     path: ~/.npm
+      #     key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/.node-version') }}-${{ hashFiles('**/package-lock.json') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-build-${{ env.cache-name }}-
+      #       ${{ runner.os }}-build-
+      #       ${{ runner.os }}-
 
-      - name: Install npm dependencies (if cache miss)
-        if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
-        run: npm ci --no-audit --progress=false --silent
+      # - name: Install npm dependencies (if cache miss)
+      #   if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+      #   run: npm ci --no-audit --progress=false --silent
 
       - name: Run Lighthouse against a static dist dir
         id: lighthouse_audit
