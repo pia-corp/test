@@ -101,7 +101,7 @@ jobs:
           fi
 
       - name: Download build artifacts
-        if: steps.check_artifact.outputs == ''  # 出力がない場合にダウンロード
+        if: steps.check_artifact.outputs == '' || steps.check_artifact.outputs != 'next-build already exists'  # 成果物がない、またはビルド済み
         uses: actions/download-artifact@v4.1.7
         with:
           name: next-build
