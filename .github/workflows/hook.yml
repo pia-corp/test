@@ -88,11 +88,11 @@ jobs:
       - name: Check if artifact exists
         run: |
           if [ -d ".next" ]; then
-            echo "next-build already exists"  # メッセージ変更
+            echo "exists_artifact=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Download build artifacts
-        if: steps.check_artifact.outputs != '' || steps.check_artifact.outputs == 'next-build already exists'
+        if: steps.check_artifact.outputs.exists_artifact == 'true'
         uses: actions/download-artifact@v4.1.7
         with:
           name: next-build
