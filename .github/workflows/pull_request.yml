@@ -74,3 +74,9 @@ jobs:
               body: '${{ steps.opening_announce.outputs.message }}'
             }
             await github.rest.issues.createComment(params)
+
+  CI:
+    needs: OPENING_ANNOUNCE
+    uses: ./.github/workflows/ci.yml
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
