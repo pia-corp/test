@@ -11,7 +11,14 @@ export const config = {
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  const data: INewsProps = await client.get({ endpoint: 'news', queries: { offset: 0, limit: parseInt(process.env.PER_PAGE as string) }});
+  const data: INewsProps = await client.get({
+    endpoint: 'news',
+    queries: {
+      offset: 0,
+      limit: parseInt(process.env.PER_PAGE as string),
+      filters: 'category[equals]test'
+    }
+  });
 
   return {
     props: {

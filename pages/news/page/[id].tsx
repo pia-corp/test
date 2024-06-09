@@ -42,9 +42,16 @@ export default function BlogPageId({ news, totalCount, current_page }: HomeProps
 
 // 動的なページを作成
 export const getStaticPaths = async () => {
-  const repos = await client.get({ endpoint: "news" });
+  const repos = await client.getAllContents({
+    endpoint: "news",
+    queries: {
+      filters: "category[equals]test",
+      orders: '-createdAt'
+    }
+  });
+  const repos_length: number = repos.length;
   const range = (start: number, end: number) => [...Array(end - start + 1)].map((_, i) => start + i);
-  const paths = range(1, Math.ceil(repos.totalCount / 3)).map((repo) => `/news/page/${repo}`);
+  const paths = range(1, Math.ceil(repos_length / 3)).map((repo) => `/news/page/${repo}`);
 
   return { paths, fallback: false };
 };
@@ -61,7 +68,13 @@ export const getStaticProps = async (context: GetStaticPropsContext) => {
 	if (typeof id === 'string') {
 		const numericId = parseInt(id, 10);
 		if (!isNaN(numericId)) {
-			data = await client.get({ endpoint: "news", queries: { offset: (numericId - 1) * 2, limit: 2 } });
+			data = await client.get({
+        endpoint: "news",
+        queries: {
+          offset: (numericId - 1) * 2,
+          limit: 2
+        }
+      });
 		}
 	}
 		  // const data = await client.get({ endpoint: "news", queries: { offset: (id - 1) * 3, limit: 3 } });

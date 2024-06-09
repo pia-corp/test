@@ -4,7 +4,7 @@ on:
   pull_request:
     branches:
       - main
-    types: [edited, reopened, synchronize]
+    types: [opened, edited, reopened, synchronize]
 
 jobs:
   Markup_Linter:
