@@ -8,15 +8,15 @@ updates:
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
-      interval: "daily"
-      time: "17:30"
+      interval: "weekly"
+      time: "00:00"
       timezone: "Asia/Tokyo"
     open-pull-requests-limit: 1
 
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
-      interval: 'daily'
-      time: "17:30"
+      interval: 'weekly'
+      time: "00:00"
       timezone: "Asia/Tokyo"
     open-pull-requests-limit: 1
