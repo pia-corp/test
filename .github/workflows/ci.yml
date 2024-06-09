@@ -43,7 +43,6 @@ jobs:
           restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install npm dependencies (if cache miss)
-        if: ${{ steps.cache_dependency.outputs.cache-hit != 'true' }}
         run: npm ci --no-audit --progress=false --silent
 
       - name: Lint and rewrite markup
@@ -94,7 +93,6 @@ jobs:
           restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install npm dependencies (if cache miss)
-        if: ${{ steps.cache_dependency.outputs.cache-hit != 'true' }}
         run: npm ci --no-audit --progress=false --silent
 
       - name: Run Lighthouse against a static dist dir
