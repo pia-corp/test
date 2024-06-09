@@ -21,11 +21,11 @@ jobs:
         with:
           ref: ${{ github.head_ref || github.ref_name }}
 
-      # - name: Setup Node.js
-      #   uses: actions/setup-node@v4.0.2
-      #   with:
-      #     node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
-      #     cache: npm
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+          cache: npm
 
       - name: Restore npm dependencies
         id: cache-npm

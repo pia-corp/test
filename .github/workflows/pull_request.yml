@@ -32,9 +32,13 @@ jobs:
         with:
           path: ~/.npm
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
 
       - name: Install npm dependencies (if cache miss)
+        if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
         run: npm ci --no-audit --progress=false --silent
 
   OPENING_ANNOUNCE:
