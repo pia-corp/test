@@ -24,17 +24,18 @@ jobs:
           node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
           cache: npm
 
-      - name: Restore node_modules
+      - name: Restore npm dependencies
         id: cache_dependency
         if: ${{ !startsWith(github.head_ref, 'dependabot') }}
         uses: actions/cache@v4.0.2
+        env:
+          cache_dependency: cache-node-modules
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
 
-      - name: Install npm dependencies
+      - name: Install npm dependencies (if cache miss)
         if: ${{ steps.cache_dependency.outputs.cache-hit != 'true' }}
         run: npm ci --no-audit --progress=false --silent
 
