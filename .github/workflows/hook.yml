@@ -48,10 +48,10 @@ jobs:
       RELEASE_BRANCH_NAME: ${{ github.run_id }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4.1.4
+        uses: actions/checkout@v4.1.6
 
       - name: Checkout code
-        uses: actions/checkout@v4.1.4
+        uses: actions/checkout@v4.1.6
         with:
           ref: main
 
