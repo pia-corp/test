@@ -1,7 +1,7 @@
 import Link from "next/link";
 // import Head from 'next/head';
 import CustomHead from '@/components/head';
-import { client } from "@/libs/client";
+import { client, domainName } from "@/libs/client";
 import { INewsProps, INewsItem } from '@/interface/index';
 import { GetStaticProps } from 'next';
 import styles from "@/styles/Home.module.css";
@@ -14,9 +14,9 @@ export const getStaticProps: GetStaticProps = async () => {
   const data: INewsProps = await client.get({
     endpoint: 'news',
     queries: {
-      offset: 0,
+      filters: `category[equals]${domainName}`,
       limit: parseInt(process.env.PER_PAGE as string),
-      filters: 'category[equals]test'
+      orders: '-createdAt'
     }
   });
 
