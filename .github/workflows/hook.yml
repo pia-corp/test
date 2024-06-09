@@ -12,6 +12,7 @@ concurrency:
 jobs:
   process_data:
     runs-on: ubuntu-latest
+    timeout-minutes: 1
     outputs:
       exists_brand: ${{ steps.exists_data.outputs.exists_brand }}
 
@@ -48,11 +49,9 @@ jobs:
     timeout-minutes: 5
     env:
       RELEASE_BRANCH_NAME: ${{ github.run_id }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4.1.6
 
-      - name: Checkout code
+    steps:
+      - name: Checkout the repository
         uses: actions/checkout@v4.1.6
         with:
           ref: main
@@ -70,7 +69,7 @@ jobs:
         uses: actions/setup-node@v4.0.2
         with:
           node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
-          # cache: npm
+          cache: npm
 
       - name: Restore npm dependencies
         id: node_modules_cache_id
@@ -80,8 +79,6 @@ jobs:
         with:
           path: ~/.npm
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/.node-version') }}-${{ hashFiles('**/package-lock.json') }}
-          # key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          # restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install npm dependencies (if cache miss)
         if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
