@@ -39,7 +39,7 @@ jobs:
         uses: actions/setup-node@v4.0.2
         with:
           node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
-          cache: npm
+          # cache: npm
 
       - name: Restore npm dependencies
         id: node_modules_cache_id
@@ -160,25 +160,48 @@ jobs:
             -d "{ \"tag_name\": \"${{ env.release_tag__minor || env.release_tag__major }}\", \"name\": \"${{ env.release_tag__minor || env.release_tag__major }}\", \"body\": \"${{ env.release_tag__minor || env.release_tag__major }}}\"}" \
             https://api.github.com/repos/${{ github.repository }}/releases
 
+  # cleanup:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Cleanup
+  #       run: |
+  #         echo "Installing GitHub CLI extension for cache management..."
+  #         gh extension install actions/gh-actions-cache
+
+  #         echo "Listing caches..."
+  #         caches=$(gh actions-cache list -R $REPO -L 100)
+
+  #         set +e
+  #         echo "Deleting caches..."
+  #         echo "$caches" | grep -E "${REPO}-node" | while IFS=$'\t' read -r cacheKey _
+  #         do
+  #           gh actions-cache delete "$cacheKey" -R $REPO --confirm
+  #         done
+  #         echo "Done"
+  #       env:
+  #         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         REPO: ${{ github.repository }}
+
   cleanup:
-    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Cleanup
         run: |
-          echo "Installing GitHub CLI extension for cache management..."
           gh extension install actions/gh-actions-cache
 
-          echo "Listing caches..."
-          caches=$(gh actions-cache list -R $REPO -L 100)
+          echo "Fetching list of cache key"
+          cacheKeysForPR=$(gh actions-cache list -R $REPO -B $BRANCH -L 100 | cut -f 1 )
 
+          ## Setting this to not fail the workflow while deleting cache keys.
           set +e
           echo "Deleting caches..."
-          echo "$caches" | grep -E "${REPO}-node" | while IFS=$'\t' read -r cacheKey _
+          for cacheKey in $cacheKeysForPR
           do
-            gh actions-cache delete "$cacheKey" -R $REPO --confirm
+              gh actions-cache delete $cacheKey -R $REPO -B $BRANCH --confirm
           done
           echo "Done"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
+          BRANCH: refs/pull/${{ github.event.pull_request.number }}/merge
