@@ -54,6 +54,7 @@ jobs:
 
   cron:
     runs-on: ubuntu-latest
+    timeout-minutes: 1
 
     steps:
       - name: Cancellation Cron job
