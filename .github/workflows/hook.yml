@@ -32,14 +32,23 @@ jobs:
           REPOSITORY: ${{ github.event.repository.name }}
           DATA: ${{ env.data }}
         run: |
-          CATEGORY=$(echo "$DATA" | jq -r '.category["id"]')
-          category_name = "${CATEGORY}.jp"
+          category_id=$(echo "$DATA" | jq -r '.category.id')
+          category_name="${category_id}.jp"
           echo "${category_name}"
-          if [[ "$CATEGORY" == "$REPOSITORY" ]]; then
+          if [[ "$category_id" == "$REPOSITORY" ]]; then
             echo "exists_brand=true" >> $GITHUB_OUTPUT
           else
             echo "exists_brand=false" >> $GITHUB_OUTPUT
           fi
+
+        # CATEGORY=$(echo "$DATA" | jq -r '.category["id"]')
+        # category_name = "${CATEGORY}.jp"
+        # echo "${category_name}"
+        # if [[ "$CATEGORY" == "$REPOSITORY" ]]; then
+        #   echo "exists_brand=true" >> $GITHUB_OUTPUT
+        # else
+        #   echo "exists_brand=false" >> $GITHUB_OUTPUT
+        # fi
 
   execute_process:
     needs: process_data
