@@ -78,7 +78,7 @@ jobs:
           cache-name: cache-node-modules
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-v${{ env.GIT_ACTIONS_NODE_VER }}-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-v${{ vars.GIT_ACTIONS_NODE_VER }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install npm dependencies (if cache miss)
         if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
