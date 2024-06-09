@@ -32,7 +32,9 @@ jobs:
           REPOSITORY: ${{ github.event.repository.name }}
           DATA: ${{ env.data }}
         run: |
-          CATEGORY=$(echo "$DATA" | jq -r '.category[0]')
+          CATEGORY=$(echo "$DATA" | jq -r '.category[id]')
+          category_name = "${CATEGORY}.jp"
+          echo "${category_name}"
           if [[ "$CATEGORY" == "$REPOSITORY" ]]; then
             echo "exists_brand=true" >> $GITHUB_OUTPUT
           else
