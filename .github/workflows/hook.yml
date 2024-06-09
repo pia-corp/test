@@ -4,6 +4,11 @@ on:
   repository_dispatch:
     types: [update-posts]
 
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   process_data:
     runs-on: ubuntu-latest

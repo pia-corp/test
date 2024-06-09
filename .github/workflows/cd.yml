@@ -54,6 +54,18 @@ jobs:
         if: steps.restore_node_modules.outputs.cache-hit != 'true'
         run: npm ci --no-audit --progress=false --silent
 
+      - name: Check if artifact exists
+        id: check_artifact
+        run: |
+          curl -s -I -f -o /dev/null "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" || echo "artifact_exists=false" >> $GITHUB_ENV
+
+      - name: Download build artifacts
+        if: env.artifact_exists != 'false'
+        uses: actions/download-artifact@v3
+        with:
+          name: nextjs-build
+          path: .next
+
       - name: Lint and rewrite markup
         run: npm run formatting
 
@@ -68,6 +80,14 @@ jobs:
           npx html-minifier --input-dir public --output-dir out --file-ext html -c html-minifier.conf
           npx html-minifier --input-dir public --output-dir out --file-ext css -c html-minifier.conf
           npx html-minifier --input-dir public --output-dir out --file-ext js -c html-minifier.conf
+
+      - name: Upload
+        uses: actions/upload-artifact@v4.3.3
+        with:
+          name: upload-next-build
+          path: |
+            !.next/cache
+            .next
 
       - name: Commit existing changes
         id: commit_status
