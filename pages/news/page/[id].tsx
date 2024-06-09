@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import CustomHead from '@/components/head';
 import { Pagination } from '@/components/Pagination';
-import { client } from "@/libs/client";
+import { client, domainName } from "@/libs/client";
 import { GetStaticPropsContext } from 'next';
 import { IHomeProps } from '@/interface/index';
 import styles from "@/styles/Home.module.css";
@@ -45,7 +45,7 @@ export const getStaticPaths = async () => {
   const repos = await client.getAllContents({
     endpoint: "news",
     queries: {
-      filters: "category[equals]test",
+      filters: `category[equals]${domainName}`,
       orders: '-createdAt'
     }
   });
@@ -65,18 +65,20 @@ export const getStaticProps = async (context: GetStaticPropsContext) => {
   // console.log(id); // current page
   // console.log(data);
 
+
 	if (typeof id === 'string') {
 		const numericId = parseInt(id, 10);
 		if (!isNaN(numericId)) {
 			data = await client.get({
         endpoint: "news",
         queries: {
-          offset: (numericId - 1) * 2,
-          limit: 2
+          filters: `category[equals]${domainName}`,
+          orders: '-createdAt'
         }
       });
 		}
 	}
+
 		  // const data = await client.get({ endpoint: "news", queries: { offset: (id - 1) * 3, limit: 3 } });
 
   return {
