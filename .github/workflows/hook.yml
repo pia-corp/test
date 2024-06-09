@@ -95,25 +95,17 @@ jobs:
         run: npm ci --no-audit --progress=false --silent
 
       - name: Check if artifact exists
-        id: check_artifact
         run: |
           if [ -d ".next" ]; then
-            echo "artifact_exists=true" >> $GITHUB_ENV
-          else
-            echo "artifact_exists=false" >> $GITHUB_ENV
+            echo "next-build already exists"  # メッセージ変更
           fi
 
       - name: Download build artifacts
-        if: env.artifact_exists == 'true'
+        if: steps.check_artifact.outputs == ''  # 出力がない場合にダウンロード
         uses: actions/download-artifact@v4.1.7
         with:
           name: next-build
           path: .next
-
-      - name: Read Artifact
-        if: env.artifact_exists == 'true'
-        run: |
-          ls -la .next
 
       - name: Build Next.js App
         run: npx next build
@@ -128,6 +120,9 @@ jobs:
           path: |
             !.next/cache
             .next
+
+      - name: Show build artifacts (optional)
+        run: ls -la .next  # ビルド完了後に実行
 
       - name: Commit existing changes
         id: commit_status
