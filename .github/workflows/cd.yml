@@ -71,6 +71,7 @@ jobs:
           path: .next
 
       - name: Read Artifact
+        if: env.artifact_exists == 'true'
         run: |
           ls -la .next
 
