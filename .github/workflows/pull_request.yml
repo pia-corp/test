@@ -79,4 +79,4 @@ jobs:
     needs: OPENING_ANNOUNCE
     uses: ./.github/workflows/ci.yml
     secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      G_TOKEN: ${{ secrets.GITHUB_TOKEN }}
