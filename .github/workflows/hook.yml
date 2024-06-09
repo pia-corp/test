@@ -87,14 +87,19 @@ jobs:
         id: check_artifact
         run: |
           if [ -d ".next" ]; then
-            echo "artifact_exists=false" >> $GITHUB_ENV
+            echo "artifact_exists=true" >> $GITHUB_ENV
 
       - name: Download build artifacts
-        if: env.artifact_exists != 'false'
+        if: env.artifact_exists == 'true'
         uses: actions/download-artifact@v3
         with:
-          name: nextjs-build
+          name: next-build
           path: .next
+
+      - name: Read Artifact
+        run: |
+          ls
+          cat .next
 
       - name: Build Next.js App
         run: npx next build
@@ -105,7 +110,7 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4.3.3
         with:
-          name: upload-next-build
+          name: next-build
           path: |
             !.next/cache
             .next
