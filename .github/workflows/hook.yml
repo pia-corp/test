@@ -101,8 +101,8 @@ jobs:
           path: .next
 
       - name: Read Artifact
+        if: env.artifact_exists == 'true'
         run: |
-          if: env.artifact_exists == 'true'
           ls -la .next
 
       - name: Build Next.js App
