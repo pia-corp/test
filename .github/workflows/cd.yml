@@ -57,14 +57,22 @@ jobs:
       - name: Check if artifact exists
         id: check_artifact
         run: |
-          curl -s -I -f -o /dev/null "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" || echo "artifact_exists=false" >> $GITHUB_ENV
+          if [ -d ".next" ]; then
+            echo "artifact_exists=true" >> $GITHUB_ENV
+          else
+            echo "artifact_exists=false" >> $GITHUB_ENV
+          fi
 
       - name: Download build artifacts
-        if: env.artifact_exists != 'false'
-        uses: actions/download-artifact@v3
+        if: env.artifact_exists == 'true'
+        uses: actions/download-artifact@v4.1.7
         with:
-          name: nextjs-build
+          name: next-build
           path: .next
+
+      - name: Read Artifact
+        run: |
+          ls -la .next
 
       - name: Lint and rewrite markup
         run: npm run formatting
@@ -84,7 +92,7 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4.3.3
         with:
-          name: upload-next-build
+          name: next-build
           path: |
             !.next/cache
             .next
