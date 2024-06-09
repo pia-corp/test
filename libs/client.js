@@ -5,3 +5,5 @@ export const client = createClient({
 	apiKey: process.env.MICROCMS_API_KEY,
 	domainName: process.env.HEADLESSCMS_DOMAIN_NAME
 });
+
+export const domainName = client.domainName || 'test';

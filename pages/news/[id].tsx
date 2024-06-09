@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Handlebars from 'handlebars';
 import parse from 'html-react-parser';
 import sanitize from 'sanitize-html';
-import {client} from '@/libs/client';
+import {client, domainName} from '@/libs/client';
 import styles from '@/styles/Home.module.css';
 import {GetStaticPropsContext, GetStaticPropsResult} from 'next';
 import { minify } from 'html-minifier-terser';
@@ -74,7 +74,7 @@ export const getStaticPaths = async () => {
   .getAllContents({
     endpoint: 'news',
     queries: {
-      filters: "category[equals]test",
+      filters: `category[equals]${domainName}`,
       orders: '-createdAt'
     }
   });
