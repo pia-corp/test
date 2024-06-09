@@ -42,7 +42,7 @@ jobs:
           cache: npm
 
       - name: Restore npm dependencies
-        id: cache-npm
+        id: node_modules_cache_id
         uses: actions/cache@v4.0.2
         env:
           cache-name: cache-node-modules
@@ -52,6 +52,7 @@ jobs:
           restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install npm dependencies (if cache miss)
+        if: steps.node_modules_cache_id.outputs.cache-hit != 'true'
         run: npm ci --no-audit --progress=false --silent
 
       - name: Lint and rewrite markup
@@ -68,30 +69,6 @@ jobs:
           npx html-minifier --input-dir public --output-dir out --file-ext html -c html-minifier.conf
           npx html-minifier --input-dir public --output-dir out --file-ext css -c html-minifier.conf
           npx html-minifier --input-dir public --output-dir out --file-ext js -c html-minifier.conf
-
-      - name: Upload
-        uses: actions/upload-artifact@v4.3.3
-        with:
-          name: next-build
-          path: |
-            !.next/cache
-            .next
-
-      - name: Check if artifact exists
-        run: |
-          if [ -d ".next" ]; then
-            echo "next-build already exists"  # メッセージ変更
-          fi
-
-      - name: Download build artifacts
-        if: steps.check_artifact.outputs.exists_artifact == 'true'
-        uses: actions/download-artifact@v4.1.7
-        with:
-          name: next-build
-          path: .next
-
-      - name: Show build artifacts (optional)
-        run: ls -la .next  # ビルド完了後に実行
 
       - name: Commit existing changes
         id: commit_status
