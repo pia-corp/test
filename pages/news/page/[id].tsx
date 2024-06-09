@@ -68,11 +68,13 @@ export const getStaticProps = async (context: GetStaticPropsContext) => {
 	if (typeof id === 'string') {
 		const numericId = parseInt(id, 10);
 		if (!isNaN(numericId)) {
-			data = await client.get({
+			data = await client.getAllContents({
         endpoint: "news",
         queries: {
-          offset: (numericId - 1) * 2,
-          limit: 2
+          filters: "category[equals]test",
+          orders: '-createdAt'
+          // offset: (numericId - 1) * 2,
+          // limit: 2
         }
       });
 		}
@@ -81,8 +83,8 @@ export const getStaticProps = async (context: GetStaticPropsContext) => {
 
   return {
     props: {
-      news: data.contents,
-      totalCount: data.totalCount,
+      news: data?.contents || [],
+      totalCount: data?.totalCount || 0,
       current_page: current_page
     },
   };
