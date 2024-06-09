@@ -25,11 +25,10 @@ jobs:
           cache: npm
 
       - name: Restore npm dependencies
-        id: cache_dependency
-        if: ${{ !startsWith(github.head_ref, 'dependabot') }}
+        id: cache-npm
         uses: actions/cache@v4.0.2
         env:
-          cache_dependency: cache-node-modules
+          cache-name: cache-node-modules
         with:
           path: ~/.npm
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
@@ -73,9 +72,3 @@ jobs:
               body: '${{ steps.opening_announce.outputs.message }}'
             }
             await github.rest.issues.createComment(params)
-
-  CI:
-    needs: OPENING_ANNOUNCE
-    uses: ./.github/workflows/ci.yml
-    secrets:
-      G_TOKEN: ${{ secrets.GITHUB_TOKEN }}
