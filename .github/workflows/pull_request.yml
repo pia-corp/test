@@ -28,6 +28,12 @@ jobs:
           fi
 
 
+  TEST:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "${{ needs.check_changes.outputs.public_changed }}"
+
   SETUP:
     if: github.event.sender.type != 'Bot' && contains(github.head_ref, 'develop') && needs.check_changes.outputs.public_changed == 'true'
     runs-on: ubuntu-latest
