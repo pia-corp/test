@@ -24,6 +24,12 @@ jobs:
             echo "public_changed=false" >> $GITHUB_ENV
           fi
 
+  TEST:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "${{ needs.check_changes.outputs.public_changed }}"
+
   Markup_Linter:
     name: Markup Linter
     if: github.event.sender.type != 'Bot' && contains(github.head_ref, 'develop') && needs.check_changes.outputs.public_changed == 'true'
