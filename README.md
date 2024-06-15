@@ -1,6 +1,4 @@
-<p align="center" style="width:50%;">
-  <img src="images/assets/logo.svg">
-</p>
+<img src="images/assets/logo.png" width="320" height="132">
 
 [![npm version](https://img.shields.io/npm/v/react.svg?style=flat)](https://www.npmjs.com/package/react)
 [![FILE UPLOAD](https://github.com/pia-corp/test/actions/workflows/upload.yml/badge.svg)](https://github.com/pia-corp/test/actions/workflows/upload.yml)
@@ -20,10 +18,17 @@
 git clone https://github.com/pia-corp/faloom.jp.git
 ```
 
+## ブランチ名ルール
+以下のブランチ名だけが許可されてます。
+develop/
+feature/
+
+※ mainへプルリクエストを出す場合はdevelopブランチからのみ受け付けます。
+
 ### コードチェック
 
-ローカル環境でテストする場合は下記のコードで確認ができます。
-チェック内容は[CODECHECK.md](tree/main/doc/markup_rule.md)を確認してください。
+ローカル環境でテストする場合は以下のscriptで確認ができます。
+チェック内容は[CODECHECK.md](https://github.com/pia-corp/test/blob/main/doc/markup_rule.md)を確認してください。
 
 ```bash
 npm run lint
@@ -82,8 +87,12 @@ HTML、JavaScript、CSSなどは　`public`フォルダに作成してくださ�
 ## Google Tag Manager
 
 ```javascript
+1. このコードは、次のようにページの <head> 内のなるべく上のほうに貼り付けてください。
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-XXXXXXXX');</script>
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-WD2QTHHH');</script>
 
+2. 開始タグ <body> の直後にこのコードを次のように貼り付けてください。
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXXX" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MWVZTTSB"height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 ```
 
@@ -92,6 +101,8 @@ HTML、JavaScript、CSSなどは　`public`フォルダに作成してくださ�
 マイクロCMS のお知らせ一覧用サンプルコードです。必要に応じて改変してください。
 
 [公式のサンプルコード](https://document.microcms.io/tutorial/javascript/javascript-getting-started)
+
+### サンプル1
 
 ```javascript
 <script src="https://unpkg.com/microcms-js-sdk@latest/dist/umd/microcms-js-sdk.js"></script>
@@ -107,6 +118,8 @@ HTML、JavaScript、CSSなどは　`public`フォルダに作成してくださ�
   })
 </script>
 ```
+
+### サンプル2
 
 ```javascript
 const API_KEY = 'XXXXX'; // APIキー
@@ -204,25 +217,6 @@ fetchAndDisplayNews();
 ### microCMSドキュメント
 
 https://document.microcms.io/
-
-## 画像拡張子
-
-- jpg
-- gif
-- png
-- svg
-- webp
-
-ベクター形式で出力できる場合は svg で書き出し。そうでなければ webp 等の形式にしてください。
-画像の縦横サイズは最適化し、容量圧縮してください。
-
-## ファビコン
-
-- favicon.ico
-- icon.svg
-- apple-touch-icon.png
-- icon-192.png
-- icon-512.png
 
 ## 構造化データマークアップ
 
