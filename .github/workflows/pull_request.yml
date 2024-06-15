@@ -6,8 +6,6 @@ on:
       - main
     types:
       - opened
-    paths:
-      - 'public/**'
 
 jobs:
   check_changes:
