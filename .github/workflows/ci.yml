@@ -25,6 +25,7 @@ jobs:
           fi
 
   Markup_Linter:
+    name: Markup Linter
     if: github.event.sender.type != 'Bot' && contains(github.head_ref, 'develop') && needs.check_changes.outputs.public_changed == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 5
