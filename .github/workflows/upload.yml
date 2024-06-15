@@ -52,7 +52,7 @@ jobs:
           local-dir: ${{ vars.LOCAL_PATH }}
           server-dir: ${{ vars.REMOTE_PATH }}
 
-  cron:
+  CRON:
     runs-on: ubuntu-latest
     timeout-minutes: 1
 

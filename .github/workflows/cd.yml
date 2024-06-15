@@ -6,9 +6,11 @@ on:
       - main
     types:
       - closed
+    paths:
+      - 'public/**'
 
 jobs:
-  build:
+  BUILD:
     if: github.event.sender.type != 'Bot' && contains(github.head_ref, 'develop')
     outputs:
       changed_files: ${{ steps.commit_status.outputs.changed_files }}
@@ -100,8 +102,8 @@ jobs:
         if: steps.commit_status.outputs.changed_files == 'false'
         run: echo "No Changes in files related to"
 
-  create_tag:
-    needs: build
+  CREATE_TAG:
+    needs: BUILD
     runs-on: ubuntu-latest
     timeout-minutes: 2
 
@@ -157,8 +159,8 @@ jobs:
             -d "{ \"tag_name\": \"${{ env.release_tag__minor || env.release_tag__major }}\", \"name\": \"${{ env.release_tag__minor || env.release_tag__major }}\", \"body\": \"${{ env.release_tag__minor || env.release_tag__major }}}\"}" \
             https://api.github.com/repos/${{ github.repository }}/releases
 
-  cleanup:
-    needs: build
+  CLEANUP:
+    needs: BUILD
     runs-on: ubuntu-latest
     timeout-minutes: 1
 

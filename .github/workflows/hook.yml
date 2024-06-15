@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  process_data:
+  PROCESS_DATA:
     runs-on: ubuntu-latest
     timeout-minutes: 1
     outputs:
@@ -42,7 +42,7 @@ jobs:
             echo "exists_brand=false" >> $GITHUB_OUTPUT
           fi
 
-  execute_process:
+  EXECUTE_PROCESS:
     needs: process_data
     if: needs.process_data.outputs.exists_brand == 'true'
     runs-on: ubuntu-latest

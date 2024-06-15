@@ -1,91 +1,92 @@
 import Link from 'next/link';
-import CustomHead from '@/components/head';
+import CustomHead from '@/components/CustomHead';
 import { Pagination } from '@/components/Pagination';
-import { client, domainName } from "@/libs/client";
-import { GetStaticPropsContext } from 'next';
-import { IHomeProps } from '@/interface/index';
-import styles from "@/styles/Home.module.css";
+import { fetchNews } from '@/components/fetchNews';
+import { GetStaticPropsContext, GetStaticPropsResult } from 'next';
+import { convertToJSTDate } from '@/components/utils/dateFormatter';
+import { HomeProps } from '@/interfaces/page/index';
+import styles from '@/styles/Home.module.css';
 
 export const config = {
   unstable_runtimeJS: false
 };
 
-interface HomeProps {
-  news: IHomeProps[];
-  totalCount: number;
-  current_page: number;
-}
-
-export default function BlogPageId({ news, totalCount, current_page }: HomeProps) {
+const BlogPageId = ({ news, totalCount, currentPage }: HomeProps) => {
   return (
     <>
-      {news.map(news => (
-        <CustomHead title={news.title} />
+      {news.map(item => (
+        <CustomHead key={item.id} title={item.title} />
       ))}
       <main className={styles.main}>
         <div>
           <ul>
-            {news.map(news => (
-              <li key={news.id}>
-                <Link href={`/news/${news.id}`}>{news.title}</Link>
+            {news.map(item => (
+              <li key={item.id}>
+                <Link href={`/news/${item.id}`}>{item.createdAt}　{item.title}</Link>
               </li>
             ))}
           </ul>
-          <Pagination totalCount={totalCount} current_page={current_page} />
-          <p>Total Item: {totalCount}</p>
-          <p>Current page: {current_page}</p>
+          <Pagination totalCount={totalCount} currentPage={currentPage} />
+          <p>Total Items: {totalCount}</p>
+          <p>Current page: {currentPage}</p>
         </div>
       </main>
     </>
   );
-}
-
-// 動的なページを作成
-export const getStaticPaths = async () => {
-  const repos = await client.getAllContents({
-    endpoint: "news",
-    queries: {
-      filters: `category[equals]${domainName}`,
-      orders: '-createdAt'
-    }
-  });
-  const repos_length: number = repos.length;
-  const range = (start: number, end: number) => [...Array(end - start + 1)].map((_, i) => start + i);
-  const paths = range(1, Math.ceil(repos_length / 3)).map((repo) => `/news/page/${repo}`);
-
-  return { paths, fallback: false };
 };
 
-// データを取得
-export const getStaticProps = async (context: GetStaticPropsContext) => {
-	const id = context.params?.id;
-  // const current_page:number = parseInt(id);
-  const current_page: number = typeof id === 'string' ? parseInt(id) : 1;
-	let data;
-  // console.log(id); // current page
-  // console.log(data);
+export const getStaticPaths = async () => {
+  const data = await fetchNews();
+  const totalCount = data.totalCount;
+  const totalPages = Math.ceil(totalCount / 3);
+  const paths = Array.from({ length: totalPages }, (_, i) => ({
+    params: { id: (i + 1).toString() },
+  }));
 
+  return {
+    paths,
+    fallback: false,
+  };
+};
 
-	if (typeof id === 'string') {
-		const numericId = parseInt(id, 10);
-		if (!isNaN(numericId)) {
-			data = await client.get({
-        endpoint: "news",
-        queries: {
-          filters: `category[equals]${domainName}`,
-          orders: '-createdAt'
-        }
-      });
-		}
-	}
+// export const getStaticProps = async (context: GetStaticPropsContext): Promise<GetStaticPropsResult<HomeProps>> => {
+//   const { id } = context.params!;
+//   const currentPage = parseInt(id as string, 10) || 1;
+//   const dataArray = await fetchNews(currentPage);
+//   console.log(dataArray.contents[0].createdAt);
 
-		  // const data = await client.get({ endpoint: "news", queries: { offset: (id - 1) * 3, limit: 3 } });
+//   return {
+//     props: {
+//       news: dataArray.contents,
+//       totalCount: dataArray.totalCount,
+//       currentPage,
+//     },
+//   };
+// };
+
+export const getStaticProps = async (context: GetStaticPropsContext): Promise<GetStaticPropsResult<HomeProps>> => {
+  const { id } = context.params!;
+  const currentPage = parseInt(id as string, 10) || 1;
+  const dataArray = await fetchNews(currentPage);
+
+  // const transformedContent = {
+  //   id: dataArray.contents[0].id,
+  //   title: dataArray.contents[0].title,
+  //   body: dataArray.contents[0].body,
+  //   createdAt: convertToJSTDate(dataArray.contents[0].createdAt),
+  //   updatedAt: convertToJSTDate(dataArray.contents[0].updatedAt),
+  //   publishedAt: convertToJSTDate(dataArray.contents[0].publishedAt),
+  //   revisedAt: convertToJSTDate(dataArray.contents[0].revisedAt),
+  // };
+  // console.log(transformedContent);
 
   return {
     props: {
-      news: data.contents,
-      totalCount: data.totalCount,
-      current_page: current_page
+      news: dataArray.contents,
+      totalCount: dataArray.totalCount,
+      currentPage,
     },
   };
 };
+
+export default BlogPageId;
