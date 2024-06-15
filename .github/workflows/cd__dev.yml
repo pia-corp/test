@@ -21,7 +21,7 @@ jobs:
       RELEASE_BRANCH_NAME: ${{ github.run_id }}
 
     steps:
-      - run: exit 1
+      - run: echo 'skip'
 
 
   CREATE_TAG:
@@ -30,7 +30,7 @@ jobs:
     timeout-minutes: 2
 
     steps:
-      - run: exit 1
+      - run: echo 'skip'
 
 
   CLEANUP:

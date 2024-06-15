@@ -19,7 +19,7 @@ jobs:
       contents: read
 
     steps:
-      - run: exit 1
+      - run: echo 'skip'
 
 
   OPENING_ANNOUNCE:
@@ -31,4 +31,4 @@ jobs:
       pull-requests: read
 
     steps:
-      - run: exit 1
+      - run: echo 'skip'
