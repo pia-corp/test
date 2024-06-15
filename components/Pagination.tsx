@@ -6,14 +6,14 @@ import styles_pagination from "@/styles/pagination.module.css";
 
 interface Pagination {
   totalCount: number;
-  current_page: number;
+  currentPage: number;
 }
 
-export const Pagination = ({ totalCount, current_page }: Pagination) => {
+export const Pagination = ({ totalCount, currentPage }: Pagination) => {
   const ITEMS_PER_PAGE = 2;
   const total_pages = Math.ceil(totalCount / ITEMS_PER_PAGE);
   // console.log(typeof totalCount) // number
-  // console.log(typeof current_page) // string
+  // console.log(typeof currentPage) // string
 
   const range = (start: number, end: number) =>
         [...Array(end - start + 1)].map((_, i) => start + i)
@@ -26,14 +26,14 @@ export const Pagination = ({ totalCount, current_page }: Pagination) => {
         </li>
       );
     }
-    if (page_number === current_page) {
+    if (page_number === currentPage) {
       return (
         <li className={styles_pagination.active} key={page_number}>
           <Link href={`/news/page/${page_number}`}>{page_number}</Link>
         </li>
       );
     }
-    if (page_number === current_page + 1 || page_number === current_page - 1) {
+    if (page_number === currentPage + 1 || page_number === currentPage - 1) {
       return (
         <li key={page_number}>
           <Link href={`/news/page/${page_number}`}>{page_number}</Link>
@@ -47,14 +47,14 @@ export const Pagination = ({ totalCount, current_page }: Pagination) => {
         </li>
       )
     }
-    if (page_number !== 1 && page_number === current_page - 2) {
+    if (page_number !== 1 && page_number === currentPage - 2) {
       return (
         <li key={page_number}>
           <span>・・・</span>
         </li>
       )
     }
-    if (page_number !== total_pages && page_number === current_page + 2) {
+    if (page_number !== total_pages && page_number === currentPage + 2) {
       return (
         <li key={page_number}>
           <span>・・・</span>

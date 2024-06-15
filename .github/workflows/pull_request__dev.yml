@@ -1,0 +1,33 @@
+name: Pull Request
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+    paths:
+      - '!public/**'
+
+jobs:
+  SETUP:
+    if: github.event.sender.type != 'Bot' && contains(github.head_ref, 'develop')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+
+    steps:
+      - run: exit 1
+
+
+  OPENING_ANNOUNCE:
+    needs: SETUP
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    permissions:
+      pull-requests: read
+
+    steps:
+      - run: exit 1

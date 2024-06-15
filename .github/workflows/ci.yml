@@ -5,6 +5,8 @@ on:
     branches:
       - main
     types: [opened, edited, reopened, synchronize]
+    paths:
+      - 'public/**'
 
 jobs:
   Markup_Linter:
