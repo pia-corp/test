@@ -15,7 +15,6 @@ jobs:
     name: Do dispatch-directory-changes
     runs-on: ubuntu-latest
     steps:
-      # アプリ側リポジトリで `repository_dispatch` を使って通知を受け取るので `peter-evans/repository-dispatch` を使用
       - name: Do repository-dispatch
         uses: peter-evans/repository-dispatch@v3
         with:
