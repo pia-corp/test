@@ -11,7 +11,6 @@ jobs:
   dispatch-directory-changes:
     strategy:
       matrix:
-        # 様々なジョブの設定を定義しておける。ここでは通知を受け取るリポジトリ一覧を定義しておく。
         repo: ['pia-corp/template']
     name: Do dispatch-directory-changes
     # ジョブが実行されるマシンの種類。
