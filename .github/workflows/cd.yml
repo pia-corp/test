@@ -8,7 +8,7 @@ on:
       - closed
 
 jobs:
-  check_changes:
+  CheckChangesPub:
     runs-on: ubuntu-latest
     outputs:
       public_changed: ${{ steps.detect_changes.outputs.public_changed }}
@@ -25,7 +25,7 @@ jobs:
             echo "public_changed=false" >> $GITHUB_ENV
           fi
 
-  BUILD:
+  Build:
     if: github.event.sender.type != 'Bot' && contains(github.head_ref, 'develop') && needs.check_changes.outputs.public_changed == 'true'
     outputs:
       changed_files: ${{ steps.commit_status.outputs.changed_files }}
@@ -117,8 +117,8 @@ jobs:
         if: steps.commit_status.outputs.changed_files == 'false'
         run: echo "No Changes in files related to"
 
-  CREATE_TAG:
-    needs: BUILD
+  CreateTag:
+    needs: Build
     runs-on: ubuntu-latest
     timeout-minutes: 2
 
@@ -174,8 +174,8 @@ jobs:
             -d "{ \"tag_name\": \"${{ env.release_tag__minor || env.release_tag__major }}\", \"name\": \"${{ env.release_tag__minor || env.release_tag__major }}\", \"body\": \"${{ env.release_tag__minor || env.release_tag__major }}}\"}" \
             https://api.github.com/repos/${{ github.repository }}/releases
 
-  CLEANUP:
-    needs: BUILD
+  CacheCleanup:
+    needs: Build
     runs-on: ubuntu-latest
     timeout-minutes: 1
 

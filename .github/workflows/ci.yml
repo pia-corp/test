@@ -7,7 +7,7 @@ on:
     types: [opened, edited, reopened, synchronize]
 
 jobs:
-  check_changes:
+  CheckChangesPub:
     runs-on: ubuntu-latest
     outputs:
       public_changed: ${{ steps.detect_changes.outputs.public_changed }}
@@ -24,13 +24,7 @@ jobs:
             echo "public_changed=false" >> $GITHUB_ENV
           fi
 
-  TEST:
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          echo "${{ needs.check_changes.outputs.public_changed }}"
-
-  Markup_Linter:
+  MarkupLinter:
     name: Markup Linter
     if: github.event.sender.type != 'Bot' && contains(github.head_ref, 'develop') && needs.check_changes.outputs.public_changed == 'true'
     runs-on: ubuntu-latest
@@ -66,7 +60,7 @@ jobs:
       - name: Lint and rewrite markup
         run: npm run linter
 
-  Markup_Linter_no_need:
+  MarkupLinterNoNeed:
     name: Markup Linter(no need)
     if: github.event.sender.type == 'Bot' || contains(github.head_ref, 'release') || needs.check_changes.outputs.public_changed == 'false'
     runs-on: ubuntu-latest
@@ -181,7 +175,7 @@ jobs:
         if: ${{ steps.format_lighthouse_score.outputs.exists_error == '1' }}
         run: exit 1
 
-  Lighthouse_no_need:
+  LighthouseNoNeed:
     name: Lighthouse-CI(no need)
     if: github.event.sender.type == 'Bot' || contains(github.head_ref, 'release') || needs.check_changes.outputs.public_changed == 'false'
     runs-on: ubuntu-latest
