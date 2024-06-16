@@ -12,64 +12,32 @@ jobs:
       - name: Checkout main repository
         uses: actions/checkout@v4.1.6
 
-      - name: Set up Git
+      - name: Get changed files
+        id: get-changed-files
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --name-only HEAD~1 HEAD | grep '.github' > changed_files.txt
 
-      - name: Check for changes and sync files
-        id: changes
+      - name: Create pull requests for each changed file
+        id: create-pull-requests
+        env:
+          GITHUB_REPOSITORY: 'pia-corp'
+          repo_name: 'template'
+          GITHUB_ACTOR: 'github-actions[bot]'
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
-          # Ensure we have previous commit to compare
-          if [ $(git rev-parse --is-shallow-repository) = "true" ]; then
-            git fetch --prune --unshallow
-          fi
+          while IFS= read -r line; do
+            filename="$line"
+            repo_name="repo-name-$line" # ダウンストリームリポジトリ名のプレフィックス
+            git clone https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY/$repo_name.git
+            cd $repo_name
+            git checkout main
+            git pull
+            cp "$filename" .
+            git add .
+            git commit -m "Auto-merge: $filename"
+            git push
+          done < changed_files.txt
 
-          # Check for changes in the specified directory
-          changed_files=$(git diff --name-only HEAD^ HEAD -- .github/)
-
-          # Output the result to be used in the next step
-          echo "changed_files=$changed_files" >> $GITHUB_ENV
-
-          # Sync files to other repositories
-          if [ "$changed_files" != "" ]; then
-            env:
-              REPO_1: https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/pia-corp/template.git
-              # Add more repositories as needed
-              GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-            run: |
-              changed_files=$(git diff --name-only HEAD^ HEAD -- .github/)
-
-              # 各ターゲットリポジトリに対して変更を同期
-              for repo in $REPO_1 $REPO_2; do
-                repo_name=$(basename -s .git $repo_url)  # リポジトリ名を取得
-                target_repo="target_repo_$repo_name"
-
-                git clone --depth=1 $repo_url $target_repo
-                cd $target_repo
-
-                # 新しいブランチを作成
-                branch_name="sync-$(git rev-parse HEAD | cut -c1-7)"
-                git checkout -b $branch_name
-
-                # 変更されたファイルをコピー
-                for file in $changed_files; do
-                  dest_dir=$(dirname "$file")
-                  mkdir -p "$dest_dir"
-                  cp "../$file" "$file"
-                done
-
-                # 変更をコミットしてブランチにプッシュ
-                git add .
-                git commit -m "Sync from main repository"
-                git push origin $branch_name
-
-                # プルリクエストを作成
-                curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" \
-                  -d "{\"title\":\"Sync from main repository\",\"head\":\"$branch_name\",\"base\":\"main\"}" \
-                  "https://api.github.com/repos/$repo_name/pulls"
-
-                cd ..
-                rm -rf target_repo
-              done
-          fi
+      - name: Cleanup
+        run: |
+          rm changed_files.txt
