@@ -5,7 +5,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  DEPENDABOT:
+  Dependabot:
     runs-on: ubuntu-latest
     timeout-minutes: 1
 

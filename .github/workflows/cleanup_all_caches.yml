@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  CLEANUP:
+  CacheCleanup:
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
