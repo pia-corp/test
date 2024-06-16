@@ -41,9 +41,10 @@ jobs:
           # 変更されたファイルのリストを取得
           changed_files=$(git diff --name-only HEAD^ HEAD -- .github/)
 
+
+
           # 各ターゲットリポジトリに対して変更を同期
           for repo in $REPO_1; do
-            repo_url=${!repo_var}  # リポジトリURLを取得
             repo_name=$(basename -s .git $repo_url)  # リポジトリ名を取得
             target_repo="target_repo_$repo_name"
 
