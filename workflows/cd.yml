@@ -1,0 +1,201 @@
+name: CD
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+jobs:
+  CheckChangesPub:
+    runs-on: ubuntu-latest
+    outputs:
+      public_changed: ${{ steps.detect_changes.outputs.public_changed }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.6
+
+      - name: Detect changes in the public folder
+        id: detect_changes
+        run: |
+          if git diff --name-only HEAD^ HEAD | grep -q '^public/'; then
+            echo "public_changed=true" >> $GITHUB_ENV
+          else
+            echo "public_changed=false" >> $GITHUB_ENV
+          fi
+
+  Build:
+    if: github.event.sender.type != 'Bot' && contains(github.head_ref, 'develop') && needs.check_changes.outputs.public_changed == 'true'
+    outputs:
+      changed_files: ${{ steps.commit_status.outputs.changed_files }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      RELEASE_BRANCH_NAME: ${{ github.run_id }}
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4.1.6
+        with:
+          ref: main
+
+      - name: Set Git configuration
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create new branch
+        run: |
+          git checkout -b release/github_${{ env.RELEASE_BRANCH_NAME }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: "${{ vars.GIT_ACTIONS_NODE_VER }}"
+          cache: npm
+
+      - name: Restore npm dependencies
+        id: node_modules_cache_id
+        uses: actions/cache@v4.0.2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-v${{ vars.GIT_ACTIONS_NODE_VER }}-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install npm dependencies (if cache miss)
+        if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+        run: npm ci --no-audit --progress=false --silent
+
+      - name: Lint and rewrite markup
+        run: npm run formatting
+
+      - name: Build Next.js App
+        run: npx next build
+        env:
+          MICROCMS_SERVICE_DOMAIN: ${{ vars.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+
+      - name: mini
+        run: |
+          npx html-minifier --input-dir public --output-dir out --file-ext html -c html-minifier.conf
+          npx html-minifier --input-dir public --output-dir out --file-ext css -c html-minifier.conf
+          npx html-minifier --input-dir public --output-dir out --file-ext js -c html-minifier.conf
+
+      - name: Commit existing changes
+        id: commit_status
+        run: |
+          git add .
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "Commit existing changes for PR"
+            echo "changed_files=true" >> $GITHUB_OUTPUT
+          else
+            echo "No changes to commit"
+            echo "changed_files=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Push new branch
+        if: steps.commit_status.outputs.changed_files == 'true'
+        run: |
+          git push -u origin release/github_${{ env.RELEASE_BRANCH_NAME }}
+
+      - name: Create PR
+        if: steps.commit_status.outputs.changed_files == 'true'
+        run: |
+          gh pr create --fill
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+      - name: Auto-merge PR
+        if: steps.commit_status.outputs.changed_files == 'true'
+        run: gh pr merge --auto --merge
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: skip
+        if: steps.commit_status.outputs.changed_files == 'false'
+        run: echo "No Changes in files related to"
+
+  CreateTag:
+    needs: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4.1.6
+
+      - name: Get previous tag
+        id: pre_tag
+        run: |
+          echo "pre_tag=$(curl -H 'Accept: application/vnd.github.v3+json' -H 'Authorization: token ${{ secrets.GITHUB_TOKEN }}' https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)" >> $GITHUB_ENV
+
+      - name: Generate release tag major version
+        if: needs.build.outputs.changed_files == 'true'
+        run: |
+          today=$(date +'%Y.%m.%d')
+          pre_release_date=$(echo "${{ env.pre_tag }}" | awk -F'-' '{print $1}')
+          pre_release_count=$(echo "${{ env.pre_tag }}" | awk -F'-' '{print $2}')
+          if [[ ! $pre_release_date = $today ]]; then
+            echo "init count"
+            pre_release_count=0
+          fi
+          release_ver=$(awk "BEGIN {printf \"%.1f\", $pre_release_count + 1}")
+          echo "release_tag__major=$today-$release_ver" >> $GITHUB_ENV
+
+      - name: Generate release tag minor vertion
+        if: needs.build.outputs.changed_files == 'false'
+        run: |
+          today=$(date +'%Y.%m.%d')
+          pre_release_date=$(echo "${{ env.pre_tag }}" | awk -F'-' '{print $1}')
+          pre_release_count=$(echo "${{ env.pre_tag }}" | awk -F'-' '{print $2}')
+          if [[ ! $pre_release_date = $today ]]; then
+            echo "init count"
+            pre_release_count=0
+          fi
+          release_ver=$(awk "BEGIN {printf \"%.1f\", $pre_release_count + 0.01}")
+          echo "release_tag__minor=$today-$release_ver" >> $GITHUB_ENV
+
+      - name: Generate release note
+        id: release_note
+        run: |
+          release_note=$(curl -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ github.repository }}/releases/generate-notes \
+            -d "{\"tag_name\":\"${{ env.release_tag__minor || env.release_tag__major }}\", \"previous_tag_name\":\"${{ env.pre_tag }}\"}" | jq .body | sed 's/"//g')
+          echo "release_note=$release_note" >> $GITHUB_ENV
+
+      - name: Create Release
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -d "{ \"tag_name\": \"${{ env.release_tag__minor || env.release_tag__major }}\", \"name\": \"${{ env.release_tag__minor || env.release_tag__major }}\", \"body\": \"${{ env.release_tag__minor || env.release_tag__major }}}\"}" \
+            https://api.github.com/repos/${{ github.repository }}/releases
+
+  CacheCleanup:
+    needs: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+
+    steps:
+      - name: Cleanup
+        run: |
+          gh extension install actions/gh-actions-cache
+
+          echo "Fetching list of cache key"
+          cacheKeysForPR=$(gh actions-cache list -R $REPO -B $BRANCH -L 100 | cut -f 1 )
+
+          ## Setting this to not fail the workflow while deleting cache keys.
+          set +e
+          echo "Deleting caches..."
+          for cacheKey in $cacheKeysForPR
+          do
+              gh actions-cache delete $cacheKey -R $REPO -B $BRANCH --confirm
+          done
+          echo "Done"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          BRANCH: refs/pull/${{ github.event.pull_request.number }}/merge

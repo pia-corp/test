@@ -1,0 +1,66 @@
+name: File upload
+
+on:
+  workflow_dispatch:
+
+jobs:
+  Upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check if the executor is the repository owner
+        if: github.actor != github.repository_owner
+        run: |
+          echo "::error file=アップロード権限がありません。コードオーナーに依頼してください。"
+          exit 1
+
+      - name: Checkout the repository
+        uses: actions/checkout@v4.1.6
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Error handling for invalid protocol
+        if: ${{ vars.PROTOCOL != 'ftp' && vars.PROTOCOL != 'sftp' }}
+        run: |
+          echo "::error file=プロトコルの指定が不正です。"
+          exit 1
+
+      - name: Deploy via SFTP
+        if: ${{ vars.PROTOCOL == 'sftp' }}
+        uses: wangyucode/sftp-upload-action@v2.0.2
+        with:
+          host: ${{ vars.HOST }}
+          port:  ${{ vars.PORT }}
+          username: ${{ vars.USER_NAME }}
+          password: ${{ secrets.PASSWORD }}
+          privateKey: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+          localDir: ${{ vars.LOCAL_PATH }}
+          remoteDir: ${{ vars.REMOTE_PATH }}
+          # removeExtraFilesOnServer: false
+
+      - name: Deploy via FTP
+        if: ${{ vars.PROTOCOL == 'ftp' }}
+        uses: SamKirkland/FTP-Deploy-Action@4.2.0
+        with:
+          server: ${{ vars.HOST }}
+          username: ${{ vars.USER_NAME }}
+          password: ${{ secrets.PASSWORD }}
+          port:  ${{ vars.PORT }}
+          local-dir: ${{ vars.LOCAL_PATH }}
+          server-dir: ${{ vars.REMOTE_PATH }}
+
+  Cron:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+
+    steps:
+      - name: Cancellation Cron job
+        run: |
+          curl -X PATCH \
+          -H 'Content-Type: application/json' \
+          -H 'Authorization: Bearer ${{ secrets.CRON_TOKEN }}' \
+          -d '{"job":{"enabled":false}}' \
+          https://api.cron-job.org/jobs/${{ env.CRON_ID }}
