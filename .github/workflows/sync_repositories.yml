@@ -48,7 +48,9 @@ jobs:
 
             # 変更されたファイルをコピー
             for file in $changed_files; do
-              rsync -av --relative "../$file" "./"
+              dest_dir=$(dirname "$file")
+              mkdir -p "$dest_dir"
+              cp "../$file" "$file"
             done
 
             # 変更をコミットしてプッシュ
