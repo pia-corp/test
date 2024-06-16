@@ -3,45 +3,25 @@ name: Sync Directory Changes to Multiple Repositories
 on:
   push:
     branches:
-      - main
-    paths:
-      - '.github/**'
+      - .github/**  # マージしたいブランチがプッシュされた時に実行する
 
 jobs:
-  Sync:
+  dispatch-directory-changes:
+    strategy:
+      matrix:
+        # 様々なジョブの設定を定義しておける。ここでは通知を受け取るリポジトリ一覧を定義しておく。
+        repo: ['pia-corp/template']
+    name: Do dispatch-directory-changes
+    # ジョブが実行されるマシンの種類。
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout main repository
-        uses: actions/checkout@v4.1.6
-
-      - name: Get changed files
-        id: get-changed-files
-        run: |
-          git fetch --prune
-          git diff --name-only HEAD^..HEAD | grep -E '^((?!\.git|public).)*$' > changed_files.txt
-
-
-      - name: Create pull requests for each changed file
-        id: create-pull-requests
-        env:
-          GITHUB_REPOSITORY: 'pia-corp'
-          repo_name: 'template'
-          GITHUB_ACTOR: 'github-actions[bot]'
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-        run: |
-          while IFS= read -r line; do
-            filename="$line"
-            repo_name="repo-name-$line" # ダウンストリームリポジトリ名のプレフィックス
-            git clone https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY/$repo_name.git
-            cd $repo_name
-            git checkout main
-            git pull
-            cp "$filename" .
-            git add .
-            git commit -m "Auto-merge: $filename"
-            git push
-          done < changed_files.txt
-
-      - name: Cleanup
-        run: |
-          rm changed_files.txt
+      # アプリ側リポジトリで `repository_dispatch` を使って通知を受け取るので `peter-evans/repository-dispatch` を使用
+      - name: Do repository-dispatch
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          # 対象がPrivateなリポジトリのためtokenをセット（内容は後述）
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          # 定義しておいた通知対象リポジトリを指定
+          repository: ${{ matrix.repo }}
+          # イベントタイプを `directory-changes` にしておく
+          event-type: directory-changes
