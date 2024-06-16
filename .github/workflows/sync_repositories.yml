@@ -11,7 +11,10 @@ jobs:
   DispatchDirectoryChanges:
     strategy:
       matrix:
-        repo: ['pia-corp/template']
+        repo: [
+          'pia-corp/template',
+          'pia-corp/faloom',
+          ]
     name: dispatch-directory-changes
     runs-on: ubuntu-latest
     steps:
