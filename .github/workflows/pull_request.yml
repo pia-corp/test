@@ -14,7 +14,7 @@ jobs:
       public_changed: ${{ steps.detect_changes.outputs.public_changed }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.1.6
+        uses: actions/checkout@v4.1.7
 
       - name: Detect changes in the public folder
         id: detect_changes
@@ -34,7 +34,7 @@ jobs:
 
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4.1.6
+        uses: actions/checkout@v4.1.7
 
       - name: Setup Node.js
         uses: actions/setup-node@v4.0.2

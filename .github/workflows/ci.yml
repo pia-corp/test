@@ -13,7 +13,7 @@ jobs:
       public_changed: ${{ steps.detect_changes.outputs.public_changed }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.1.6
+        uses: actions/checkout@v4.1.7
 
       - name: Detect changes in the public folder
         id: detect_changes
@@ -34,7 +34,7 @@ jobs:
 
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4.1.6
+        uses: actions/checkout@v4.1.7
         with:
           ref: ${{ github.head_ref || github.ref_name }}
 
@@ -84,7 +84,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4.1.6
+        uses: actions/checkout@v4.1.7
         with:
           ref: ${{ github.head_ref || github.ref_name }}
 
