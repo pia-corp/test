@@ -19,29 +19,29 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          - name: Sync files to other repositories
-          env:
-            REPO_1: git@github.com:pia-corp/template.git
-            # Add more repositories as needed
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          run: |
-            # 変更されたファイルのリストを取得
-            changed_files=$(git diff --name-only HEAD^ HEAD -- .github/)
+      - name: Sync files to other repositories
+        env:
+          REPO_1: git@github.com:pia-corp/template.git
+          # Add more repositories as needed
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # 変更されたファイルのリストを取得
+          changed_files=$(git diff --name-only HEAD^ HEAD -- .github/)
 
-            # 各ターゲットリポジトリに対して変更を同期
-            for repo in $REPO_1; do
-              git clone --depth=1 $repo target_repo
-              cd target_repo
+          # 各ターゲットリポジトリに対して変更を同期
+          for repo in $REPO_1; do
+            git clone --depth=1 $repo target_repo
+            cd target_repo
 
-              # 変更されたファイルをコピー
-              for file in $changed_files; do
-                rsync -av --relative "../$file" "./"
-              done
-
-              # 変更をコミットしてプッシュ
-              git add .
-              git commit -m "Sync from main repository"
-              git push origin main
-              cd ..
-              rm -rf target_repo
+            # 変更されたファイルをコピー
+            for file in $changed_files; do
+              rsync -av --relative "../$file" "./"
             done
+
+            # 変更をコミットしてプッシュ
+            git add .
+            git commit -m "Sync from main repository"
+            git push origin main
+            cd ..
+            rm -rf target_repo
+          done
