@@ -36,7 +36,7 @@ jobs:
       - name: Sync files to other repositories
         if: env.changed_files != ''
         env:
-          REPO_1: git@github.com:pia-corp/template.git
+          REPO_1: https://${{ secrets.GITHUB_TOKEN }}@github.com/pia-corp/template.git
           # Add more repositories as needed
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
