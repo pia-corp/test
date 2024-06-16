@@ -16,7 +16,7 @@ jobs:
         id: get-changed-files
         run: |
           git fetch --prune
-          git diff --name-only origin/main...HEAD | grep -E '^((?!\.git|public).)*$' > changed_files.txt
+          git diff --name-only HEAD^..HEAD | grep -E '^((?!\.git|public).)*$' > changed_files.txt
 
 
       - name: Create pull requests for each changed file
