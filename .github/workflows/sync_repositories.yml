@@ -13,7 +13,7 @@ jobs:
       matrix:
         repo: [
           'pia-corp/template',
-          'pia-corp/faloom',
+          'pia-corp/faloom.jp',
           ]
     name: dispatch-directory-changes
     runs-on: ubuntu-latest
