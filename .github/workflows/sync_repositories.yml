@@ -19,7 +19,5 @@ jobs:
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          # 定義しておいた通知対象リポジトリを指定
           repository: ${{ matrix.repo }}
-          # イベントタイプを `directory-changes` にしておく
           event-type: directory-changes
