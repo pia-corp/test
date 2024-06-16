@@ -1,11 +1,11 @@
 name: CD
 
 on:
-  push:
+  pull_request:
     branches:
       - main
-    paths:
-      - '.github/**'
+    types:
+      - closed
 
 jobs:
   CheckChangesPub:

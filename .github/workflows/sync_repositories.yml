@@ -3,7 +3,9 @@ name: Sync Directory Changes to Multiple Repositories
 on:
   push:
     branches:
-      - .github/**  # マージしたいブランチがプッシュされた時に実行する
+      - main
+    paths:
+      - '.github/**'
 
 jobs:
   dispatch-directory-changes:
