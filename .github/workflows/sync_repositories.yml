@@ -2,8 +2,6 @@ name: Sync Directory Changes to Multiple Repositories
 
 on:
   push:
-    branches:
-      - main
     paths:
       - '.github/**'
 
@@ -36,9 +34,9 @@ jobs:
       - name: Sync files to other repositories
         if: env.changed_files != ''
         env:
-          REPO_1: https://${{ secrets.GITHUB_TOKEN }}@github.com/pia-corp/template.git
+          REPO_1: https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/pia-corp/template.git
           # Add more repositories as needed
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
           # 変更されたファイルのリストを取得
           changed_files=$(git diff --name-only HEAD^ HEAD -- .github/)
