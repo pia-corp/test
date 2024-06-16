@@ -13,7 +13,6 @@ jobs:
       matrix:
         repo: ['pia-corp/template']
     name: Do dispatch-directory-changes
-    # ジョブが実行されるマシンの種類。
     runs-on: ubuntu-latest
     steps:
       # アプリ側リポジトリで `repository_dispatch` を使って通知を受け取るので `peter-evans/repository-dispatch` を使用
