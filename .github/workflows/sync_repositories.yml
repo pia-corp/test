@@ -35,6 +35,7 @@ jobs:
         if: env.changed_files != ''
         env:
           REPO_1: https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/pia-corp/template.git
+          REPO_1: https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/pia-corp/template2.git
           # Add more repositories as needed
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
@@ -52,7 +53,7 @@ jobs:
             cd $target_repo
 
             # 新しいブランチを作成
-            branch_name="sync-$(date +%s)"
+            branch_name="sync-$(git rev-parse HEAD | cut -c1-7)"
             git checkout -b $branch_name
 
             # 変更されたファイルをコピー
@@ -68,10 +69,14 @@ jobs:
             git push origin $BRANCH_NAME
 
             # プルリクエストを作成
-            curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" \
-              -d "{\"title\":\"Sync from main repository\",\"head\":\"$branch_name\",\"base\":\"main\"}" \
-              "https://api.github.com/repos/$repo_name/pulls"
+            import octokit
 
-            cd ..
-            rm -rf target_repo
+            github = octokit.GitHub(auth=os.environ["GITHUB_TOKEN"])
+            repo = github.repo(repo_name)
+
+            pull_request = repo.create_pull_request(
+              title="Sync from main repository",
+              head=branch_name,
+              base="main",
+            )
           done
