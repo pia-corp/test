@@ -8,14 +8,14 @@ on:
       - '.github/**'
 
 jobs:
-  dispatch-directory-changes:
+  DispatchDirectoryChanges:
     strategy:
       matrix:
         repo: ['pia-corp/template']
-    name: Do dispatch-directory-changes
+    name: dispatch-directory-changes
     runs-on: ubuntu-latest
     steps:
-      - name: Do repository-dispatch
+      - name: repository-dispatch
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
