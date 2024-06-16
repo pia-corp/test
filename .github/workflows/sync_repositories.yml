@@ -19,7 +19,22 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
+      - name: Check for changes
+        id: changes
+        run: |
+          # Ensure we have previous commit to compare
+          if [ $(git rev-parse --is-shallow-repository) = "true" ]; then
+            git fetch --prune --unshallow
+          fi
+
+          # Check for changes in the specified directory
+          changed_files=$(git diff --name-only HEAD^ HEAD -- .github/)
+
+          # Output the result to be used in the next step
+          echo "changed_files=$changed_files" >> $GITHUB_ENV
+
       - name: Sync files to other repositories
+        if: env.changed_files != ''
         env:
           REPO_1: git@github.com:pia-corp/template.git
           # Add more repositories as needed
