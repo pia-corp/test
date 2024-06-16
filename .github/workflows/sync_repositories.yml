@@ -43,8 +43,16 @@ jobs:
 
           # 各ターゲットリポジトリに対して変更を同期
           for repo in $REPO_1; do
-            git clone --depth=1 $repo target_repo
-            cd target_repo
+            repo_url=${!repo_var}  # リポジトリURLを取得
+            repo_name=$(basename -s .git $repo_url)  # リポジトリ名を取得
+            target_repo="target_repo_$repo_name"
+
+            git clone --depth=1 $repo_url $target_repo
+            cd $target_repo
+
+            # 新しいブランチを作成
+            branch_name="sync-$(date +%s)"
+            git checkout -b $branch_name
 
             # 変更されたファイルをコピー
             for file in $changed_files; do
@@ -53,10 +61,16 @@ jobs:
               cp "../$file" "$file"
             done
 
-            # 変更をコミットしてプッシュ
+            # 変更をコミットしてブランチにプッシュ
             git add .
             git commit -m "Sync from main repository"
-            git push origin main
+            git push origin $BRANCH_NAME
+
+            # プルリクエストを作成
+            curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" \
+              -d "{\"title\":\"Sync from main repository\",\"head\":\"$branch_name\",\"base\":\"main\"}" \
+              "https://api.github.com/repos/$repo_name/pulls"
+
             cd ..
             rm -rf target_repo
           done
