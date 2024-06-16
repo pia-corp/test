@@ -17,7 +17,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Check for changes
+      - name: Check for changes and sync files
         id: changes
         run: |
           # Ensure we have previous commit to compare
@@ -31,52 +31,45 @@ jobs:
           # Output the result to be used in the next step
           echo "changed_files=$changed_files" >> $GITHUB_ENV
 
-      - name: Sync files to other repositories
-        if: env.changed_files != ''
-        env:
-          REPO_1: https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/pia-corp/template.git
-          REPO_1: https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/pia-corp/template2.git
-          # Add more repositories as needed
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-        run: |
-          # 変更されたファイルのリストを取得
-          changed_files=$(git diff --name-only HEAD^ HEAD -- .github/)
+          # Sync files to other repositories
+          if [ "$changed_files" != "" ]; then
+            env:
+              REPO_1: https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/pia-corp/template.git
+              # Add more repositories as needed
+              GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+            run: |
+              changed_files=$(git diff --name-only HEAD^ HEAD -- .github/)
 
+              # 各ターゲットリポジトリに対して変更を同期
+              for repo in $REPO_1 $REPO_2; do
+                repo_name=$(basename -s .git $repo_url)  # リポジトリ名を取得
+                target_repo="target_repo_$repo_name"
 
+                git clone --depth=1 $repo_url $target_repo
+                cd $target_repo
 
-          # 各ターゲットリポジトリに対して変更を同期
-          for repo in $REPO_1; do
-            repo_name=$(basename -s .git $repo_url)  # リポジトリ名を取得
-            target_repo="target_repo_$repo_name"
+                # 新しいブランチを作成
+                branch_name="sync-$(git rev-parse HEAD | cut -c1-7)"
+                git checkout -b $branch_name
 
-            git clone --depth=1 $repo_url $target_repo
-            cd $target_repo
+                # 変更されたファイルをコピー
+                for file in $changed_files; do
+                  dest_dir=$(dirname "$file")
+                  mkdir -p "$dest_dir"
+                  cp "../$file" "$file"
+                done
 
-            # 新しいブランチを作成
-            branch_name="sync-$(git rev-parse HEAD | cut -c1-7)"
-            git checkout -b $branch_name
+                # 変更をコミットしてブランチにプッシュ
+                git add .
+                git commit -m "Sync from main repository"
+                git push origin $branch_name
 
-            # 変更されたファイルをコピー
-            for file in $changed_files; do
-              dest_dir=$(dirname "$file")
-              mkdir -p "$dest_dir"
-              cp "../$file" "$file"
-            done
+                # プルリクエストを作成
+                curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" \
+                  -d "{\"title\":\"Sync from main repository\",\"head\":\"$branch_name\",\"base\":\"main\"}" \
+                  "https://api.github.com/repos/$repo_name/pulls"
 
-            # 変更をコミットしてブランチにプッシュ
-            git add .
-            git commit -m "Sync from main repository"
-            git push origin $BRANCH_NAME
-
-            # プルリクエストを作成
-            import octokit
-
-            github = octokit.GitHub(auth=os.environ["GITHUB_TOKEN"])
-            repo = github.repo(repo_name)
-
-            pull_request = repo.create_pull_request(
-              title="Sync from main repository",
-              head=branch_name,
-              base="main",
-            )
-          done
+                cd ..
+                rm -rf target_repo
+              done
+          fi
