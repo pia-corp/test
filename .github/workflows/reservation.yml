@@ -114,7 +114,7 @@ jobs:
           -H 'Content-Type: application/json' \
           -H 'Authorization: Bearer ${{ secrets.CRON_TOKEN }}' \
           -d '{"job":{"enabled":"true","schedule":{"hours":[${{env.hour}}],"mdays":[${{env.day}}],"minutes":[${{env.minutes}}],"months":[${{env.month}}]}}}' \
-          https://api.cron-job.org/jobs/${{ var.CRON_ID }}
+          https://api.cron-job.org/jobs/${{ vars.CRON_ID }}
 
           curl -X GET \
           -H 'Content-Type: application/json' \
