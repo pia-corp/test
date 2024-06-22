@@ -33,7 +33,14 @@ feature/
 ```bash
 npm run lint
 ```
-{{ env.GIT_ACTIONS_NODE_VER }}
+`
+export API_KEY={{ env.GIT_ACTIONS_NODE_VER }}
+`
+
+```
+export API_KEY={{ env.GIT_ACTIONS_NODE_VER }}
+```
+
 ### サイトの健全性
 
 Googleの`Lighthouse`を使い**読み込み時間**、**インタラクティブ性**、**コンテンツの視聴的安全性**について評価します。
