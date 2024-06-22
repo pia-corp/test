@@ -106,14 +106,8 @@ jobs:
             echo "error_message=The following images are too large:${error_list}" >> $GITHUB_ENV
           fi
 
-
-      - name: Debug
-        run: |
-          echo ${{ env.error_message }}
-          echo ${{ env.exists_error }}
-
       - name: Comment on PR with warnings
-        if: ${{ steps.file_size_larger_check.outputs.exists_error == 1 }}
+        if: ${{ env.exists_error == 1 }}
         uses: ./.github/workflows/_comment.yml
         with:
           issue_number: ${{ github.event.pull_request.number }}
