@@ -182,26 +182,25 @@ jobs:
         if: ${{ steps.format_lighthouse_score.outputs.exists_error == '1' }}
         uses: ./.github/workflows/_comment.yml
         with:
-          username: 'mona'
-        secrets:
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          APIKEY: ${{ secrets.SFTP_PASSWORD }}
+          issue_number: context.issue.number
+          owner: context.repo.owner
+          repo: context.repo.repo
+          body: ${{ steps.format_lighthouse_score.outputs.error_message }}
 
-
-      - name: Comment on PR with warnings
-        if: ${{ steps.format_lighthouse_score.outputs.exists_error == '1' }}
-        uses: actions/github-script@v7.0.1
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const error_message = `${{ steps.format_lighthouse_score.outputs.error_message }}`;
-            let param = {
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: error_message
-            };
-            await github.rest.issues.createComment(param);
+      # - name: Comment on PR with warnings
+      #   if: ${{ steps.format_lighthouse_score.outputs.exists_error == '1' }}
+      #   uses: actions/github-script@v7.0.1
+      #   with:
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     script: |
+      #       const error_message = `${{ steps.format_lighthouse_score.outputs.error_message }}`;
+      #       let param = {
+      #         issue_number: context.issue.number,
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         body: error_message
+      #       };
+      #       await github.rest.issues.createComment(param);
 
       - name: Fail workflow if there are errors
         if: ${{ steps.format_lighthouse_score.outputs.exists_error == '1' }}

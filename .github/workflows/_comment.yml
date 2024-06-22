@@ -3,9 +3,13 @@ name: PR Agent for Pull Requests
 on:
   workflow_call:
     secrets:
-      APIKEY:
+      issue_number:
         required: true
-      TOKEN:
+      owner:
+        required: true
+      repo:
+        required: true
+      body:
         required: true
 
 jobs:
