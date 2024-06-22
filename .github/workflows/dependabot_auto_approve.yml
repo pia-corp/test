@@ -1,5 +1,10 @@
 name: Dependabot auto-approve
-on: pull_request_target
+on:
+  pull_request:
+    types:
+      - opened
+    paths:
+      - '.github/**'
 
 permissions:
   pull-requests: write
