@@ -72,6 +72,71 @@ jobs:
       - name: Skip Action
         run: echo "linter skip"
 
+  CheckImageSize:
+    name: Check Image Size
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.6
+
+      - name: Find large images
+        id: file_size_larger_check
+        run: |
+          max_size=500000  # 500KB in bytes
+          exists_error=0
+          error_list=""
+
+          for img in $(find ./public -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.webp" \)); do
+            if [ -f "$img" ]; then
+              size=$(stat -c%s "$img" 2>/dev/null)
+              if [ $? -eq 0 ] && [ $size -gt $max_size ]; then
+                echo "Error: $img is too large (${size} bytes)"
+                exists_error=1
+                error_list="${error_list}\n$img (${size} bytes)"
+              fi
+            fi
+          done
+
+          if [ "$exists_error" = 1 ]; then
+            echo -e "The following images are too large:${error_list}"
+            echo -e "status:${exists_error}"
+            echo "exists_error=$exists_error" >> $GITHUB_ENV
+            echo "error_message=画像のファイルサイズが大きすぎます:${error_list}" >> $GITHUB_ENV
+          fi
+
+      - name: Comment on PR with warnings
+        if: ${{ env.exists_error == 1 }}
+        uses: actions/github-script@v7.0.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const error_message = `${{ env.error_message }}`;
+            let param = {
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: error_message
+            };
+            await github.rest.issues.createComment(param);
+
+      - name: Fail workflow if there are errors
+        if: ${{ env.exists_error == 1 }}
+        run: exit 1
+
+  CheckImageSizeNoNeed:
+    name: Check Image Size(no need)
+    if: github.event.sender.type == 'Bot' || contains(github.head_ref, 'release') || needs.check_changes.outputs.public_changed == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    permissions:
+      contents: read
+
+    steps:
+      - name: Skip Action
+        run: echo "check image skip"
+
   Lighthouse:
     name: Lighthouse-CI
     if: github.event.sender.type != 'Bot' && contains(github.head_ref, 'develop') && needs.check_changes.outputs.public_changed == 'true'
