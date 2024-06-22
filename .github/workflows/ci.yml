@@ -32,6 +32,18 @@ jobs:
         run: |
           echo "public_changed: ${{ steps.detect_changes.outputs.public_changed }}"
 
+  Debug:
+    needs: CheckChangesPub
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+
+    steps:
+      - name: debug
+        run: |
+          echo "public_changed: ${{ needs.CheckChangesPub.outputs.public_changed }}"
+
 
   MarkupLinter:
     name: Markup Linter
