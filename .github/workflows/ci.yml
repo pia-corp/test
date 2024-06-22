@@ -72,10 +72,14 @@ jobs:
         max_size=500000  # 500KB in bytes
         found=false
         for img in $(find . -type f -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.webp"); do
-          size=$(stat -c%s "$img")
-          if [ $size -gt $max_size ]; then
-            echo "Error: $img is too large (${size} bytes)"
-            found=true
+          if [ -f "$img" ]; then
+            size=$(stat -c%s "$img" 2>/dev/null)
+            if [ $? -eq 0 ] && [ $size -gt $max_size ]; then
+              echo "Error: $img is too large (${size} bytes)"
+              found=true
+            fi
+          else
+            echo "Warning: Could not stat file $img"
           fi
         done
         if [ "$found" = true ]; then
