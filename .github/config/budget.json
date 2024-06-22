@@ -1,14 +1,14 @@
 [
   {
-    "path": "/public/*",
+    "path": "/",
     "timings": [
       {
         "metric": "interactive",
-        "budget": 3000
+        "budget": 300
       },
       {
         "metric": "first-meaningful-paint",
-        "budget": 2000
+        "budget": 500
       }
     ],
     "resourceSizes": [
@@ -22,7 +22,7 @@
       },
       {
         "resourceType": "total",
-        "budget": 2000
+        "budget": 1500
       }
     ]
   }

@@ -19,14 +19,16 @@ jobs:
       - name: Detect changes in the public folder
         id: detect_changes
         run: |
-          if git diff --name-only HEAD^ HEAD | grep -q '^public/'; then
+          git fetch origin ${{ github.base_ref }} --depth=1
+          if [ $(git diff --name-only origin/${{ github.base_ref }} HEAD --relative ./public/ | wc -l) -gt 0 ]; then
             echo "public_changed=true" >> $GITHUB_ENV
           else
             echo "public_changed=false" >> $GITHUB_ENV
           fi
 
   Setup:
-    if: github.event.sender.type != 'Bot' && contains(github.head_ref, 'develop') && needs.check_changes.outputs.public_changed == 'true'
+    needs: CheckChangesPub
+    if: github.event.sender.type != 'Bot' && contains(github.head_ref, 'develop') && needs.CheckChangesPub.outputs.public_changed == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
