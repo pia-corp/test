@@ -218,16 +218,6 @@ jobs:
                 }
               }
 
-
-
-              # if (value.passed == false) {
-              #   const passed = value.passed;
-              #   const auditProperty = value.auditProperty;
-              #   view_text2 += `❌${file_name(value.url)}の${auditProperty}が規定の値に達していません。レポートを確認して修正してください。
-              #   `;
-              # }
-
-
               if (!exists_error) {
                 if (value.passed == false) {
                   exists_error = 1;
