@@ -29,6 +29,11 @@ jobs:
             echo "check_changes=false" >> $GITHUB_ENV
           fi
 
+      - name: debug
+        run: |
+          echo needs.check_changes.outputs.public_changed
+
+
   Setup:
     needs: CheckChangesPub
     if: github.event.sender.type != 'Bot' && contains(github.head_ref, 'develop') && needs.check_changes.outputs.public_changed == 'true'
