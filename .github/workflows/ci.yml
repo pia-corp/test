@@ -60,35 +60,6 @@ jobs:
       - name: Lint and rewrite markup
         run: npm run linter
 
-  check_image_size:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4.1.6
-
-    - name: Find large images
-      run: |
-        max_size=500000  # 500KB in bytes
-        found=false
-        error_list=""
-        for img in $(find . -type f -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.webp"); do
-          if [ -f "$img" ]; then
-            size=$(stat -c%s "$img" 2>/dev/null)
-            if [ $? -eq 0 ] && [ $size -gt $max_size ]; then
-              echo "Error: $img is too large (${size} bytes)"
-              found=true
-              error_list="${error_list}\n$img (${size} bytes)"
-            fi
-          else
-            echo "Warning: Could not stat file $img"
-          fi
-        done
-        if [ "$found" = true ]; then
-          echo -e "The following images are too large: ${error_list}"
-          exit 1
-        fi
-
   MarkupLinterNoNeed:
     name: Markup Linter(no need)
     if: github.event.sender.type == 'Bot' || contains(github.head_ref, 'release') || needs.check_changes.outputs.public_changed == 'false'
@@ -100,6 +71,71 @@ jobs:
     steps:
       - name: Skip Action
         run: echo "linter skip"
+
+  CheckImageSize:
+    name: Markup Linter(no need)
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4.1.6
+
+    - name: Find large images
+      id: file_size_larger_check
+      run: |
+        max_size=500000  # 500KB in bytes
+        let found = false
+        let error_list=""
+        let exists_error = 0;
+        for img in $(find ./public -type f -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.webp"); do
+          if [ -f "$img" ]; then
+            size=$(stat -c%s "$img" 2>/dev/null)
+            if [ $? -eq 0 ] && [ $size -gt $max_size ]; then
+              echo "Error: $img is too large (${size} bytes)"
+              exists_error = 1
+              error_list="${error_list}\n$img (${size} bytes)"
+            fi
+          fi
+        done
+
+        if [ "$exists_error" = 1 ]; then
+          let param = {
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: `画像のファイルサイズが大きすぎます。
+              ${error_list}`}
+
+          view_text2 += `❌${file_name(value.url)}の${auditProperty}が閾値に達していません。レポートを確認して修正してください。
+
+          echo -e "The following images are too large: ${error_list}"
+          core.setOutput("exists_error", exists_error);
+          core.setOutput("error_message", view_text2);
+          await github.rest.issues.createComment(param);
+          exit 1
+        fi
+
+    - name: Comment on PR with warnings
+      if: ${{ steps.file_size_larger_check.outputs.exists_error == '1' }}
+      uses: ./.github/workflows/_comment.yml
+      with:
+        issue_number: context.issue.number
+        owner: context.repo.owner
+        repo: context.repo.repo
+        body: ${{ steps.format_lighthouse_score.outputs.error_message }}
+
+  CheckImageSizeNoNeed:
+    name: Check Image Size(no need)
+    if: github.event.sender.type == 'Bot' || contains(github.head_ref, 'release') || needs.check_changes.outputs.public_changed == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    permissions:
+      contents: read
+
+    steps:
+      - name: Skip Action
+        run: echo "check image skip"
 
   Lighthouse:
     name: Lighthouse-CI
