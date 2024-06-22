@@ -18,6 +18,7 @@ jobs:
       - name: Detect changes in the public folder
         id: detect_changes
         run: |
+          git fetch origin
           if git diff --name-only HEAD^ HEAD | grep -q '^public/'; then
             echo "public_changed=true" >> $GITHUB_ENV
           else
