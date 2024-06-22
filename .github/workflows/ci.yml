@@ -60,6 +60,28 @@ jobs:
       - name: Lint and rewrite markup
         run: npm run linter
 
+  check_image_size:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4.0.2
+
+    - name: Find large images
+      run: |
+        max_size=500000  # 500KB in bytes
+        found=false
+        for img in $(find . -type f -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.webp"); do
+          size=$(stat -c%s "$img")
+          if [ $size -gt $max_size ]; then
+            echo "Error: $img is too large (${size} bytes)"
+            found=true
+          fi
+        done
+        if [ "$found" = true ]; then
+          exit 1
+        fi
+
   MarkupLinterNoNeed:
     name: Markup Linter(no need)
     if: github.event.sender.type == 'Bot' || contains(github.head_ref, 'release') || needs.check_changes.outputs.public_changed == 'false'
@@ -155,6 +177,16 @@ jobs:
             core.setOutput("exists_error", exists_error);
             core.setOutput("error_message", view_text2);
             await github.rest.issues.createComment(param);
+
+      - name: Comment on PR with warnings
+        if: ${{ steps.format_lighthouse_score.outputs.exists_error == '1' }}
+        uses: ./.github/workflows/_comment.yml
+        with:
+          username: 'mona'
+        secrets:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APIKEY: ${{ secrets.SFTP_PASSWORD }}
+
 
       - name: Comment on PR with warnings
         if: ${{ steps.format_lighthouse_score.outputs.exists_error == '1' }}

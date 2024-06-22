@@ -1,0 +1,24 @@
+name: PR Agent for Pull Requests
+
+on:
+  workflow_call:
+    secrets:
+      APIKEY:
+        required: true
+      TOKEN:
+        required: true
+
+jobs:
+  Pr_agent_job:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: write
+
+    name: test
+    steps:
+      - name: PR Agent action step
+        run: |
+          echo "test"
