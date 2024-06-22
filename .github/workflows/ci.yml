@@ -10,7 +10,7 @@ jobs:
   CheckChangesPub:
     runs-on: ubuntu-latest
     outputs:
-      public_changed: ${{ env.public_changed }}
+      public_changed: ${{ steps.detect_changes.outputs.check_changes }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4.1.6
@@ -30,7 +30,7 @@ jobs:
 
       - name: debug
         run: |
-          echo "public_changed: ${{ env.public_changed }}"
+          echo "public_changed: ${{ steps.detect_changes.outputs.check_changes }}"
 
   Debug:
     needs: CheckChangesPub
