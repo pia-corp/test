@@ -65,7 +65,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.0.2
+      uses: actions/checkout@v4.1.6
 
     - name: Find large images
       run: |
