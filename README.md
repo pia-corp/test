@@ -33,13 +33,6 @@ feature/
 ```bash
 npm run lint
 ```
-`
-export API_KEY={{ env.GIT_ACTIONS_NODE_VER }}
-`
-
-```
-export API_KEY={{ env.GIT_ACTIONS_NODE_VER }}
-```
 
 ### サイトの健全性
 
