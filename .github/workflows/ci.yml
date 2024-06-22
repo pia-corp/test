@@ -106,6 +106,11 @@ jobs:
             echo "error_message=The following images are too large:${error_list}" >> $GITHUB_ENV
           fi
 
+
+      - name: PR Agent action step
+        run: |
+          echo ${{ steps.file_size_larger_check.outputs.exists_error }}
+
       - name: Comment on PR with warnings
         if: ${{ steps.file_size_larger_check.outputs.exists_error == 1 }}
         uses: ./.github/workflows/_comment.yml
