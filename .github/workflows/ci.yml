@@ -15,9 +15,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4.1.6
 
-      - name: Fetch latest commits
-        run: git fetch origin
-
       - name: Detect changes in the public folder
         id: detect_changes
         run: |
@@ -27,23 +24,6 @@ jobs:
           else
             echo "public_changed=false" >> $GITHUB_ENV
           fi
-
-      - name: debug
-        run: |
-          echo "public_changed: ${{ env.public_changed }}"
-
-  Debug:
-    needs: CheckChangesPub
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      contents: read
-
-    steps:
-      - name: debug
-        run: |
-          echo "public_changed: ${{ needs.CheckChangesPub.outputs.public_changed }}"
-
 
   MarkupLinter:
     name: Markup Linter
