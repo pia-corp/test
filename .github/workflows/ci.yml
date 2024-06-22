@@ -30,7 +30,7 @@ jobs:
 
       - name: debug
         run: |
-          echo needs.check_changes.outputs.public_changed
+          echo ${{ needs.check_changes.outputs.public_changed }}
 
 
   MarkupLinter:
