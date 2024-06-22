@@ -85,34 +85,24 @@ jobs:
       id: file_size_larger_check
       run: |
         max_size=500000  # 500KB in bytes
-        let found = false
-        let error_list=""
-        let exists_error = 0;
+        found = false
+        error_list=""
+        exists_error=0;
         for img in $(find ./public -type f -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.webp"); do
           if [ -f "$img" ]; then
             size=$(stat -c%s "$img" 2>/dev/null)
             if [ $? -eq 0 ] && [ $size -gt $max_size ]; then
               echo "Error: $img is too large (${size} bytes)"
-              exists_error = 1
+              exists_error=1
               error_list="${error_list}\n$img (${size} bytes)"
             fi
           fi
         done
 
-        if [ "$exists_error" = 1 ]; then
-          let param = {
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: `画像のファイルサイズが大きすぎます。
-              ${error_list}`}
-
-          view_text2 += `❌${file_name(value.url)}の${auditProperty}が閾値に達していません。レポートを確認して修正してください。
-
+        if [ $exists_error -eq 1 ]; then
           echo -e "The following images are too large: ${error_list}"
-          core.setOutput("exists_error", exists_error);
-          core.setOutput("error_message", view_text2);
-          await github.rest.issues.createComment(param);
+          echo "::set-output name=exists_error::${exists_error}"
+          echo "::set-output name=error_message::The following images are too large:${error_list}"
         fi
 
     - name: Comment on PR with warnings
@@ -122,7 +112,7 @@ jobs:
         issue_number: context.issue.number
         owner: context.repo.owner
         repo: context.repo.repo
-        body: ${{ steps.format_lighthouse_score.outputs.error_message }}
+        body: ${{ steps.file_size_larger_check.outputs.error_message }}
 
   CheckImageSizeNoNeed:
     name: Check Image Size(no need)
