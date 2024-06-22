@@ -103,7 +103,7 @@ jobs:
             echo -e "The following images are too large:${error_list}"
             echo -e "status:${exists_error}"
             echo "exists_error=$exists_error" >> $GITHUB_ENV
-            echo "error_message=The following images are too large:${error_list}" >> $GITHUB_ENV
+            echo "error_message=画像のファイルサイズが大きすぎます:${error_list}" >> $GITHUB_ENV
           fi
 
       - name: Comment on PR with warnings
@@ -120,6 +120,10 @@ jobs:
               body: error_message
             };
             await github.rest.issues.createComment(param);
+
+      - name: Fail workflow if there are errors
+        if: ${{ env.exists_error == 1 }}
+        run: exit 1
 
   CheckImageSizeNoNeed:
     name: Check Image Size(no need)
