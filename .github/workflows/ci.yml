@@ -113,7 +113,6 @@ jobs:
           core.setOutput("exists_error", exists_error);
           core.setOutput("error_message", view_text2);
           await github.rest.issues.createComment(param);
-          exit 1
         fi
 
     - name: Comment on PR with warnings
