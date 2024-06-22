@@ -78,41 +78,41 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4.1.6
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.6
 
-    - name: Find large images
-      id: file_size_larger_check
-      run: |
-        max_size=500000  # 500KB in bytes
-        exists_error=0
-        error_list=""
+      - name: Find large images
+        id: file_size_larger_check
+        run: |
+          max_size=500000  # 500KB in bytes
+          exists_error=0
+          error_list=""
 
-        for img in $(find ./public -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.webp" \)); do
-          if [ -f "$img" ]; then
-            size=$(stat -c%s "$img" 2>/dev/null)
-            if [ $? -eq 0 ] && [ $size -gt $max_size ]; then
-              echo "Error: $img is too large (${size} bytes)"
-              exists_error=1
-              error_list="${error_list}\n$img (${size} bytes)"
+          for img in $(find ./public -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.webp" \)); do
+            if [ -f "$img" ]; then
+              size=$(stat -c%s "$img" 2>/dev/null)
+              if [ $? -eq 0 ] && [ $size -gt $max_size ]; then
+                echo "Error: $img is too large (${size} bytes)"
+                exists_error=1
+                error_list="${error_list}\n$img (${size} bytes)"
+              fi
             fi
+          done
+
+          if [ "$exists_error" = 1 ]; then
+            echo -e "The following images are too large:${error_list}"
+            echo "exists_error=$exists_error" >> $GITHUB_ENV
+            echo "error_message=The following images are too large:${error_list}" >> $GITHUB_ENV
           fi
-        done
 
-        if [ "$exists_error" = 1 ]; then
-          echo -e "The following images are too large:${error_list}"
-          echo "exists_error=${exists_error}" >> $GITHUB_ENV
-          echo "error_message=The following images are too large:${error_list}" >> $GITHUB_ENV
-        fi
-
-    - name: Comment on PR with warnings
-      if: ${{ steps.file_size_larger_check.outputs.exists_error == 1 }}
-      uses: ./.github/workflows/_comment.yml
-      with:
-        issue_number: ${{ github.event.pull_request.number }}
-        owner: ${{ github.repository_owner }}
-        repo: ${{ github.repository }}
-        body: ${{ env.error_message }}
+      - name: Comment on PR with warnings
+        if: ${{ steps.file_size_larger_check.outputs.exists_error == 1 }}
+        uses: ./.github/workflows/_comment.yml
+        with:
+          issue_number: ${{ github.event.pull_request.number }}
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.repository }}
+          body: ${{ env.error_message }}
 
   CheckImageSizeNoNeed:
     name: Check Image Size(no need)
