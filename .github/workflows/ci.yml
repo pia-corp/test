@@ -28,6 +28,11 @@ jobs:
             echo "check_changes=false" >> $GITHUB_ENV
           fi
 
+      - name: debug
+        run: |
+          echo needs.check_changes.outputs.public_changed
+
+
   MarkupLinter:
     name: Markup Linter
     needs: CheckChangesPub
