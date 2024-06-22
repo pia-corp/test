@@ -191,32 +191,30 @@ jobs:
                 view_text3 += `メインとなるコンテンツが表示されるまでの時間が長すぎます。\n`;
                 view_text3 += `${value.url}\n`;
                 view_text3 += `期待する時間: ${value.expected}\n`;
-                view_text3 += `実際の時間: ${value.actual}\n`;
+                view_text3 += `実際の時間: ${value.actual}\n\n`;
               }
 
               if (value.auditId == "first-meaningful-paint" && !value.passed) {
                 view_text3 += `操作可能までの時間が長すぎます。\n`;
                 view_text3 += `期待する時間: ${value.expected}\n`;
-                view_text3 += `実際の時間: ${value.actual}\n`;
+                view_text3 += `実際の時間: ${value.actual}\n\n`;
               }
 
               if (value.auditId == "resource-summary" && !value.passed) {
-                if (typeof auditProperty !== 'undefined') {
-                  if (auditProperty == "image.size") {
-                    view_text3 += `画像の合計ファイルサイズが大きすぎます。\n`;
-                    view_text3 += `期待するファイルサイズ: ${value.expected}\n`;
-                    view_text3 += `実際のファイルサイズ: ${value.actual}\n`;
-                  }
-                  if (auditProperty == "script.size") {
-                    view_text3 += `JavaScriptの合計ファイルサイズが大きすぎます。\n`;
-                    view_text3 += `期待するファイルサイズ: ${value.expected}\n`;
-                    view_text3 += `実際のファイルサイズ: ${value.actual}\n`;
-                  }
-                  if (auditProperty == "total.size") {
-                    view_text3 += `トータルの合計ファイルサイズが大きすぎます。\n`;
-                    view_text3 += `期待するファイルサイズ: ${value.expected}\n`;
-                    view_text3 += `実際のファイルサイズ: ${value.actual}\n`;
-                  }
+                if (typeof auditProperty !== 'undefined' && auditProperty == "image.size") {
+                  view_text3 += `画像の合計ファイルサイズが大きすぎます。\n`;
+                  view_text3 += `期待するファイルサイズ: ${value.expected}\n`;
+                  view_text3 += `実際のファイルサイズ: ${value.actual}\n\n`;
+                }
+                if (typeof auditProperty !== 'undefined' && auditProperty == "script.size") {
+                  view_text3 += `JavaScriptの合計ファイルサイズが大きすぎます。\n`;
+                  view_text3 += `期待するファイルサイズ: ${value.expected}\n`;
+                  view_text3 += `実際のファイルサイズ: ${value.actual}\n\n`;
+                }
+                if (typeof auditProperty !== 'undefined' && auditProperty == "total.size") {
+                  view_text3 += `トータルの合計ファイルサイズが大きすぎます。\n`;
+                  view_text3 += `期待するファイルサイズ: ${value.expected}\n`;
+                  view_text3 += `実際のファイルサイズ: ${value.actual}\n\n`;
                 }
               }
 
