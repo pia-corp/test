@@ -25,19 +25,6 @@ jobs:
             echo "public_changed=false" >> $GITHUB_ENV
           fi
 
-  Debug:
-    needs: CheckChangesPub
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      contents: read
-
-    steps:
-      - name: debug
-        run: |
-          echo "public_changed: ${{ needs.CheckChangesPub.outputs.public_changed }}"
-
-
   MarkupLinter:
     name: Markup Linter
     needs: CheckChangesPub
@@ -177,6 +164,7 @@ jobs:
         uses: treosh/lighthouse-ci-action@v11
         with:
           configPath: './.github/config/.lighthouserc.json'
+          budgetPath: ./.github/config/budget.json
           temporaryPublicStorage: true
         continue-on-error: true
 
@@ -185,7 +173,6 @@ jobs:
         uses: actions/github-script@v7.0.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          budgetPath: ./.github/config/budget.json
           script: |
             const urls = ${{steps.lighthouse_audit.outputs.links}};
             const assertion = ${{steps.lighthouse_audit.outputs.assertionResults}};
