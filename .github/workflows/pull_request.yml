@@ -31,12 +31,12 @@ jobs:
 
       - name: debug
         run: |
-          echo ${{ needs.check_changes.outputs.public_changed }}
+          echo "public_changed: ${{ steps.detect_changes.outputs.public_changed }}"
 
 
   Setup:
     needs: CheckChangesPub
-    if: github.event.sender.type != 'Bot' && contains(github.head_ref, 'develop') && needs.check_changes.outputs.public_changed == 'true'
+    if: github.event.sender.type != 'Bot' && contains(github.head_ref, 'develop') && needs.CheckChangesPub.outputs.public_changed == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:

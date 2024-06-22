@@ -30,13 +30,13 @@ jobs:
 
       - name: debug
         run: |
-          echo ${{ needs.check_changes.outputs.public_changed }}
+          echo "public_changed: ${{ steps.detect_changes.outputs.public_changed }}"
 
 
   MarkupLinter:
     name: Markup Linter
     needs: CheckChangesPub
-    if: github.event.sender.type != 'Bot' && contains(github.head_ref, 'develop') && needs.check_changes.outputs.public_changed == 'true'
+    if: github.event.sender.type != 'Bot' && contains(github.head_ref, 'develop') && needs.CheckChangesPub.outputs.public_changed == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -73,7 +73,7 @@ jobs:
   MarkupLinterNoNeed:
     needs: CheckChangesPub
     name: Markup Linter(no need)
-    if: github.event.sender.type == 'Bot' || contains(github.head_ref, 'release') || needs.check_changes.outputs.public_changed == 'false'
+    if: github.event.sender.type == 'Bot' || contains(github.head_ref, 'release') || needs.CheckChangesPub.outputs.public_changed == 'false'
     runs-on: ubuntu-latest
     timeout-minutes: 1
     permissions:
@@ -86,7 +86,7 @@ jobs:
   CheckImageSize:
     name: Check Image Size
     needs: CheckChangesPub
-    if: github.event.sender.type != 'Bot' && contains(github.head_ref, 'develop') && needs.check_changes.outputs.public_changed == 'true'
+    if: github.event.sender.type != 'Bot' && contains(github.head_ref, 'develop') && needs.CheckChangesPub.outputs.public_changed == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -140,7 +140,7 @@ jobs:
   CheckImageSizeNoNeed:
     name: Check Image Size(no need)
     needs: CheckChangesPub
-    if: github.event.sender.type == 'Bot' || contains(github.head_ref, 'release') || needs.check_changes.outputs.public_changed == 'false'
+    if: github.event.sender.type == 'Bot' || contains(github.head_ref, 'release') || needs.CheckChangesPub.outputs.public_changed == 'false'
     runs-on: ubuntu-latest
     timeout-minutes: 1
     permissions:
@@ -153,7 +153,7 @@ jobs:
   Lighthouse:
     name: Lighthouse-CI
     needs: CheckChangesPub
-    if: github.event.sender.type != 'Bot' && contains(github.head_ref, 'develop') && needs.check_changes.outputs.public_changed == 'true'
+    if: github.event.sender.type != 'Bot' && contains(github.head_ref, 'develop') && needs.CheckChangesPub.outputs.public_changed == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -258,7 +258,7 @@ jobs:
   LighthouseNoNeed:
     name: Lighthouse-CI(no need)
     needs: CheckChangesPub
-    if: github.event.sender.type == 'Bot' || contains(github.head_ref, 'release') || needs.check_changes.outputs.public_changed == 'false'
+    if: github.event.sender.type == 'Bot' || contains(github.head_ref, 'release') || needs.CheckChangesPub.outputs.public_changed == 'false'
     runs-on: ubuntu-latest
     timeout-minutes: 1
     permissions:
