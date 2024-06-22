@@ -23,6 +23,9 @@ jobs:
 
     name: test
     steps:
+      - name: Check out repository
+        uses: actions/checkout@v4.1.6
+
       - name: PR Agent action step
         run: |
           echo "test"
