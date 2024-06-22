@@ -107,9 +107,10 @@ jobs:
           fi
 
 
-      - name: PR Agent action step
+      - name: Debug
         run: |
-          echo ${{ steps.file_size_larger_check.outputs.exists_error }}
+          echo ${{ env.error_message }}
+          echo ${{ env.exists_error }}
 
       - name: Comment on PR with warnings
         if: ${{ steps.file_size_larger_check.outputs.exists_error == 1 }}
