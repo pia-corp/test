@@ -184,11 +184,46 @@ jobs:
             let exists_error = 0;
 
             let view_text2 = "";
+            let view_text3 = "";
             const assertion_body = (value) => {
+
+              if (value.auditId == "interactive" && !value.passed) {
+                view_text3 += `メインとなるコンテンツが表示されるまでの時間が長すぎます。\n`;
+                view_text3 += `${value.url}\n`;
+                view_text3 += `期待する時間: ${value.expected}\n`;
+                view_text3 += `実際の時間: ${value.actual}\n`;
+              }
+
+              if (value.auditId == "first-meaningful-paint" && !value.passed) {
+                view_text3 += `操作可能までの時間が長すぎます。\n`;
+                view_text3 += `期待する時間: ${value.expected}\n`;
+                view_text3 += `実際の時間: ${value.actual}\n`;
+              }
+
+              if (value.auditId == "resource-summary" && !value.passed) {
+                if (auditProperty == "image.size") {
+                  view_text3 += `画像の合計ファイルサイズが大きすぎます。\n`;
+                  view_text3 += `期待するファイルサイズ: ${value.expected}\n`;
+                  view_text3 += `実際のファイルサイズ: ${value.actual}\n`;
+                }
+                if (auditProperty == "script.size") {
+                  view_text3 += `JavaScriptの合計ファイルサイズが大きすぎます。\n`;
+                  view_text3 += `期待するファイルサイズ: ${value.expected}\n`;
+                  view_text3 += `実際のファイルサイズ: ${value.actual}\n`;
+                }
+                if (auditProperty == "total.size") {
+                  view_text3 += `トータルの合計ファイルサイズが大きすぎます。\n`;
+                  view_text3 += `期待するファイルサイズ: ${value.expected}\n`;
+                  view_text3 += `実際のファイルサイズ: ${value.actual}\n`;
+                }
+              }
+
+
+
               if (value.passed == false) {
                 const passed = value.passed;
                 const auditProperty = value.auditProperty;
-                view_text2 += `❌${file_name(value.url)}の${auditProperty}が閾値に達していません。レポートを確認して修正してください。
+                view_text2 += `❌${file_name(value.url)}の${auditProperty}が規定の値に達していません。レポートを確認して修正してください。
                 `;
               }
               if (!exists_error) {
@@ -220,6 +255,7 @@ jobs:
             | File name | Performance | Accessibility | Best practices | SEO |
             | --- | --- | --- | --- | --- |
             ${view_text}
+            ${view_text3}
 
             ※表示されている結果は3回の結果から得られた中央値です。
             ※パフォーマンス結果はブレがありますリンク先の診断結果を見て判断してください。`};
