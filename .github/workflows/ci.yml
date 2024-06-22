@@ -73,7 +73,7 @@ jobs:
         run: echo "linter skip"
 
   CheckImageSize:
-    name: Markup Linter(no need)
+    name: Check Image Size
 
     runs-on: ubuntu-latest
 
@@ -85,7 +85,7 @@ jobs:
       id: file_size_larger_check
       run: |
         max_size=500000  # 500KB in bytes
-        found = false
+        found=false
         error_list=""
         exists_error=0;
         for img in $(find ./public -type f -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.webp"); do
