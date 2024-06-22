@@ -101,6 +101,7 @@ jobs:
 
           if [ "$exists_error" = 1 ]; then
             echo -e "The following images are too large:${error_list}"
+            echo -e "status:${exists_error}"
             echo "exists_error=$exists_error" >> $GITHUB_ENV
             echo "error_message=The following images are too large:${error_list}" >> $GITHUB_ENV
           fi
