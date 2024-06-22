@@ -201,20 +201,22 @@ jobs:
               }
 
               if (value.auditId == "resource-summary" && !value.passed) {
-                if (auditProperty == "image.size") {
-                  view_text3 += `画像の合計ファイルサイズが大きすぎます。\n`;
-                  view_text3 += `期待するファイルサイズ: ${value.expected}\n`;
-                  view_text3 += `実際のファイルサイズ: ${value.actual}\n`;
-                }
-                if (auditProperty == "script.size") {
-                  view_text3 += `JavaScriptの合計ファイルサイズが大きすぎます。\n`;
-                  view_text3 += `期待するファイルサイズ: ${value.expected}\n`;
-                  view_text3 += `実際のファイルサイズ: ${value.actual}\n`;
-                }
-                if (auditProperty == "total.size") {
-                  view_text3 += `トータルの合計ファイルサイズが大きすぎます。\n`;
-                  view_text3 += `期待するファイルサイズ: ${value.expected}\n`;
-                  view_text3 += `実際のファイルサイズ: ${value.actual}\n`;
+                if (typeof auditProperty !== 'undefined') {
+                  if (auditProperty == "image.size") {
+                    view_text3 += `画像の合計ファイルサイズが大きすぎます。\n`;
+                    view_text3 += `期待するファイルサイズ: ${value.expected}\n`;
+                    view_text3 += `実際のファイルサイズ: ${value.actual}\n`;
+                  }
+                  if (auditProperty == "script.size") {
+                    view_text3 += `JavaScriptの合計ファイルサイズが大きすぎます。\n`;
+                    view_text3 += `期待するファイルサイズ: ${value.expected}\n`;
+                    view_text3 += `実際のファイルサイズ: ${value.actual}\n`;
+                  }
+                  if (auditProperty == "total.size") {
+                    view_text3 += `トータルの合計ファイルサイズが大きすぎます。\n`;
+                    view_text3 += `期待するファイルサイズ: ${value.expected}\n`;
+                    view_text3 += `実際のファイルサイズ: ${value.actual}\n`;
+                  }
                 }
               }
 
