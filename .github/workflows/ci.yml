@@ -12,8 +12,8 @@ jobs:
     outputs:
       public_changed: ${{ env.public_changed }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4.1.6
+      # - name: Checkout repository
+      #   uses: actions/checkout@v4.1.6
 
       - name: Detect changes in the public folder
         id: detect_changes
