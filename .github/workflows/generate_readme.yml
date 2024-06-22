@@ -27,7 +27,7 @@ jobs:
               process.env[key] = value;
             }
 
-            const readme = fs.readFileSync('README.md.template', 'utf8');
+            const readme = fs.readFileSync('.github/README.md.template', 'utf8');
             const replacedReadme = readme.replace(/\{\{([^\}]+)\}\}/g, (match, variable) => {
               return process.env[variable] || '';
             });
