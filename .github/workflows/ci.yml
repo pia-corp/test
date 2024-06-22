@@ -101,8 +101,8 @@ jobs:
 
         if [ $exists_error -eq 1 ]; then
           echo -e "The following images are too large: ${error_list}"
-          echo "::set-output name=exists_error::${exists_error}"
-          echo "::set-output name=error_message::The following images are too large:${error_list}"
+          echo "exists_error=${exists_error}" >> $GITHUB_ENV
+          echo "error_message=The following images are too large:${error_list}" >> $GITHUB_ENV
         fi
 
     - name: Comment on PR with warnings
