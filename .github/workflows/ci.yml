@@ -174,8 +174,8 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const urls = ${{steps.lighthouse_audit.outputs.links}};
-            const assertion = ${{steps.lighthouse_audit.outputs.assertionResults}};
+            const urls = ${{ steps.lighthouse_audit.outputs.links }};
+            const assertion = ${{ steps.lighthouse_audit.outputs.assertionResults }};
             const obj = ${{ steps.lighthouse_audit.outputs.manifest }};
             const formatResult = (res) => Math.round((res * 100));
             const file_name = (url) => { return url.replace(/^http:\/\/localhost:\d+\//, ""); };
@@ -186,7 +186,6 @@ jobs:
             let view_text2 = "";
             let view_text3 = "";
             const assertion_body = (value) => {
-
               if (value.auditId == "interactive" && !value.passed) {
                 view_text3 += `メインとなるコンテンツが表示されるまでの時間が長すぎます。\n`;
                 view_text3 += `${value.url}\n`;
@@ -223,8 +222,8 @@ jobs:
                   exists_error = 1;
                 }
               }
-            ;}
-            Object.keys(assertion).forEach(key => assertion[key] = assertion_body(assertion[key]));
+            };
+            Object.keys(assertion).forEach(key => assertion_body(assertion[key]));
 
             let view_text = "";
             const table_body = (urlArray) => {
@@ -236,10 +235,10 @@ jobs:
                 view_text += `| [${file_name(urlArray.url)}](${getValueByKey(urlArray.url)}) | ${score(performance)} ${performance} | ${score(accessibility)} ${accessibility} | ${score(practices)} ${practices} | ${score(seo)} ${seo} |\n`;
               }
             };
-            Object.keys(obj).forEach(key => obj[key] = table_body(obj[key]));
+            Object.keys(obj).forEach(key => table_body(obj[key]));
 
             let param = {
-              issue_number: context.issue.number,
+              issue_number: context.payload.pull_request.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: `⚡️ [Lighthouse Mobile Report]:
@@ -255,6 +254,7 @@ jobs:
             core.setOutput("exists_error", exists_error);
             core.setOutput("error_message", view_text2);
             await github.rest.issues.createComment(param);
+
 
       - name: Comment on PR with warnings
         if: ${{ steps.format_lighthouse_score.outputs.exists_error == '1' }}
