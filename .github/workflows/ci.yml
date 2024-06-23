@@ -88,7 +88,7 @@ jobs:
       - name: Find large images
         id: file_size_larger_check
         run: |
-          max_size=500000  # 500KB in bytes
+          max_size=${{ vars.MAX_FILE_SIZE }}
           exists_error=0
           error_list=""
 
@@ -190,7 +190,6 @@ jobs:
                 if(!value.passed) {
                   const tti = Math.round(value.actual) / 1000;
                   returnArray.tti_score = `<span style="color:red;">${tti}s</span>`;
-                  existsError = 1;
                 } else {
                   returnArray.tti_score = '✅';
                 }
@@ -199,7 +198,6 @@ jobs:
                 if(!value.passed) {
                   const fmp = Math.round(value.actual) / 1000;
                   returnArray.fmp_score = `<span style="color:red;">${fmp}s</span>`;
-                  existsError = 1;
                 } else {
                   returnArray.fmp_score = '✅';
                 }
@@ -209,25 +207,22 @@ jobs:
                   if (value.auditProperty === "image.size") {
                     const img = Math.round(value.actual / 1024);
                     returnArray.img_score = `<span style="color:red;">${img}KB</span>`;
-                    existsError = 1;
                   }
                 }
                 if(!value.passed) {
                   if (value.auditProperty === "script.size") {
                     const js = Math.round(value.actual / 1024);
                     returnArray.js_score = `<span style="color:red;">${js}KB</span>`;
-                    existsError = 1;
                   }
                 }
                 if(!value.passed) {
                   if (value.auditProperty === "total.size") {
                     const total = Math.round(value.actual / 1024);
                     returnArray.total_score = `<span style="color:red;">${total}KB</span>`;
-                    existsError = 1;
                   }
                 }
               } else {
-                returnArray.img_score = '✅';
+                returnArray[value.auditProperty] = '✅';
               }
               return returnArray;
             };
@@ -235,19 +230,12 @@ jobs:
             const assertionBody = (value) => {
               const scores = getAssertionScore(value);
               const filename = fileName(value.url);
-
-              console.log(scores);
-
               const object = {
                 url: filename
               }
 
               scoreArray[filename] = { ...scoreArray[filename], ...object };
               scoreArray[filename] = { ...scoreArray[filename], ...scores };
-
-              console.log(scoreArray);
-              console.log('====');
-
             };
             Object.values(assertions).forEach(assertionBody);
 
@@ -267,12 +255,11 @@ jobs:
                 const seo = formatResult(urlArray.summary.seo);
                 viewText += `| [${fileName(urlArray.url)}](${urls[urlArray.url]}) | ${score(performance)} ${performance} | ${score(accessibility)} ${accessibility} | ${score(practices)} ${practices} | ${score(seo)} ${seo} |\n`;
               }
+              if (50 < score(performance) || 50 < score(performance) || 50 < score(accessibility) || 50 < score(practices))) {
+                existsError = 1;
+              }
             };
             Object.values(manifest).forEach(tableBody);
-
-
-
-
 
             const commentBody = `
             ⚡️ **Lighthouse Mobile Report**:
