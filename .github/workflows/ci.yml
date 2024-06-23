@@ -224,7 +224,7 @@ jobs:
             const assertionBody = (value) => {
               const scores = getAssertionScore(value);
               const filename = fileName(value.url);
-              if (scoreArray[filename] == "undefined") {
+              if (typeof scoreArray[filename] == "undefined") {
                 scoreArray[filename] = {
                   "tti_score" = "✅";
                   "fmp_score" = "✅";
