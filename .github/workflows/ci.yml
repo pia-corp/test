@@ -194,30 +194,30 @@ jobs:
 
               if (value.auditId == "interactive" && !value.passed) {
                 tti = Math.round(value.actual) / 1000;
-                tti_score = `<span style="color:red";>${tti}</span>`;
+                tti_score = `&lt;span style="color:red";&gt;${tti}s&lt;/span&gt;`;
               }
 
               if (value.auditId == "first-meaningful-paint" && !value.passed) {
                 fmp = Math.round(value.actual) / 1000;
-                fmp_score = `<span style="color:red";>${fmp}</span>`;
+                fmp_score = `&lt;span style="color:red";&gt;${fmp}s&lt;/span&gt;`;
               }
 
               if (value.auditId == "resource-summary" && !value.passed) {
                 if (typeof value.auditProperty !== 'undefined' && value.auditProperty == "image.size") {
                   img = Math.round(value.actual/1024);
-                  img_score = `<span style="color:red";>${img}</span>`;
+                  img_score = `&lt;span style="color:red";&gt;${img}KB&lt;/span&gt;`;
                 }
                 if (typeof value.auditProperty !== 'undefined' && value.auditProperty == "script.size") {
                   js = Math.round(value.actual/1024);
-                  js_score = `<span style="color:red";>${js}</span>`;
+                  js_score = `&lt;span style="color:red";&gt;${js}KB&lt;/span&gt;`;
                 }
                 if (typeof value.auditProperty !== 'undefined' && value.auditProperty == "total.size") {
                   total = Math.round(value.actual/1024);
-                  total_score = `<span style="color:red";>${total}</span>`;
+                  total_score = `&lt;span style="color:red";&gt;${total}KB&lt;/span&gt;`;
                 }
               }
 
-              view_assertion += `| ${file_name(value.url)} | ${tti_score}s | ${fmp_score}s | ${img_score}KB | ${js_score}KB | ${total_score}KB |\n`;
+              view_assertion += `| ${file_name(value.url)} | ${tti_score} | ${fmp_score} | ${img_score} | ${js_score} | ${total_score} |\n`;
 
               if (!exists_error) {
                 if (value.passed == false) {
