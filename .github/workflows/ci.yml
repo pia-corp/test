@@ -245,10 +245,12 @@ jobs:
               console.log('====');
 
               const scores = getAssertionScore(value);
-              scoreArray[fileName(value.url)] = {
-                url: fileName(value.url)
+              const filename = fileName(value.url);
+              console.log(scoreArray);
+              scoreArray[filename] = {
+                url: filename
               }
-              scoreArray[fileName(value.url)] = { ...scoreArray[fileName(value.url)], ...scores };
+              scoreArray[filename] = { ...scoreArray[filename], ...scores };
               console.log(scoreArray);
               console.log('====');
 
