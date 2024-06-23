@@ -16,7 +16,7 @@ jobs:
           echo "VERSION=1.0.0" >> config.env
 
       - name: Generate README
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
