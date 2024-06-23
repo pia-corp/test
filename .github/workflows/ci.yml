@@ -263,7 +263,7 @@ jobs:
             ※パフォーマンス結果はブレがありますリンク先の診断結果を見て判断してください。`};
 
             core.setOutput("exists_error", exists_error);
-            core.setOutput("error_message", view_text2);
+            core.setOutput("error_message", 'view_text2');
             await github.rest.issues.createComment(param);
 
 
