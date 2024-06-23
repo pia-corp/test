@@ -188,54 +188,55 @@ jobs:
 
 
             const getAssertionScore = (value) => {
+              let returnArray = {};
               if (value.auditId === "interactive") {
                 if(!value.passed) {
                   const tti = Math.round(value.actual) / 1000;
-                  scoreArray.tti_score = `<span style="color:red;">${tti}s</span>`;
+                  returnArray.tti_score = `<span style="color:red;">${tti}s</span>`;
                   existsError = 1;
                 } else {
-                  scoreArray.tti_score = '✅';
+                  returnArray.tti_score = '✅';
                 }
               }
               if (value.auditId === "first-meaningful-paint") {
                 if(!value.passed) {
                   const fmp = Math.round(value.actual) / 1000;
-                  scoreArray.fmp_score = `<span style="color:red;">${fmp}s</span>`;
+                  returnArray.fmp_score = `<span style="color:red;">${fmp}s</span>`;
                   existsError = 1;
                 } else {
-                  scoreArray.fmp_score = '✅';
+                  returnArray.fmp_score = '✅';
                 }
               }
               if (value.auditId === "resource-summary") {
                 if(!value.passed) {
                   if (value.auditProperty === "image.size") {
                     const img = Math.round(value.actual / 1024);
-                    scoreArray.img_score = `<span style="color:red;">${img}KB</span>`;
+                    returnArray.img_score = `<span style="color:red;">${img}KB</span>`;
                     existsError = 1;
                   }
                 } else {
-                  scoreArray.img_score = '✅';
+                  returnArray.img_score = '✅';
                 }
                 if(!value.passed) {
                   if (value.auditProperty === "script.size") {
                     const js = Math.round(value.actual / 1024);
-                    scoreArray.js_score = `<span style="color:red;">${js}KB</span>`;
+                    returnArray.js_score = `<span style="color:red;">${js}KB</span>`;
                     existsError = 1;
                   }
                 } else {
-                  scoreArray.js_score = '✅';
+                  returnArray.js_score = '✅';
                 }
                 if(!value.passed) {
                   if (value.auditProperty === "total.size") {
                     const total = Math.round(value.actual / 1024);
-                    scoreArray.total_score = `<span style="color:red;">${total}KB</span>`;
+                    returnArray.total_score = `<span style="color:red;">${total}KB</span>`;
                     existsError = 1;
                   }
                 } else {
-                  scoreArray.total_score = '✅';
+                  returnArray.total_score = '✅';
                 }
               }
-              return scoreArray;
+              return returnArray;
             };
 
             let scoreArray = {};
@@ -245,7 +246,8 @@ jobs:
 
 
               const scores = getAssertionScore(value);
-
+              console.log(scores);
+              console.log('====');
 
 
               scoreArray[fileName(value.url)] = {
