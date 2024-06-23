@@ -56,7 +56,6 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.cache-name }}-v${{ vars.GIT_ACTIONS_NODE_VER }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install npm dependencies (if cache miss)
-        if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
         run: npm ci --no-audit --progress=false --silent
 
       - name: Lint and rewrite markup
@@ -88,7 +87,7 @@ jobs:
       - name: Find large images
         id: file_size_larger_check
         run: |
-          max_size=500000  # 500KB in bytes
+          max_size=${{ vars.MAX_FILE_SIZE }}
           exists_error=0
           error_list=""
 
@@ -96,16 +95,13 @@ jobs:
             if [ -f "$img" ]; then
               size=$(stat -c%s "$img" 2>/dev/null)
               if [ $? -eq 0 ] && [ $size -gt $max_size ]; then
-                echo "Error: $img is too large (${size} bytes)"
                 exists_error=1
-                error_list="${error_list}\n$img (${size} bytes)"
+                error_list="${error_list}\n❌ $img (${size} bytes)"
               fi
             fi
           done
 
           if [ "$exists_error" = 1 ]; then
-            echo -e "The following images are too large:${error_list}"
-            echo -e "status:${exists_error}"
             echo "exists_error=$exists_error" >> $GITHUB_ENV
             echo "error_message=画像のファイルサイズが大きすぎます:${error_list}" >> $GITHUB_ENV
           fi
@@ -174,83 +170,76 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const urls = ${{steps.lighthouse_audit.outputs.links}};
-            const assertions =${{steps.lighthouse_audit.outputs.assertionResults}};
+            const urls = ${{ steps.lighthouse_audit.outputs.links }};
+            const assertions =${{ steps.lighthouse_audit.outputs.assertionResults }};
             const manifest = ${{ steps.lighthouse_audit.outputs.manifest }};
             const formatResult = (res) => Math.round(res * 100);
             const fileName = (url) => url.replace(/^http:\/\/localhost:\d+\//, "");
             const score = (res) => res >= 90 ? '🟢' : res >= 50 ? '🟠' : '🔴';
             let existsError = 0;
             let viewAssertion = "";
-
-
-
-
+            let scoreArray = {};
 
             const getAssertionScore = (value) => {
+              let returnArray = {};
               if (value.auditId === "interactive") {
-                if(!value.passed) {
+                if (!value.passed) {
                   const tti = Math.round(value.actual) / 1000;
-                  scoreArray.tti_score = `<span style="color:red;">${tti}s</span>`;
-                  existsError = 1;
-                } else {
-                  scoreArray.tti_score = '✅';
+                  returnArray.tti_score = `❌${tti}s`;
                 }
               }
               if (value.auditId === "first-meaningful-paint") {
-                if(!value.passed) {
+                if (!value.passed) {
                   const fmp = Math.round(value.actual) / 1000;
-                  scoreArray.fmp_score = `<span style="color:red;">${fmp}s</span>`;
-                  existsError = 1;
-                } else {
-                  scoreArray.fmp_score = '✅';
+                  returnArray.fmp_score = `❌${fmp}s`;
                 }
               }
               if (value.auditId === "resource-summary") {
-                if(!value.passed) {
+                if (!value.passed) {
                   if (value.auditProperty === "image.size") {
                     const img = Math.round(value.actual / 1024);
-                    scoreArray.img_score = `<span style="color:red;">${img}KB</span>`;
-                    existsError = 1;
+                    returnArray.img_score = `❌${img}KB`;
                   }
-                } else {
-                  scoreArray.fmp_score = '✅';
                 }
-                if(!value.passed) {
+                if (!value.passed) {
                   if (value.auditProperty === "script.size") {
                     const js = Math.round(value.actual / 1024);
-                    scoreArray.js_score = `<span style="color:red;">${js}KB</span>`;
-                    existsError = 1;
+                    returnArray.js_score = `❌${js}KB`;
                   }
-                } else {
-                  scoreArray.fmp_score = '✅';
                 }
-                if(!value.passed) {
+                if (!value.passed) {
                   if (value.auditProperty === "total.size") {
                     const total = Math.round(value.actual / 1024);
-                    scoreArray.total_score = `<span style="color:red;">${total}KB</span>`;
-                    existsError = 1;
+                    returnArray.total_score = `❌${total}KB`;
                   }
-                } else {
-                  scoreArray.fmp_score = '✅';
                 }
               }
-              return scoreArray;
+              return returnArray;
             };
 
-            let scoreArray = {};
             const assertionBody = (value) => {
               const scores = getAssertionScore(value);
-              scoreArray[fileName(value.url)] = {
-                url: fileName(value.url),
-                ...scores
+              const filename = fileName(value.url);
+              if (typeof scoreArray[filename] === "undefined") {
+                scoreArray[filename] = {
+                  "tti_score": "✅",
+                  "fmp_score": "✅",
+                  "img_score": "✅",
+                  "js_score": "✅",
+                  "total_score": "✅",
+                };
+              }
+              const object = {
+                url: filename
               };
+
+              scoreArray[filename] = { ...scoreArray[filename], ...object };
+              scoreArray[filename] = { ...scoreArray[filename], ...scores };
             };
             Object.values(assertions).forEach(assertionBody);
 
             const assertionView = (value) => {
-              console.log(value);
-              if (value.url != "undefined") {
+              if (typeof value.url != "undefined") {
                 viewAssertion += `| ${value.url} | ${value.tti_score} | ${value.fmp_score} | ${value.img_score} | ${value.js_score} | ${value.total_score} |\n`;
               }
             };
@@ -264,13 +253,12 @@ jobs:
                 const performance = formatResult(urlArray.summary.performance);
                 const seo = formatResult(urlArray.summary.seo);
                 viewText += `| [${fileName(urlArray.url)}](${urls[urlArray.url]}) | ${score(performance)} ${performance} | ${score(accessibility)} ${accessibility} | ${score(practices)} ${practices} | ${score(seo)} ${seo} |\n`;
+                if ( 50 < score(performance) || 50 < score(performance) || 50 < score(accessibility) || 50 < score(practices) ) {
+                  existsError = 1;
+                }
               }
             };
             Object.values(manifest).forEach(tableBody);
-
-
-
-
 
             const commentBody = `
             ⚡️ **Lighthouse Mobile Report**:
@@ -283,8 +271,8 @@ jobs:
             | --- | --- | --- | --- | --- | --- |
             ${viewAssertion}
 
-            TTI: メインとなるコンテンツが表示されるまでの時間。
-            FMP: 操作可能までの時間。
+            TTI: ページが完全にインタラクティブになるまでにかかる時間。
+            FMP: 主要コンテンツが表示されるまでの時間。
             IMG: ページで読み込まれる画像のファイル容量。
             JS: ページで読み込まれるjavascriptのファイル容量。
             TOTAL: ページで読み込まれるファイル容量の合計。
