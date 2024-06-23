@@ -188,13 +188,6 @@ jobs:
 
 
             const getAssertionScore = (value) => {
-              let scoreArray = {
-                tti_score: '✅',
-                fmp_score: '✅',
-                img_score: '✅',
-                js_score: '✅',
-                total_score: '✅'
-              };
               if (value.auditId === "interactive") {
                 if(!value.passed) {
                   const tti = Math.round(value.actual) / 1000;
@@ -240,17 +233,32 @@ jobs:
               return scoreArray;
             };
 
+            # let scoreArray = {};
+            # const assertionBody = (value) => {
+            #   const scores = Object.keys(assertion).forEach(key => getAssertionScore(value));
+            #   scoreArray = {
+            #     ${fileName(value.url)}: {
+            #       url: ${fileName(value.url)}
+            #     }
+            #   }
+            #   scoreArray = {
+            #     ${fileName(value.url)}: scores
+            #   }
+
+            #   if (!existsError && !value.passed) {
+            #     existsError = 1;
+            #   }
+            # };
+            # Object.values(assertions).forEach(assertionBody);
+
+
             let scoreArray = {};
             const assertionBody = (value) => {
-              const scores = Object.keys(assertion).forEach(key => getAssertionScore(value));
-              scoreArray = {
-                ${fileName(value.url)}: {
-                  url: ${fileName(value.url)}
-                }
-              }
-              scoreArray = {
-                ${fileName(value.url)}: scores
-              }
+              const scores = getAssertionScore(value);
+              scoreArray[fileName(value.url)] = {
+                url: fileName(value.url),
+                ...scores
+              };
 
               if (!existsError && !value.passed) {
                 existsError = 1;
@@ -258,10 +266,10 @@ jobs:
             };
             Object.values(assertions).forEach(assertionBody);
 
-            const assertion_view = (value) => {
+            const assertionView = (value) => {
               viewAssertion += `| ${value.url} | ${value.tti_score} | ${value.fmp_score} | ${value.img_score} | ${value.js_score} | ${value.total_score} |\n`;
-            }
-            Object.values(scoreArray).forEach(assertion_view);
+            };
+            Object.values(scoreArray).forEach(assertionView);
 
             let viewText = "";
             const tableBody = (urlArray) => {
