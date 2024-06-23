@@ -183,6 +183,10 @@ jobs:
             let existsError = 0;
             let viewAssertion = "";
 
+
+
+
+
             const getAssertionScore = (value) => {
               let scoreArray = {
                 tti_score: '✅',
@@ -191,40 +195,73 @@ jobs:
                 js_score: '✅',
                 total_score: '✅'
               };
-              if (value.auditId === "interactive" && !value.passed) {
-                const tti = Math.round(value.actual) / 1000;
-                scoreArray.tti_score = `<span style="color:red;">${tti}s</span>`;
-              }
-              if (value.auditId === "first-meaningful-paint" && !value.passed) {
-                const fmp = Math.round(value.actual) / 1000;
-                scoreArray.fmp_score = `<span style="color:red;">${fmp}s</span>`;
-              }
-              if (value.auditId === "resource-summary" && !value.passed) {
-                if (value.auditProperty === "image.size") {
-                  const img = Math.round(value.actual / 1024);
-                  scoreArray.img_score = `<span style="color:red;">${img}KB</span>`;
+              if (value.auditId === "interactive") {
+                if(!value.passed) {
+                  const tti = Math.round(value.actual) / 1000;
+                  scoreArray.tti_score = `<span style="color:red;">${tti}s</span>`;
+                } else {
+                  scoreArray.tti_score = '✅';
                 }
-                if (value.auditProperty === "script.size") {
-                  const js = Math.round(value.actual / 1024);
-                  scoreArray.js_score = `<span style="color:red;">${js}KB</span>`;
+              }
+              if (value.auditId === "first-meaningful-paint") {
+                if(!value.passed) {
+                  const fmp = Math.round(value.actual) / 1000;
+                  scoreArray.fmp_score = `<span style="color:red;">${fmp}s</span>`;
+                } else {
+                  scoreArray.fmp_score = '✅';
                 }
-                if (value.auditProperty === "total.size") {
-                  const total = Math.round(value.actual / 1024);
-                  scoreArray.total_score = `<span style="color:red;">${total}KB</span>`;
+              }
+              if (value.auditId === "resource-summary") {
+                if(!value.passed) {
+                  if (value.auditProperty === "image.size") {
+                    const img = Math.round(value.actual / 1024);
+                    scoreArray.img_score = `<span style="color:red;">${img}KB</span>`;
+                  }
+                } else {
+                  scoreArray.fmp_score = '✅';
+                }
+                if(!value.passed) {
+                  if (value.auditProperty === "script.size") {
+                    const js = Math.round(value.actual / 1024);
+                    scoreArray.js_score = `<span style="color:red;">${js}KB</span>`;
+                  }
+                } else {
+                  scoreArray.fmp_score = '✅';
+                }
+                if(!value.passed) {
+                  if (value.auditProperty === "total.size") {
+                    const total = Math.round(value.actual / 1024);
+                    scoreArray.total_score = `<span style="color:red;">${total}KB</span>`;
+                  }
+                } else {
+                  scoreArray.fmp_score = '✅';
                 }
               }
               return scoreArray;
             };
 
+            let score = {};
             const assertionBody = (value) => {
-              const scores = getAssertionScore(value);
-              viewAssertion += `| ${fileName(value.url)} | ${scores.tti_score} | ${scores.fmp_score} | ${scores.img_score} | ${scores.js_score} | ${scores.total_score} |\n`;
+              const scores = Object.keys(assertion).forEach(key => getAssertionScore(value));
+              score = {
+                ${fileName(value.url)}: {
+                  url: ${fileName(value.url)}
+                }
+              }
+              score = {
+                ${fileName(value.url)}: scores
+              }
+
               if (!existsError && !value.passed) {
                 existsError = 1;
               }
             };
-
             Object.values(assertions).forEach(assertionBody);
+
+            const assertion_view = (value) => {
+              viewAssertion += `| ${value.url} | ${value.tti_score} | ${value.fmp_score} | ${value.img_score} | ${value.js_score} | ${value.total_score} |\n`;
+            }
+            Object.values(score).forEach(assertion_view);
 
             let viewText = "";
             const tableBody = (urlArray) => {
@@ -237,6 +274,10 @@ jobs:
               }
             };
             Object.values(manifest).forEach(tableBody);
+
+
+
+
 
             const commentBody = `
             ⚡️ **Lighthouse Mobile Report**:
@@ -266,21 +307,6 @@ jobs:
               repo: context.repo.repo,
               body: commentBody
             });
-
-      # - name: Comment on PR with warnings
-      #   if: ${{ steps.format_lighthouse_score.outputs.exists_error == '1' }}
-      #   uses: actions/github-script@v7.0.1
-      #   with:
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-      #     script: |
-      #       const error_message = `${{ steps.format_lighthouse_score.outputs.error_message }}`;
-      #       let param = {
-      #         issue_number: context.issue.number,
-      #         owner: context.repo.owner,
-      #         repo: context.repo.repo,
-      #         body: error_message
-      #       };
-      #       await github.rest.issues.createComment(param);
 
       - name: Fail workflow if there are errors
         if: ${{ steps.format_lighthouse_score.outputs.exists_error == '1' }}
