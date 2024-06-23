@@ -246,7 +246,12 @@ jobs:
               scoreArray[filename] = {
                 url: filename
               }
-              scoreArray[filename] = { ...scoreArray[filename], ...scores };
+
+              scoreArray.filename = {
+                ...scoreArray.filename,
+                ...scores
+              };
+
               console.log(scoreArray);
               console.log('====');
 
