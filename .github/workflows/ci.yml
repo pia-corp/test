@@ -183,39 +183,41 @@ jobs:
             const getValueByKey = (key) => { return urls[key] || null };
             let exists_error = 0;
 
-            let view_text2 = "";
-            let view_text3 = "";
+            let view_assertion = "";
             const assertion_body = (value) => {
+              let tti_score = "✅";
+              let fmp_score = "✅";
+              let img_score = "✅";
+              let js_score = "✅";
+              let total_score = "✅";
+              const kb = 1024;
+
               if (value.auditId == "interactive" && !value.passed) {
-                view_text3 += `メインとなるコンテンツが表示されるまでの時間が長すぎます。\n`;
-                view_text3 += `${value.url}\n`;
-                view_text3 += `期待する時間: ${value.expected}\n`;
-                view_text3 += `実際の時間: ${value.actual}\n\n`;
+                tti = Math.round(value.actual) / 1000;
+                tti_score = `<span style="color:red";>${tti}</span>`;
               }
 
               if (value.auditId == "first-meaningful-paint" && !value.passed) {
-                view_text3 += `操作可能までの時間が長すぎます。\n`;
-                view_text3 += `期待する時間: ${value.expected}\n`;
-                view_text3 += `実際の時間: ${value.actual}\n\n`;
+                fmp = Math.round(value.actual) / 1000;
+                fmp_score = `<span style="color:red";>${fmp}</span>`;
               }
 
               if (value.auditId == "resource-summary" && !value.passed) {
                 if (typeof value.auditProperty !== 'undefined' && value.auditProperty == "image.size") {
-                  view_text3 += `画像の合計ファイルサイズが大きすぎます。\n`;
-                  view_text3 += `期待するファイルサイズ: ${value.expected}\n`;
-                  view_text3 += `実際のファイルサイズ: ${value.actual}\n\n`;
+                  img = Math.round(value.actual/1024);
+                  img_score = `<span style="color:red";>${img}</span>`;
                 }
                 if (typeof value.auditProperty !== 'undefined' && value.auditProperty == "script.size") {
-                  view_text3 += `JavaScriptの合計ファイルサイズが大きすぎます。\n`;
-                  view_text3 += `期待するファイルサイズ: ${value.expected}\n`;
-                  view_text3 += `実際のファイルサイズ: ${value.actual}\n\n`;
+                  js = Math.round(value.actual/1024);
+                  js_score = `<span style="color:red";>${js}</span>`;
                 }
                 if (typeof value.auditProperty !== 'undefined' && value.auditProperty == "total.size") {
-                  view_text3 += `トータルの合計ファイルサイズが大きすぎます。\n`;
-                  view_text3 += `期待するファイルサイズ: ${value.expected}\n`;
-                  view_text3 += `実際のファイルサイズ: ${value.actual}\n\n`;
+                  total = Math.round(value.actual/1024);
+                  total_score = `<span style="color:red";>${total}</span>`;
                 }
               }
+
+              view_assertion += `| ${file_name(value.url)} | ${tti_score}s | ${fmp_score}s | ${img_score}KB | ${js_score}KB | ${total_score}KB |\n`;
 
               if (!exists_error) {
                 if (value.passed == false) {
@@ -246,9 +248,18 @@ jobs:
             | File name | Performance | Accessibility | Best practices | SEO |
             | --- | --- | --- | --- | --- |
             ${view_text}
-            ${view_text3}
 
-            ※表示されている結果は3回の結果から得られた中央値です。
+            | File name | TTI | FMP | IMG | JS | TOTAL |
+            | --- | --- | --- | --- | --- | --- |
+            ${view_assertion}
+
+            TTI: メインとなるコンテンツが表示されるまでの時間。
+            FMP: 操作可能までの時間。
+            IMG: ページで読み込まれる画像のファイル容量。
+            JS: ページで読み込まれるjavascriptのファイル容量。
+            TOTAL: ページで読み込まれるファイル容量の合計。
+
+            ※表示されている結果は複数回の結果から得られた中央値です。
             ※パフォーマンス結果はブレがありますリンク先の診断結果を見て判断してください。`};
 
             core.setOutput("exists_error", exists_error);
