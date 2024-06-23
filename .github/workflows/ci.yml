@@ -182,20 +182,7 @@ jobs:
             const score = res => res >= 90 ? '🟢' : res >= 50 ? '🟠' : '🔴';
             const getValueByKey = (key) => { return urls[key] || null };
             let exists_error = 0;
-
             let view_assertion = "";
-            const assertion_body = (value) => {
-              const score = Object.keys(assertion).forEach(key => get_assertion_score(value));
-
-              view_assertion += `| ${file_name(value.url)} | ${score.tti_score} | ${score.fmp_score} | ${score.img_score} | ${score.js_score} | ${score.total_score} |\n`;
-
-              if (!exists_error) {
-                if (value.passed == false) {
-                  exists_error = 1;
-                }
-              }
-            };
-            Object.keys(assertion).forEach(key => assertion_body(assertion[key]));
 
             const get_assertion_score = (value) => {
               let score_array = {};
@@ -238,6 +225,19 @@ jobs:
               return score_array;
             }
 
+            const assertion_body = (value) => {
+              const score = Object.keys(assertion).forEach(key => get_assertion_score(value));
+
+              view_assertion += `| ${file_name(value.url)} | ${score.tti_score} | ${score.fmp_score} | ${score.img_score} | ${score.js_score} | ${score.total_score} |\n`;
+
+              if (!exists_error) {
+                if (value.passed == false) {
+                  exists_error = 1;
+                }
+              }
+            };
+            Object.keys(assertion).forEach(key => assertion_body(assertion[key]));
+
             let view_text = "";
             const table_body = (urlArray) => {
               if (urlArray.isRepresentativeRun == true) {
@@ -274,24 +274,24 @@ jobs:
             ※パフォーマンス結果はブレがありますリンク先の診断結果を見て判断してください。`};
 
             core.setOutput("exists_error", exists_error);
-            core.setOutput("error_message", 'view_text2');
+            # core.setOutput("error_message", 'view_text2');
             await github.rest.issues.createComment(param);
 
 
-      - name: Comment on PR with warnings
-        if: ${{ steps.format_lighthouse_score.outputs.exists_error == '1' }}
-        uses: actions/github-script@v7.0.1
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const error_message = `${{ steps.format_lighthouse_score.outputs.error_message }}`;
-            let param = {
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: error_message
-            };
-            await github.rest.issues.createComment(param);
+      # - name: Comment on PR with warnings
+      #   if: ${{ steps.format_lighthouse_score.outputs.exists_error == '1' }}
+      #   uses: actions/github-script@v7.0.1
+      #   with:
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     script: |
+      #       const error_message = `${{ steps.format_lighthouse_score.outputs.error_message }}`;
+      #       let param = {
+      #         issue_number: context.issue.number,
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         body: error_message
+      #       };
+      #       await github.rest.issues.createComment(param);
 
       - name: Fail workflow if there are errors
         if: ${{ steps.format_lighthouse_score.outputs.exists_error == '1' }}
