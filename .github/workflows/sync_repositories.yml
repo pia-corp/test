@@ -3,7 +3,7 @@ name: Sync Directory Changes to Multiple Repositories
 on:
   workflow_dispatch:
     inputs:
-      choice1:
+      choice:
         description: '対象リポジトリ'
         required: true
         type: choice
@@ -16,57 +16,72 @@ on:
 
 jobs:
   DispatchDirectoryChanges:
+    runs-on: ubuntu-latest
+
     strategy:
       matrix:
-        repo: [
-          'pia-corp/template',
-          # 'pia-corp/molak.jp',
-          # 'pia-corp/feliamo.jp',
-          # 'pia-corp/ns-collection.jp',
-          # 'pia-corp/minette-lens.jp',
-          # 'pia-corp/mirage-c.jp',
-          # 'pia-corp/mimuco.jp',
-          # 'pia-corp/harne.jp',
-          # 'pia-corp/louer.jp',
-          # 'pia-corp/lumieu.jp',
-          # 'pia-corp/puuuuchu.jp',
-          # 'pia-corp/melady.jp',
-          # 'pia-corp/melloew.jp',
-          # 'pia-corp/faloom.jp',
-          # 'pia-corp/mimicharme.jp',
-          # 'pia-corp/miuel.jp',
-          # 'pia-corp/clainel.jp',
-          # 'pia-corp/resay.jp',
-          # 'pia-corp/pia-corp.co.jp',
-          ]
-        clinic: [
-            'college-peninsula.com',
-            'gincolle.com',
-            'kanjanokoe.jp',
-            'mukokyu.jp'
-          ]
-        corporate: [
-            'pia-corp.co.jp/exosome/',
-            'cbd.pia-corp.co.jp',
-            'dawg-cbd.jp',
-            'vecel.jp',
-            'exollen.jp',
-            'salamore.jp',
-            'miclear.jp',
-            'exosome.pia-corp.co.jp'
-          ]
-        statics: [
-            'yasu-me.jp',
-            'piapcr.jp',
-            'karacondaigaku.jp',
-            'karacondaigaku.com'
-          ]
-    name: dispatch-directory-changes
-    runs-on: ubuntu-latest
+        repo: []
+        include:
+          - choice: "ブランドサイト"
+            repo: [
+              'pia-corp/template',
+              # 'pia-corp/molak.jp',
+              # 'pia-corp/feliamo.jp',
+              # 'pia-corp/ns-collection.jp',
+              # 'pia-corp/minette-lens.jp',
+              # 'pia-corp/mirage-c.jp',
+              # 'pia-corp/mimuco.jp',
+              # 'pia-corp/harne.jp',
+              # 'pia-corp/louer.jp',
+              # 'pia-corp/lumieu.jp',
+              # 'pia-corp/puuuuchu.jp',
+              # 'pia-corp/melady.jp',
+              # 'pia-corp/melloew.jp',
+              # 'pia-corp/faloom.jp',
+              # 'pia-corp/mimicharme.jp',
+              # 'pia-corp/miuel.jp',
+              # 'pia-corp/clainel.jp',
+              # 'pia-corp/resay.jp',
+              # 'pia-corp/pia-corp.co.jp',
+            ]
+          - choice: "クリニック"
+            repo: [
+              'college-peninsula.com',
+              'gincolle.com',
+              'kanjanokoe.jp',
+              'mukokyu.jp'
+            ]
+          - choice: "コーポレートサイト"
+            repo: [
+              'pia-corp.co.jp/exosome/',
+              'cbd.pia-corp.co.jp',
+              'dawg-cbd.jp',
+              'vecel.jp',
+              'exollen.jp',
+              'salamore.jp',
+              'miclear.jp',
+              'exosome.pia-corp.co.jp'
+            ]
+          - choice: "PIA wordpress"
+            repo: [
+              'pia-corp/template'
+            ]
+          - choice: "PIA static"
+            repo: [
+              'yasu-me.jp',
+              'piapcr.jp',
+              'karacondaigaku.jp',
+              'karacondaigaku.com'
+            ]
+
     steps:
+      - name: Set repositories based on input
+        id: set-repos
+        run: echo "::set-output name=repo::${{ matrix.repo }}"
+
       - name: repository-dispatch
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          repository: ${{ matrix.repo }}
+          repository: ${{ steps.set-repos.outputs.repo }}
           event-type: directory-changes
