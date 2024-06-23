@@ -249,6 +249,7 @@ jobs:
             Object.values(assertions).forEach(assertionBody);
 
             const assertionView = (value) => {
+              console.log(value);
               if (value.url != "undefined") {
                 viewAssertion += `| ${value.url} | ${value.tti_score} | ${value.fmp_score} | ${value.img_score} | ${value.js_score} | ${value.total_score} |\n`;
               }

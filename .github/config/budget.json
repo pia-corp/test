@@ -14,15 +14,15 @@
     "resourceSizes": [
       {
         "resourceType": "image",
-        "budget": 500
+        "budget": 1000
       },
       {
         "resourceType": "script",
-        "budget": 125
+        "budget": 300
       },
       {
         "resourceType": "total",
-        "budget": 1500
+        "budget": 3000
       }
     ]
   }
