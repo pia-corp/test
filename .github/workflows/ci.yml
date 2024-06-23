@@ -182,10 +182,7 @@ jobs:
             const score = (res) => res >= 90 ? '🟢' : res >= 50 ? '🟠' : '🔴';
             let existsError = 0;
             let viewAssertion = "";
-
-
-
-
+            let scoreArray = {};
 
             const getAssertionScore = (value) => {
               let returnArray = {};
@@ -239,7 +236,6 @@ jobs:
               return returnArray;
             };
 
-            let scoreArray = {};
             const assertionBody = (value) => {
               console.log(value);
               console.log('====');
@@ -250,7 +246,7 @@ jobs:
               scoreArray[filename] = {
                 url: filename
               }
-              scoreArray = Object.assign({}, scoreArray[filename], scores);
+              scoreArray[filename] = Object.assign({}, scoreArray[filename], scores);
               console.log(scoreArray);
               console.log('====');
 
