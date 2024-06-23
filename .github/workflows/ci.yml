@@ -240,15 +240,15 @@ jobs:
               return scoreArray;
             };
 
-            let score = {};
+            let scoreArray = {};
             const assertionBody = (value) => {
               const scores = Object.keys(assertion).forEach(key => getAssertionScore(value));
-              score = {
+              scoreArray = {
                 ${fileName(value.url)}: {
                   url: ${fileName(value.url)}
                 }
               }
-              score = {
+              scoreArray = {
                 ${fileName(value.url)}: scores
               }
 
@@ -261,7 +261,7 @@ jobs:
             const assertion_view = (value) => {
               viewAssertion += `| ${value.url} | ${value.tti_score} | ${value.fmp_score} | ${value.img_score} | ${value.js_score} | ${value.total_score} |\n`;
             }
-            Object.values(score).forEach(assertion_view);
+            Object.values(scoreArray).forEach(assertion_view);
 
             let viewText = "";
             const tableBody = (urlArray) => {
