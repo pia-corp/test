@@ -190,16 +190,12 @@ jobs:
                 if(!value.passed) {
                   const tti = Math.round(value.actual) / 1000;
                   returnArray.tti_score = `❌${tti}s`;
-                } else {
-                  returnArray.tti_score = '✅';
                 }
               }
               if (value.auditId === "first-meaningful-paint") {
                 if(!value.passed) {
                   const fmp = Math.round(value.actual) / 1000;
                   returnArray.fmp_score = `❌${fmp}s`;
-                } else {
-                  returnArray.fmp_score = '✅';
                 }
               }
               if (value.auditId === "resource-summary") {
@@ -221,8 +217,6 @@ jobs:
                     returnArray.total_score = `❌${total}KB`;
                   }
                 }
-              } else {
-                returnArray[value.auditProperty] = '✅';
               }
                 console.log(returnArray);
               return returnArray;
@@ -231,6 +225,15 @@ jobs:
             const assertionBody = (value) => {
               const scores = getAssertionScore(value);
               const filename = fileName(value.url);
+              if (scoreArray[filename] == "undefined") {
+                scoreArray[filename] = {
+                  'tti_score' = '✅';
+                  'fmp_score' = '✅';
+                  'img_score' = '✅';
+                  'js_score' = '✅';
+                  'total_score' = '✅';
+                }
+              }
               const object = {
                 url: filename
               }
@@ -273,8 +276,8 @@ jobs:
             | --- | --- | --- | --- | --- | --- |
             ${viewAssertion}
 
-            TTI: メインとなるコンテンツが表示されるまでの時間。
-            FMP: 操作可能までの時間。
+            TTI: ユーザーが利用可能になるまでの時間。
+            FMP: 主要コンテンツが表示されるまでの時間。
             IMG: ページで読み込まれる画像のファイル容量。
             JS: ページで読み込まれるjavascriptのファイル容量。
             TOTAL: ページで読み込まれるファイル容量の合計。
