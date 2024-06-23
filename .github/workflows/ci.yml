@@ -187,31 +187,31 @@ jobs:
             const getAssertionScore = (value) => {
               let returnArray = {};
               if (value.auditId === "interactive") {
-                if(!value.passed) {
+                if (!value.passed) {
                   const tti = Math.round(value.actual) / 1000;
                   returnArray.tti_score = `❌${tti}s`;
                 }
               }
               if (value.auditId === "first-meaningful-paint") {
-                if(!value.passed) {
+                if (!value.passed) {
                   const fmp = Math.round(value.actual) / 1000;
                   returnArray.fmp_score = `❌${fmp}s`;
                 }
               }
               if (value.auditId === "resource-summary") {
-                if(!value.passed) {
+                if (!value.passed) {
                   if (value.auditProperty === "image.size") {
                     const img = Math.round(value.actual / 1024);
                     returnArray.img_score = `❌${img}KB`;
                   }
                 }
-                if(!value.passed) {
+                if (!value.passed) {
                   if (value.auditProperty === "script.size") {
                     const js = Math.round(value.actual / 1024);
                     returnArray.js_score = `❌${js}KB`;
                   }
                 }
-                if(!value.passed) {
+                if (!value.passed) {
                   if (value.auditProperty === "total.size") {
                     const total = Math.round(value.actual / 1024);
                     returnArray.total_score = `❌${total}KB`;
@@ -224,18 +224,18 @@ jobs:
             const assertionBody = (value) => {
               const scores = getAssertionScore(value);
               const filename = fileName(value.url);
-              if (typeof scoreArray[filename] == "undefined") {
+              if (typeof scoreArray[filename] === "undefined") {
                 scoreArray[filename] = {
-                  "tti_score" = "✅",
-                  "fmp_score" = "✅",
-                  "img_score" = "✅",
-                  "js_score" = "✅",
-                  "total_score" = "✅"
-                }
+                  "tti_score": "✅",
+                  "fmp_score": "✅",
+                  "img_score": "✅",
+                  "js_score": "✅",
+                  "total_score": "✅",
+                };
               }
               const object = {
                 url: filename
-              }
+              };
 
               scoreArray[filename] = { ...scoreArray[filename], ...object };
               scoreArray[filename] = { ...scoreArray[filename], ...scores };
@@ -243,7 +243,7 @@ jobs:
             Object.values(assertions).forEach(assertionBody);
 
             const assertionView = (value) => {
-              if (value.url != "undefined") {
+              if (typeof value.url != "undefined") {
                 viewAssertion += `| ${value.url} | ${value.tti_score} | ${value.fmp_score} | ${value.img_score} | ${value.js_score} | ${value.total_score} |\n`;
               }
             };
