@@ -214,7 +214,7 @@ jobs:
                     existsError = 1;
                   }
                 } else {
-                  scoreArray.fmp_score = '✅';
+                  scoreArray.img_score = '✅';
                 }
                 if(!value.passed) {
                   if (value.auditProperty === "script.size") {
@@ -223,7 +223,7 @@ jobs:
                     existsError = 1;
                   }
                 } else {
-                  scoreArray.fmp_score = '✅';
+                  scoreArray.js_score = '✅';
                 }
                 if(!value.passed) {
                   if (value.auditProperty === "total.size") {
@@ -232,7 +232,7 @@ jobs:
                     existsError = 1;
                   }
                 } else {
-                  scoreArray.fmp_score = '✅';
+                  scoreArray.total_score = '✅';
                 }
               }
               return scoreArray;
