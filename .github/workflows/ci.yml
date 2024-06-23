@@ -247,8 +247,8 @@ jobs:
                 url: filename
               }
 
-              scoreArray.filename = {
-                ...scoreArray.filename,
+              scoreArray[filename] = {
+                ...scoreArray[filename],
                 ...scores
               };
 
