@@ -254,9 +254,9 @@ jobs:
                 const performance = formatResult(urlArray.summary.performance);
                 const seo = formatResult(urlArray.summary.seo);
                 viewText += `| [${fileName(urlArray.url)}](${urls[urlArray.url]}) | ${score(performance)} ${performance} | ${score(accessibility)} ${accessibility} | ${score(practices)} ${practices} | ${score(seo)} ${seo} |\n`;
-              }
-              if ( 50 < score(performance) || 50 < score(performance) || 50 < score(accessibility) || 50 < score(practices) ) {
-                existsError = 1;
+                if ( 50 < score(performance) || 50 < score(performance) || 50 < score(accessibility) || 50 < score(practices) ) {
+                  existsError = 1;
+                }
               }
             };
             Object.values(manifest).forEach(tableBody);
