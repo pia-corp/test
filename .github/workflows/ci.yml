@@ -240,10 +240,14 @@ jobs:
 
             let scoreArray = {};
             const assertionBody = (value) => {
+              console.log(value);
+              console.log('====');
+
+
               const scores = getAssertionScore(value);
-              console.log('====');
-              console.log(scores);
-              console.log('====');
+
+
+
               scoreArray[fileName(value.url)] = {
                 url: fileName(value.url),
                 ...scores
