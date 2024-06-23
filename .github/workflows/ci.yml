@@ -224,6 +224,7 @@ jobs:
               } else {
                 returnArray[value.auditProperty] = '✅';
               }
+                console.log(returnArray);
               return returnArray;
             };
 
