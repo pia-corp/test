@@ -211,8 +211,6 @@ jobs:
                     returnArray.img_score = `<span style="color:red;">${img}KB</span>`;
                     existsError = 1;
                   }
-                } else {
-                  returnArray.img_score = '✅';
                 }
                 if(!value.passed) {
                   if (value.auditProperty === "script.size") {
@@ -220,8 +218,6 @@ jobs:
                     returnArray.js_score = `<span style="color:red;">${js}KB</span>`;
                     existsError = 1;
                   }
-                } else {
-                  returnArray.js_score = '✅';
                 }
                 if(!value.passed) {
                   if (value.auditProperty === "total.size") {
@@ -229,9 +225,9 @@ jobs:
                     returnArray.total_score = `<span style="color:red;">${total}KB</span>`;
                     existsError = 1;
                   }
-                } else {
-                  returnArray.total_score = '✅';
                 }
+              } else {
+                returnArray.img_score = '✅';
               }
               return returnArray;
             };
