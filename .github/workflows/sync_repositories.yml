@@ -8,7 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        repos: ['pia-corp/template']
+        repos: [
+          'pia-corp/template',
+          'pia-corp/mimicharme.jp',
+          'pia-corp/faloom.jp',
+          'pia-corp/melady.jp',
+        ]
 
     steps:
       - name: repository-dispatch
