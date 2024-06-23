@@ -56,7 +56,6 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.cache-name }}-v${{ vars.GIT_ACTIONS_NODE_VER }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install npm dependencies (if cache miss)
-        if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
         run: npm ci --no-audit --progress=false --silent
 
       - name: Lint and rewrite markup
@@ -98,7 +97,7 @@ jobs:
               if [ $? -eq 0 ] && [ $size -gt $max_size ]; then
                 echo "Error: $img is too large (${size} bytes)"
                 exists_error=1
-                error_list="${error_list}\n$img (${size} bytes)"
+                error_list="❌ ${error_list}\n$img (${size} bytes)"
               fi
             fi
           done
