@@ -174,8 +174,8 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const urls = ${{steps.lighthouse_audit.outputs.links}};
-            const assertions =${{steps.lighthouse_audit.outputs.assertionResults}};
+            const urls = ${{ steps.lighthouse_audit.outputs.links }};
+            const assertions =${{ steps.lighthouse_audit.outputs.assertionResults }};
             const manifest = ${{ steps.lighthouse_audit.outputs.manifest }};
             const formatResult = (res) => Math.round(res * 100);
             const fileName = (url) => url.replace(/^http:\/\/localhost:\d+\//, "");
@@ -189,7 +189,7 @@ jobs:
               if (value.auditId === "interactive") {
                 if(!value.passed) {
                   const tti = Math.round(value.actual) / 1000;
-                  returnArray.tti_score = `<span style="color:red;">${tti}s</span>`;
+                  returnArray.tti_score = `❌${tti}s`;
                 } else {
                   returnArray.tti_score = '✅';
                 }
@@ -197,7 +197,7 @@ jobs:
               if (value.auditId === "first-meaningful-paint") {
                 if(!value.passed) {
                   const fmp = Math.round(value.actual) / 1000;
-                  returnArray.fmp_score = `<span style="color:red;">${fmp}s</span>`;
+                  returnArray.fmp_score = `❌${fmp}s`;
                 } else {
                   returnArray.fmp_score = '✅';
                 }
@@ -206,19 +206,19 @@ jobs:
                 if(!value.passed) {
                   if (value.auditProperty === "image.size") {
                     const img = Math.round(value.actual / 1024);
-                    returnArray.img_score = `<span style="color:red;">${img}KB</span>`;
+                    returnArray.img_score = `❌${img}KB`;
                   }
                 }
                 if(!value.passed) {
                   if (value.auditProperty === "script.size") {
                     const js = Math.round(value.actual / 1024);
-                    returnArray.js_score = `<span style="color:red;">${js}KB</span>`;
+                    returnArray.js_score = `❌${js}KB`;
                   }
                 }
                 if(!value.passed) {
                   if (value.auditProperty === "total.size") {
                     const total = Math.round(value.actual / 1024);
-                    returnArray.total_score = `<span style="color:red;">${total}KB</span>`;
+                    returnArray.total_score = `❌${total}KB`;
                   }
                 }
               } else {
@@ -255,7 +255,7 @@ jobs:
                 const seo = formatResult(urlArray.summary.seo);
                 viewText += `| [${fileName(urlArray.url)}](${urls[urlArray.url]}) | ${score(performance)} ${performance} | ${score(accessibility)} ${accessibility} | ${score(practices)} ${practices} | ${score(seo)} ${seo} |\n`;
               }
-              if (50 < score(performance) || 50 < score(performance) || 50 < score(accessibility) || 50 < score(practices))) {
+              if ( 50 < score(performance) || 50 < score(performance) || 50 < score(accessibility) || 50 < score(practices) ) {
                 existsError = 1;
               }
             };
