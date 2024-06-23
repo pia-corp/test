@@ -247,10 +247,18 @@ jobs:
                 url: filename
               }
 
-              scoreArray[filename] = {
-                ...scoreArray[filename],
-                ...scores
+              const mergeObjects = (obj1, obj2) => {
+                const merged = { ...obj1 };
+                for (const key in obj2) {
+                  if (merged[key]) {
+                    merged[key] = { ...merged[key], ...obj2[key] };
+                  } else {
+                    merged[key] = obj2[key];
+                  }
+                }
+                return merged;
               };
+              const scoreArray[filename] = mergeObjects(scoreArray[filename], scores);
 
               console.log(scoreArray);
               console.log('====');
