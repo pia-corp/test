@@ -250,7 +250,7 @@ jobs:
               scoreArray[filename] = {
                 url: filename
               }
-              scoreArray = { ...scoreArray[filename], ...scores };
+              scoreArray = Object.assign({}, scoreArray[filename], scores);
               console.log(scoreArray);
               console.log('====');
 
