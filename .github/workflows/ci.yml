@@ -241,10 +241,10 @@ jobs:
             let scoreArray = {};
             const assertionBody = (value) => {
               const scores = getAssertionScore(value);
-              # scoreArray[fileName(value.url)] = {
-              #   url: fileName(value.url),
-              #   ...scores
-              # };
+              scoreArray[fileName(value.url)] = {
+                url: fileName(value.url),
+                ...scores
+              };
             };
             Object.values(assertions).forEach(assertionBody);
 
