@@ -241,6 +241,9 @@ jobs:
             let scoreArray = {};
             const assertionBody = (value) => {
               const scores = getAssertionScore(value);
+              console.log('====');
+              console.log(scores);
+              console.log('====');
               scoreArray[fileName(value.url)] = {
                 url: fileName(value.url),
                 ...scores
@@ -249,9 +252,9 @@ jobs:
             Object.values(assertions).forEach(assertionBody);
 
             const assertionView = (value) => {
-              console.log('====');
-              console.log(value);
-              console.log('====');
+              # console.log('====');
+              # console.log(value);
+              # console.log('====');
               if (value.url != "undefined") {
                 viewAssertion += `| ${value.url} | ${value.tti_score} | ${value.fmp_score} | ${value.img_score} | ${value.js_score} | ${value.total_score} |\n`;
               }
