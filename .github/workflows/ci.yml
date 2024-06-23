@@ -258,7 +258,7 @@ jobs:
                 }
                 return merged;
               };
-              const scoreArray[filename] = mergeObjects(scoreArray[filename], scores);
+              scoreArray[filename] = mergeObjects(scoreArray[filename], scores);
 
               console.log(scoreArray);
               console.log('====');
