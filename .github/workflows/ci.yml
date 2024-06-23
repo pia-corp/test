@@ -242,13 +242,12 @@ jobs:
 
               console.log(scores);
 
-              scoreArray[filename] = {
+              const object = {
                 url: filename
               }
 
-              for (const key in scores) {
-                scoreArray[filename][key] = scores[key];
-              }
+              scoreArray = { ...scoreArray[filename], ...object };
+              scoreArray = { ...scoreArray[filename], ...scores };
 
               console.log(scoreArray);
               console.log('====');
