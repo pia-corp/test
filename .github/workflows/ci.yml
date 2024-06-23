@@ -175,101 +175,130 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const urls = ${{steps.lighthouse_audit.outputs.links}};
-            const assertion = ${{steps.lighthouse_audit.outputs.assertionResults}};
-            const obj = ${{ steps.lighthouse_audit.outputs.manifest }};
-            const formatResult = (res) => Math.round((res * 100));
-            const file_name = (url) => { return url.replace(/^http:\/\/localhost:\d+\//, ""); };
-            const score = res => res >= 90 ? '🟢' : res >= 50 ? '🟠' : '🔴';
-            const getValueByKey = (key) => { return urls[key] || null };
-            let exists_error = 0;
+            const assertions =${{steps.lighthouse_audit.outputs.assertionResults}};
+            const manifest = ${{ steps.lighthouse_audit.outputs.manifest }};
+            const formatResult = (res) => Math.round(res * 100);
+            const fileName = (url) => url.replace(/^http:\/\/localhost:\d+\//, "");
+            const score = (res) => res >= 90 ? '🟢' : res >= 50 ? '🟠' : '🔴';
+            let existsError = 0;
+            let viewAssertion = "";
 
-            let view_text2 = "";
-            let view_text3 = "";
-            const assertion_body = (value) => {
 
-              if (value.auditId == "interactive" && !value.passed) {
-                view_text3 += `メインとなるコンテンツが表示されるまでの時間が長すぎます。\n`;
-                view_text3 += `${value.url}\n`;
-                view_text3 += `期待する時間: ${value.expected}\n`;
-                view_text3 += `実際の時間: ${value.actual}\n\n`;
-              }
 
-              if (value.auditId == "first-meaningful-paint" && !value.passed) {
-                view_text3 += `操作可能までの時間が長すぎます。\n`;
-                view_text3 += `期待する時間: ${value.expected}\n`;
-                view_text3 += `実際の時間: ${value.actual}\n\n`;
-              }
 
-              if (value.auditId == "resource-summary" && !value.passed) {
-                if (typeof value.auditProperty !== 'undefined' && value.auditProperty == "image.size") {
-                  view_text3 += `画像の合計ファイルサイズが大きすぎます。\n`;
-                  view_text3 += `期待するファイルサイズ: ${value.expected}\n`;
-                  view_text3 += `実際のファイルサイズ: ${value.actual}\n\n`;
-                }
-                if (typeof value.auditProperty !== 'undefined' && value.auditProperty == "script.size") {
-                  view_text3 += `JavaScriptの合計ファイルサイズが大きすぎます。\n`;
-                  view_text3 += `期待するファイルサイズ: ${value.expected}\n`;
-                  view_text3 += `実際のファイルサイズ: ${value.actual}\n\n`;
-                }
-                if (typeof value.auditProperty !== 'undefined' && value.auditProperty == "total.size") {
-                  view_text3 += `トータルの合計ファイルサイズが大きすぎます。\n`;
-                  view_text3 += `期待するファイルサイズ: ${value.expected}\n`;
-                  view_text3 += `実際のファイルサイズ: ${value.actual}\n\n`;
+
+            const getAssertionScore = (value) => {
+              if (value.auditId === "interactive") {
+                if(!value.passed) {
+                  const tti = Math.round(value.actual) / 1000;
+                  scoreArray.tti_score = `<span style="color:red;">${tti}s</span>`;
+                  existsError = 1;
+                } else {
+                  scoreArray.tti_score = '✅';
                 }
               }
-
-              if (!exists_error) {
-                if (value.passed == false) {
-                  exists_error = 1;
+              if (value.auditId === "first-meaningful-paint") {
+                if(!value.passed) {
+                  const fmp = Math.round(value.actual) / 1000;
+                  scoreArray.fmp_score = `<span style="color:red;">${fmp}s</span>`;
+                  existsError = 1;
+                } else {
+                  scoreArray.fmp_score = '✅';
                 }
               }
-            ;}
-            Object.keys(assertion).forEach(key => assertion[key] = assertion_body(assertion[key]));
+              if (value.auditId === "resource-summary") {
+                if(!value.passed) {
+                  if (value.auditProperty === "image.size") {
+                    const img = Math.round(value.actual / 1024);
+                    scoreArray.img_score = `<span style="color:red;">${img}KB</span>`;
+                    existsError = 1;
+                  }
+                } else {
+                  scoreArray.fmp_score = '✅';
+                }
+                if(!value.passed) {
+                  if (value.auditProperty === "script.size") {
+                    const js = Math.round(value.actual / 1024);
+                    scoreArray.js_score = `<span style="color:red;">${js}KB</span>`;
+                    existsError = 1;
+                  }
+                } else {
+                  scoreArray.fmp_score = '✅';
+                }
+                if(!value.passed) {
+                  if (value.auditProperty === "total.size") {
+                    const total = Math.round(value.actual / 1024);
+                    scoreArray.total_score = `<span style="color:red;">${total}KB</span>`;
+                    existsError = 1;
+                  }
+                } else {
+                  scoreArray.fmp_score = '✅';
+                }
+              }
+              return scoreArray;
+            };
 
-            let view_text = "";
-            const table_body = (urlArray) => {
-              if (urlArray.isRepresentativeRun == true) {
-                const accessibility = formatResult(urlArray.summary["accessibility"]);
-                const practices = formatResult(urlArray.summary["best-practices"]);
-                const performance = formatResult(urlArray.summary["performance"]);
-                const seo = formatResult(urlArray.summary["seo"]);
-                view_text += `| [${file_name(urlArray.url)}](${getValueByKey(urlArray.url)}) | ${score(performance)} ${performance} | ${score(accessibility)} ${accessibility} | ${score(practices)} ${practices} | ${score(seo)} ${seo} |\n`;
+            let scoreArray = {};
+            const assertionBody = (value) => {
+              const scores = getAssertionScore(value);
+              scoreArray[fileName(value.url)] = {
+                url: fileName(value.url),
+                ...scores
+              };
+            };
+            Object.values(assertions).forEach(assertionBody);
+
+            const assertionView = (value) => {
+              if (value.url != "undefined") {
+                viewAssertion += `| ${value.url} | ${value.tti_score} | ${value.fmp_score} | ${value.img_score} | ${value.js_score} | ${value.total_score} |\n`;
               }
             };
-            Object.keys(obj).forEach(key => obj[key] = table_body(obj[key]));
+            Object.values(scoreArray).forEach(assertionView);
 
-            let param = {
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `⚡️ [Lighthouse Mobile Report]:
+            let viewText = "";
+            const tableBody = (urlArray) => {
+              if (urlArray.isRepresentativeRun) {
+                const accessibility = formatResult(urlArray.summary.accessibility);
+                const practices = formatResult(urlArray.summary["best-practices"]);
+                const performance = formatResult(urlArray.summary.performance);
+                const seo = formatResult(urlArray.summary.seo);
+                viewText += `| [${fileName(urlArray.url)}](${urls[urlArray.url]}) | ${score(performance)} ${performance} | ${score(accessibility)} ${accessibility} | ${score(practices)} ${practices} | ${score(seo)} ${seo} |\n`;
+              }
+            };
+            Object.values(manifest).forEach(tableBody);
+
+
+
+
+
+            const commentBody = `
+            ⚡️ **Lighthouse Mobile Report**:
 
             | File name | Performance | Accessibility | Best practices | SEO |
             | --- | --- | --- | --- | --- |
-            ${view_text}
-            ${view_text3}
+            ${viewText}
 
-            ※表示されている結果は3回の結果から得られた中央値です。
-            ※パフォーマンス結果はブレがありますリンク先の診断結果を見て判断してください。`};
+            | File name | TTI | FMP | IMG | JS | TOTAL |
+            | --- | --- | --- | --- | --- | --- |
+            ${viewAssertion}
 
-            core.setOutput("exists_error", exists_error);
-            core.setOutput("error_message", view_text2);
-            await github.rest.issues.createComment(param);
+            TTI: メインとなるコンテンツが表示されるまでの時間。
+            FMP: 操作可能までの時間。
+            IMG: ページで読み込まれる画像のファイル容量。
+            JS: ページで読み込まれるjavascriptのファイル容量。
+            TOTAL: ページで読み込まれるファイル容量の合計。
 
-      - name: Comment on PR with warnings
-        if: ${{ steps.format_lighthouse_score.outputs.exists_error == '1' }}
-        uses: actions/github-script@v7.0.1
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const error_message = `${{ steps.format_lighthouse_score.outputs.error_message }}`;
-            let param = {
-              issue_number: context.issue.number,
+            ※表示されている結果は複数回の結果から得られた中央値です。
+            ※パフォーマンス結果はブレがありますリンク先の診断結果を見て判断してください。
+            `;
+
+            core.setOutput("exists_error", existsError);
+            await github.rest.issues.createComment({
+              issue_number: context.payload.pull_request.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: error_message
-            };
-            await github.rest.issues.createComment(param);
+              body: commentBody
+            });
 
       - name: Fail workflow if there are errors
         if: ${{ steps.format_lighthouse_score.outputs.exists_error == '1' }}
