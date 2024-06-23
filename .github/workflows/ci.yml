@@ -185,39 +185,9 @@ jobs:
 
             let view_assertion = "";
             const assertion_body = (value) => {
-              let tti_score = "✅";
-              let fmp_score = "✅";
-              let img_score = "✅";
-              let js_score = "✅";
-              let total_score = "✅";
-              const kb = 1024;
+              const score = Object.keys(assertion).forEach(key => get_assertion_score(value));
 
-              if (value.auditId == "interactive" && !value.passed) {
-                tti = Math.round(value.actual) / 1000;
-                tti_score = `&lt;span style="color:red";&gt;${tti}s&lt;/span&gt;`;
-              }
-
-              if (value.auditId == "first-meaningful-paint" && !value.passed) {
-                fmp = Math.round(value.actual) / 1000;
-                fmp_score = `&lt;span style="color:red";&gt;${fmp}s&lt;/span&gt;`;
-              }
-
-              if (value.auditId == "resource-summary" && !value.passed) {
-                if (typeof value.auditProperty !== 'undefined' && value.auditProperty == "image.size") {
-                  img = Math.round(value.actual/1024);
-                  img_score = `&lt;span style="color:red";&gt;${img}KB&lt;/span&gt;`;
-                }
-                if (typeof value.auditProperty !== 'undefined' && value.auditProperty == "script.size") {
-                  js = Math.round(value.actual/1024);
-                  js_score = `&lt;span style="color:red";&gt;${js}KB&lt;/span&gt;`;
-                }
-                if (typeof value.auditProperty !== 'undefined' && value.auditProperty == "total.size") {
-                  total = Math.round(value.actual/1024);
-                  total_score = `&lt;span style="color:red";&gt;${total}KB&lt;/span&gt;`;
-                }
-              }
-
-              view_assertion += `| ${file_name(value.url)} | ${tti_score} | ${fmp_score} | ${img_score} | ${js_score} | ${total_score} |\n`;
+              view_assertion += `| ${file_name(value.url)} | ${score.tti_score} | ${score.fmp_score} | ${score.img_score} | ${score.js_score} | ${score.total_score} |\n`;
 
               if (!exists_error) {
                 if (value.passed == false) {
@@ -226,6 +196,47 @@ jobs:
               }
             };
             Object.keys(assertion).forEach(key => assertion_body(assertion[key]));
+
+            const get_assertion_score = (value) => {
+              let score_array = {};
+              const kb = 1024;
+
+              if (value.auditId == "interactive" && !value.passed) {
+                tti = Math.round(value.actual) / 1000;
+                score_array["tti_score"] = `<span style="color:red;">${tti}s</span>`;
+              } else {
+                score_array["tti_score"] = `✅`;
+              }
+
+              if (value.auditId == "first-meaningful-paint" && !value.passed) {
+                fmp = Math.round(value.actual) / 1000;
+                score_array["fmp_score"] = `<span style="color:red;">${fmp}s</span>`;
+              } else {
+                score_array["fmp_score"] = `✅`;
+              }
+
+              if (value.auditId == "resource-summary" && !value.passed) {
+                if (typeof value.auditProperty !== 'undefined' && value.auditProperty == "image.size") {
+                  img = Math.round(value.actual/1024);
+                  score_array["img_score"] = `<span style="color:red;">${img}KB</span>`;
+                } else {
+                  score_array["img_score"] = `✅`;
+                }
+                if (typeof value.auditProperty !== 'undefined' && value.auditProperty == "script.size") {
+                  js = Math.round(value.actual/1024);
+                  score_array["js_score"] = `<span style="color:red;">${js}KB</span>`;
+                } else {
+                  score_array["js_score"] = `✅`;
+                }
+                if (typeof value.auditProperty !== 'undefined' && value.auditProperty == "total.size") {
+                  total = Math.round(value.actual/1024);
+                  score_array["total_score"] = `<span style="color:red;">${total}KB</span>`;
+                } else {
+                  score_array["total_score"] = `✅`;
+                }
+              }
+              return score_array;
+            }
 
             let view_text = "";
             const table_body = (urlArray) => {
