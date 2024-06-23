@@ -226,11 +226,11 @@ jobs:
               const filename = fileName(value.url);
               if (typeof scoreArray[filename] == "undefined") {
                 scoreArray[filename] = {
-                  "tti_score" = "✅";
-                  "fmp_score" = "✅";
-                  "img_score" = "✅";
-                  "js_score" = "✅";
-                  "total_score" = "✅";
+                  "tti_score" = "✅",
+                  "fmp_score" = "✅",
+                  "img_score" = "✅",
+                  "js_score" = "✅",
+                  "total_score" = "✅"
                 }
               }
               const object = {
