@@ -174,9 +174,9 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const urls = JSON.parse('${{ steps.lighthouse_audit.outputs.links }}');
-            const assertions = JSON.parse('${{ steps.lighthouse_audit.outputs.assertionResults }}');
-            const manifest = JSON.parse('${{ steps.lighthouse_audit.outputs.manifest }}');
+            const urls = ${{steps.lighthouse_audit.outputs.links}};
+            const assertions =${{steps.lighthouse_audit.outputs.assertionResults}};
+            const manifest = ${{ steps.lighthouse_audit.outputs.manifest }};
             const formatResult = (res) => Math.round(res * 100);
             const fileName = (url) => url.replace(/^http:\/\/localhost:\d+\//, "");
             const score = (res) => res >= 90 ? '🟢' : res >= 50 ? '🟠' : '🔴';
@@ -192,6 +192,7 @@ jobs:
                 if(!value.passed) {
                   const tti = Math.round(value.actual) / 1000;
                   scoreArray.tti_score = `<span style="color:red;">${tti}s</span>`;
+                  existsError = 1;
                 } else {
                   scoreArray.tti_score = '✅';
                 }
@@ -200,6 +201,7 @@ jobs:
                 if(!value.passed) {
                   const fmp = Math.round(value.actual) / 1000;
                   scoreArray.fmp_score = `<span style="color:red;">${fmp}s</span>`;
+                  existsError = 1;
                 } else {
                   scoreArray.fmp_score = '✅';
                 }
@@ -209,6 +211,7 @@ jobs:
                   if (value.auditProperty === "image.size") {
                     const img = Math.round(value.actual / 1024);
                     scoreArray.img_score = `<span style="color:red;">${img}KB</span>`;
+                    existsError = 1;
                   }
                 } else {
                   scoreArray.fmp_score = '✅';
@@ -217,6 +220,7 @@ jobs:
                   if (value.auditProperty === "script.size") {
                     const js = Math.round(value.actual / 1024);
                     scoreArray.js_score = `<span style="color:red;">${js}KB</span>`;
+                    existsError = 1;
                   }
                 } else {
                   scoreArray.fmp_score = '✅';
@@ -225,6 +229,7 @@ jobs:
                   if (value.auditProperty === "total.size") {
                     const total = Math.round(value.actual / 1024);
                     scoreArray.total_score = `<span style="color:red;">${total}KB</span>`;
+                    existsError = 1;
                   }
                 } else {
                   scoreArray.fmp_score = '✅';
@@ -233,25 +238,6 @@ jobs:
               return scoreArray;
             };
 
-            # let scoreArray = {};
-            # const assertionBody = (value) => {
-            #   const scores = Object.keys(assertion).forEach(key => getAssertionScore(value));
-            #   scoreArray = {
-            #     ${fileName(value.url)}: {
-            #       url: ${fileName(value.url)}
-            #     }
-            #   }
-            #   scoreArray = {
-            #     ${fileName(value.url)}: scores
-            #   }
-
-            #   if (!existsError && !value.passed) {
-            #     existsError = 1;
-            #   }
-            # };
-            # Object.values(assertions).forEach(assertionBody);
-
-
             let scoreArray = {};
             const assertionBody = (value) => {
               const scores = getAssertionScore(value);
@@ -259,10 +245,6 @@ jobs:
                 url: fileName(value.url),
                 ...scores
               };
-
-              if (!existsError && !value.passed) {
-                existsError = 1;
-              }
             };
             Object.values(assertions).forEach(assertionBody);
 
