@@ -18,6 +18,11 @@ jobs:
         with:
           fetch-depth: 2
 
+      - name: Fetch previous commit
+        run: |
+          PREV_COMMIT=$(git rev-parse HEAD~1)
+          echo "PREV_COMMIT=$PREV_COMMIT" >> $GITHUB_ENV
+
       - name: check_diff
         shell: bash
         run: |
