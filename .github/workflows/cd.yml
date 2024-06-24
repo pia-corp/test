@@ -21,14 +21,6 @@ jobs:
       - name: check_diff
         shell: bash
         run: |
-          files=(`git diff HEAD^ --name-only|tr '\n' ' ' `)
-          for file in ${files[@]}; do
-            echo ${file}
-          done
-
-      - name: check_diff
-        shell: bash
-        run: |
           files=$(git diff HEAD^ --name-only -- public/)
           if [ -n "$files" ]; then
             echo "public_changed=true" >> $GITHUB_ENV
