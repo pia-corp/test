@@ -13,27 +13,21 @@ jobs:
     outputs:
       public_changed: ${{ env.public_changed }}
     steps:
-      - uses: actions/checkout@v4.1.6
-        name: checkout
-        with:
-          fetch-depth: 2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: Fetch previous commit
-        run: |
-          PREV_COMMIT=$(git rev-parse HEAD~1)
-          echo "PREV_COMMIT=$PREV_COMMIT" >> $GITHUB_ENV
+      - name: Get the previous commit SHA
+        id: get_previous_commit
+        run: echo "::set-output name=previous_commit::$(git rev-parse HEAD^1)"
 
-      - name: check_diff
-        shell: bash
+      - name: Compare public folder
+        id: compare_public
         run: |
-          git diff --quiet HEAD~1 HEAD -- public
-          DIFF_EXIT_CODE=$?
-          if [ $DIFF_EXIT_CODE -eq 0 ]; then
-            echo "false"
-            echo "public_changed=false" >> $GITHUB_ENV
+          git diff --name-only ${{ steps.get_previous_commit.outputs.previous_commit }} HEAD public/ > diff.txt
+          if [ -s diff.txt ]; then
+            echo "::set-output name=public_changed::true"
           else
-            echo "true"
-            echo "public_changed=true" >> $GITHUB_ENV
+            echo "::set-output name=public_changed::false"
           fi
 
   Build:
