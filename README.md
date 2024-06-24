@@ -31,7 +31,7 @@ feature/
 チェック内容は[CODECHECK.md](https://github.com/pia-corp/test/blob/main/doc/markup_rule.md)を確認してください。
 
 ```bash
-npm run lint
+npm run linter
 ```
 
 ### サイトの健全性
@@ -50,18 +50,15 @@ HTML、JavaScript、CSSなどは　`public`フォルダに作成してくださ�
 └── project/
     ├── .github/
     ├── .next/
-    ├── components/
     ├── doc/
-    ├── interface/
-    ├── libs/
     ├── out/
+    ├── pages/
+    ├── public/
     │   ├── index.html
     │   ├── sitemap.xml
     │   ├── manifest.webmanifest
     │   └── contact/
     │       └── index.html
-    ├── pages/
-    ├── public/
     ├── styles/
     ├── .gitignore
     ├── package.json
@@ -213,6 +210,29 @@ fetchAndDisplayNews();
 | external    | boolean | 外部サイトかどうか                          | true / false               |
 
 ※実装時はコメントやログ出力を削除しサンプルは必要に応じて改変してください。
+
+## お問い合わせページについて
+
+SFTPログイン後、pc/contactディレクトリ配下のindex.html
+Smartyテンプレート使用。テンプレートタグを記述したindex.htmlを用意しています。
+
+### smarty変数
+
+| tag | 型 | 値 |  |
+| --- | --- | --- | --- |
+| view_input | number | 0 or 1 | フォーム入力画面を表示 |
+| view_confirm | number | 0 or 1 | フォーム確認画面を表示 |
+| is_mail_send_completed | number | 0 or 1 | フォームの送信完了画面を表示 |
+
+### 送信完了画面に下記のコードを追加してください。
+
+```jsx
+{literal}<script>"use strict";history.pushState(null, null, location.href);window.addEventListener('popstate', (e) => {history.go(1);});</script>{/literal}
+```
+
+### contactディレクトリのjavascript
+
+smartyタグ内でjavasrciptを使う場合は{literal}で囲む必要があります。
 
 ### microCMSドキュメント
 
