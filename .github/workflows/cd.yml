@@ -31,6 +31,7 @@ jobs:
           fi
 
   Build:
+    needs: CheckChangesPub
     if: github.event.sender.type != 'Bot' && contains(github.head_ref, 'develop') && needs.CheckChangesPub.outputs.public_changed == 'true'
     outputs:
       changed_files: ${{ steps.commit_status.outputs.changed_files }}
