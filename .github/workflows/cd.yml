@@ -31,10 +31,8 @@ jobs:
         run: |
           files=$(git diff HEAD^ --name-only -- public/)
           if [ -n "$files" ]; then
-            echo "true"
             echo "public_changed=true" >> $GITHUB_ENV
           else
-            echo "false"
             echo "public_changed=false" >> $GITHUB_ENV
           fi
 
