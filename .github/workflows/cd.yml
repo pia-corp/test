@@ -14,14 +14,21 @@ jobs:
       public_changed: ${{ steps.detect_changes.outputs.public_changed }}
     steps:
       - uses: actions/checkout@v4.1.6
-        name: checkout
+        name: checkout "${{ github.base_ref }}"
         with:
-          fetch-depth: 2
+          fetch-depth: 1
+          ref: ${{ github.base_ref }}
+
+      - uses: actions/checkout@v4.1.6
+        name: checkout "${{ github.head_ref }}"
+        with:
+          fetch-depth: 1
+          ref: ${{ github.head_ref}}
 
       - name: check_diff
         shell: bash
         run: |
-          files=$(git diff HEAD^ --name-only -- public/)
+          files=$(git diff --name-only origin/${{ github.base_ref }} origin/${{ github.head_ref }} -- public/)
           if [ -n "$files" ]; then
             echo "public_changed=true" >> $GITHUB_ENV
           else
