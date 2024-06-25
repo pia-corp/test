@@ -2,6 +2,11 @@ name: File upload
 
 on:
   workflow_dispatch:
+    inputs:
+      sync:
+        description: "File synchronization"
+        required: true
+        default: "delta"
 
 jobs:
   Upload:
@@ -27,19 +32,6 @@ jobs:
         run: |
           echo "::error file=プロトコルの指定が不正です。"
           exit 1
-
-      # - name: Deploy via SFTP
-      #   if: ${{ vars.PROTOCOL == 'sftp' }}
-      #   uses: wangyucode/sftp-upload-action@v2.0.2
-      #   with:
-      #     host: ${{ vars.HOST }}
-      #     port:  ${{ vars.PORT }}
-      #     username: ${{ vars.USER_NAME }}
-      #     password: ${{ secrets.PASSWORD }}
-      #     privateKey: ${{ secrets.DEPLOY_PRIVATE_KEY }}
-      #     localDir: ${{ vars.LOCAL_PATH }}
-      #     remoteDir: ${{ vars.REMOTE_PATH }}
-      #     # removeExtraFilesOnServer: false
 
       - name: Deploy via SFTP
         uses: milanmk/actions-file-deployer@master
