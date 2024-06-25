@@ -6,7 +6,7 @@ on:
 jobs:
   Upload:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 20
     permissions:
       contents: read
 
@@ -28,18 +28,33 @@ jobs:
           echo "::error file=プロトコルの指定が不正です。"
           exit 1
 
+      # - name: Deploy via SFTP
+      #   if: ${{ vars.PROTOCOL == 'sftp' }}
+      #   uses: wangyucode/sftp-upload-action@v2.0.2
+      #   with:
+      #     host: ${{ vars.HOST }}
+      #     port:  ${{ vars.PORT }}
+      #     username: ${{ vars.USER_NAME }}
+      #     password: ${{ secrets.PASSWORD }}
+      #     privateKey: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+      #     localDir: ${{ vars.LOCAL_PATH }}
+      #     remoteDir: ${{ vars.REMOTE_PATH }}
+      #     # removeExtraFilesOnServer: false
+
       - name: Deploy via SFTP
-        if: ${{ vars.PROTOCOL == 'sftp' }}
-        uses: wangyucode/sftp-upload-action@v2.0.2
+        uses: milanmk/actions-file-deployer@master
         with:
-          host: ${{ vars.HOST }}
-          port:  ${{ vars.PORT }}
-          username: ${{ vars.USER_NAME }}
-          password: ${{ secrets.PASSWORD }}
-          privateKey: ${{ secrets.DEPLOY_PRIVATE_KEY }}
-          localDir: ${{ vars.LOCAL_PATH }}
-          remoteDir: ${{ vars.REMOTE_PATH }}
-          # removeExtraFilesOnServer: false
+          remote-protocol: "sftp"
+          remote-host: ${{ vars.HOST }}
+          remote-port: ${{ vars.PORT }}
+          remote-user: ${{ vars.USER_NAME }}
+          remote-password: ${{ vars.PASSWORD }}
+          local-path: ${{ vars.LOCAL_PATH }}
+          remote-path: ${{ vars.REMOTE_PATH }}
+          sync: delta
+          debug: true
+
+
 
       - name: Deploy via FTP
         if: ${{ vars.PROTOCOL == 'ftp' }}
@@ -51,6 +66,7 @@ jobs:
           port:  ${{ vars.PORT }}
           local-dir: ${{ vars.LOCAL_PATH }}
           server-dir: ${{ vars.REMOTE_PATH }}
+          ARGS: --delete --parallel=15
 
   Cron:
     runs-on: ubuntu-latest
