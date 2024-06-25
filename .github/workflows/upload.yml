@@ -40,7 +40,7 @@ jobs:
           remote-host: ${{ vars.HOST }}
           remote-port: ${{ vars.PORT }}
           remote-user: ${{ vars.USER_NAME }}
-          remote-password: ${{ vars.PASSWORD }}
+          remote-password: ${{ secrets.PASSWORD }}
           local-path: ${{ vars.LOCAL_PATH }}
           remote-path: ${{ vars.REMOTE_PATH }}
           sync: 'delta'
