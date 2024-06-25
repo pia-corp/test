@@ -25,7 +25,7 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v4.1.6
         with:
-          ref: ${{ github.head_ref }}
+          fetch-depth: 0
 
       - name: Error handling for invalid protocol
         if: ${{ vars.PROTOCOL != 'ftp' && vars.PROTOCOL != 'sftp' }}
@@ -45,8 +45,6 @@ jobs:
           remote-path: ${{ vars.REMOTE_PATH }}
           sync: 'delta'
           debug: true
-
-
 
       - name: Deploy via FTP
         if: ${{ vars.PROTOCOL == 'ftp' }}
