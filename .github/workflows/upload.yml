@@ -44,14 +44,14 @@ jobs:
       - name: Deploy via SFTP
         uses: milanmk/actions-file-deployer@master
         with:
-          remote-protocol: "sftp"
+          remote-protocol: 'sftp'
           remote-host: ${{ vars.HOST }}
           remote-port: ${{ vars.PORT }}
           remote-user: ${{ vars.USER_NAME }}
           remote-password: ${{ vars.PASSWORD }}
           local-path: ${{ vars.LOCAL_PATH }}
           remote-path: ${{ vars.REMOTE_PATH }}
-          sync: delta
+          sync: 'delta'
           debug: true
 
 
