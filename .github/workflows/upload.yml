@@ -41,6 +41,7 @@ jobs:
           remote-port: ${{ vars.PORT }}
           remote-user: ${{ vars.USER_NAME }}
           remote-password: ${{ vars.PASSWORD }}
+          ssh-private-key: ${{ secrets.SFTP_PB_KEY}}
           local-path: ${{ vars.LOCAL_PATH }}
           remote-path: ${{ vars.REMOTE_PATH }}
           sync: 'delta'
